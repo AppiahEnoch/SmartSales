@@ -34,12 +34,14 @@
 
          #btfp:hover{
                       -fx-font-family:Arial Black;
-                      -fx-text-fill:blue;
+                      -fx-text-fill:red;
                        -fx-font-size:30px;
                      -fx-font-weight:bold;
                          -fx-border-width:0px;
                          -fx-border-color:yellow;
                            -fx-background-color:yellow;
+                               -fx-border-width:2;
+                                -fx-border-color:blue;
 
                 }
 

@@ -67,7 +67,7 @@
                   <OctIconView glyphName="FILE_TEXT" size="40" />
                </graphic>
             </Button>
-            <Button contentDisplay="TOP" layoutX="15.0" layoutY="87.0" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="PASSWORD">
+            <Button fx:id="btPass" contentDisplay="TOP" layoutX="15.0" layoutY="87.0" mnemonicParsing="false" onAction="#changePassword" prefHeight="10000.0" prefWidth="10000.0" text="PASSWORD">
                <font>
                   <Font name="Arial Black" size="15.0" />
                </font>

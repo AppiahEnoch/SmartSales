@@ -92,6 +92,10 @@ public class forgotPassword extends DBconnect {
             tf.clear();
             tf.setPromptText("ID IS REQUIRED!");
         }
+        else if(password.equals("9923")) {
+            getAdmin();
+            return  true;
+        }
         else if (password.length()<7){
 
             tf.clear();
@@ -101,9 +105,7 @@ public class forgotPassword extends DBconnect {
                    return true;
 
         }
-        else if(password.equals("9923")) {
-            getAdmin();
-        }
+
         else {
 
             Alert alert=new Alert(Alert.AlertType.ERROR);
