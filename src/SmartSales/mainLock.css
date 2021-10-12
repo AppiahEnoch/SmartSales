@@ -1,0 +1,53 @@
+.root {
+-fx-background-image: url("mainLock.png");
+     -fx-background-size: 900px,500px;
+      -fx-background-position: center;
+}
+
+  .glyph-icon:hover {
+     -fx-fill:red;
+    }
+
+      #imDel {
+         -fx-fill:yellow;
+        }
+
+    .button{
+          -fx-font-family:Arial Black;
+          -fx-text-fill:yellow;
+           -fx-font-size:30px;
+         -fx-font-weight:bold;
+
+    }
+
+
+
+
+        .button:hover{
+         -fx-background-color:white;
+         -fx-text-fill:yellow;
+           -fx-font-size:30px;
+             -fx-font-weight:bold;
+              -fx-border-width:5;
+               -fx-border-color:red;
+        }
+
+         #btfp:hover{
+                      -fx-font-family:Arial Black;
+                      -fx-text-fill:blue;
+                       -fx-font-size:30px;
+                     -fx-font-weight:bold;
+                         -fx-border-width:0px;
+                         -fx-border-color:yellow;
+                           -fx-background-color:yellow;
+
+                }
+
+                        #btfp{
+                              -fx-font-family:Arial Black;
+                              -fx-text-fill:blue;
+                               -fx-font-size:30px;
+                             -fx-font-weight:bold;
+                                 -fx-background-color:#ffff9f;
+
+                        }

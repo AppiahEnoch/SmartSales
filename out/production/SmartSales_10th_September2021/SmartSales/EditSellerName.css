@@ -1,0 +1,70 @@
+
+.root{
+
+  -fx-background-color:white;
+   -fx-alignment:Center;
+}
+
+#colID{
+        -fx-font-family:Arial Black;
+           -fx-font-size: 16px;
+          -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+        -fx-font-weight:bold;
+}
+
+#colName{
+        -fx-font-family:Arial Black;
+           -fx-font-size: 16px;
+          -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+        -fx-font-weight:bold;
+}
+
+
+#colMobile{
+        -fx-font-family:Arial Black;
+           -fx-font-size: 16px;
+          -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+        -fx-font-weight:bold;
+}
+
+#colLoc{
+        -fx-font-family:Arial Black;
+           -fx-font-size: 16px;
+          -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+        -fx-font-weight:bold;
+}
+
+
+  .glyph-icon {
+     -fx-fill:blue;
+    }
+
+    .button{
+          -fx-font-family:Arial Black;
+           -fx-font-size: 16px;
+          -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+         -fx-font-weight:bold;
+           -fx-background-color:yellow;
+    }
+
+        .button:hover{
+         -fx-text-fill:Yellow;
+           -fx-font-size:20px;
+             -fx-font-weight:bold;
+              -fx-border-width:2px;
+               -fx-border-color:white;
+                -fx-background-color:red;
+
+        }
+
+
+
+
+
+
+

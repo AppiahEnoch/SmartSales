@@ -1,0 +1,25 @@
+
+              .root{
+
+                 -fx-background-color:blue;
+
+              }
+
+        .button:hover{
+         -fx-background-color:#000080;
+         -fx-text-fill:white;
+             -fx-font-weight:bold;
+              -fx-font-size: 20px;
+
+        }
+
+                .button{
+                        -fx-background-color:#ffff9f;
+                 -fx-text-fill:blue;
+                     -fx-font-weight:bold;
+                      -fx-font-size: 20px;
+
+                }
+  .glyph-icon{
+     -fx-fill:blue;
+    }
