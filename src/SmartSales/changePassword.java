@@ -27,6 +27,8 @@ public class changePassword extends DBconnect {
     private Stage currentStage;
     private Scene currentScene;
     private Parent root;
+
+
     @FXML
     private Button btPass;
 
@@ -194,27 +196,7 @@ public class changePassword extends DBconnect {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     /// DETAILS
-
-
-
-
-
-
-
-
 
     public boolean validate(){
         tfInitialCode.setText(passwordField1.getText().trim());
@@ -259,6 +241,8 @@ public class changePassword extends DBconnect {
         }
         return false;
     }
+
+
 
     public boolean saveAdmindetails(){
         if (DBcon()){
@@ -327,4 +311,6 @@ public class changePassword extends DBconnect {
 
      return false;
     }
+
+
 }

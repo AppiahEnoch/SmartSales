@@ -17,10 +17,10 @@ public class Main extends Application {
         Parent root;
         String css;
         if (DBExists) {
-            root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
-           // root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
-            css = this.getClass().getResource("adminMainWindow.css").toExternalForm();
-          //  css = this.getClass().getResource("mainLock.css").toExternalForm();
+           // root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
+            root = FXMLLoader.load(getClass().getResource("loadItemManual.fxml"));
+         //   css = this.getClass().getResource("adminMainWindow.css").toExternalForm();
+            css = this.getClass().getResource("loadItemManual.css").toExternalForm();
 
         } else {
             root = FXMLLoader.load(getClass().getResource("logAdmin.fxml"));
