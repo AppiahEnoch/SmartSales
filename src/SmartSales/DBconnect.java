@@ -15,6 +15,21 @@ public class DBconnect extends passData {
     ResultSet rs;
     String qry = "";
 
+    int c1=1;
+    int c2=1;
+    int c3=1;
+    int c4=1;
+
+
+    String DBitem;
+    String DBprice;
+    String DBqty;
+    String DBsn;
+    String DBCost;
+
+    int windowSize0=20;
+
+
     public boolean DBcon() {
 
         Statement st;
@@ -22,7 +37,7 @@ public class DBconnect extends passData {
         String url2 = "jdbc:mysql://localhost:3306/" + smartSales;
         String qrydb = "CREATE DATABASE IF NOT EXISTS " + smartSales;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             //server URL
             String url = "jdbc:mysql://localhost/";
             conn = DriverManager.getConnection(url, "root", "root");
@@ -69,7 +84,7 @@ public class DBconnect extends passData {
 
             try {
 
-                qry="SELECT     s1 from data as s1";
+                qry="SELECT s1 from data as s1";
                 st=conn.createStatement();
                 rs=st.executeQuery(qry);
 
@@ -200,12 +215,19 @@ public class DBconnect extends passData {
 
 
     public int countRecord(String tb, String column) {
-
+        openConn(conn);
+         int i=0;
         try {
-            qry = "SELECT COUNT('" + column + "') as '" + column + "' FROM" + tb;
+            qry = "SELECT COUNT('" + column + "')  as  '" + column + "' FROM " + tb;
             st = conn.createStatement();
-            st.executeUpdate(qry);
+            rs=st.executeQuery(qry);
+
+            if (rs.next()){
+                i=Integer.parseInt(rs.getString(column).trim());
+            }
+
             conn.close();
+            return i;
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -281,6 +303,58 @@ public class DBconnect extends passData {
         }
         return false;
   }
+
+
+    public void getItems4(String table){
+        System.out.println("getIntData2: "+getIntData());
+        qry="SELECT ID,item,qty,cost,price from "+table+" order by ID ASC";
+
+        try {
+            DBcon();
+            st=conn.createStatement();
+            rs=st.executeQuery(qry);
+
+            if (rs.next()){
+                DBsn= rs.getString("ID").trim();
+                DBitem=rs.getString("item").trim();
+                DBqty=rs.getString("qty").trim();
+                DBprice=rs.getString("price").trim();
+                DBCost=rs.getString("cost").trim();
+
+
+            }
+            else {
+                System.out.println(" no match in two tables: ");
+            }
+        } catch (Exception e) {
+            System.out.println("here");
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+    public void insertItem4(String tb,int sn,String item,int qty,double cost,double price) {
+        DBcon();
+        try {
+            qry = "INSERT IGNORE INTO "+tb+" values('"+sn+"','"+item+"','"+qty+"','"+cost+"','"+price+"')";
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                conn.close();
+            }
+            catch (Exception ee){
+
+            }
+
+        }
+    }
+
 
 
 

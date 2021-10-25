@@ -105,11 +105,6 @@ public class editSellerDetails extends DBconnect {
         }
 
 
-
-
-
-
-
     }
 
     @FXML
@@ -386,6 +381,7 @@ public void updateSellerName(Object n,Object id){
 
 
     }
+
 
 
 

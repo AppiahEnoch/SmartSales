@@ -286,6 +286,12 @@ public class logAdmin extends DBconnect {
         String data= "CREATE TABLE IF NOT EXISTS " +
                 "data(n1 varchar(400),n2 int,s1 varchar(255),s2 varchar(255))";
 
+        String tmpL1= "CREATE TABLE IF NOT EXISTS " +
+                "tmpL1(ID int,item varchar(255),qty int,cost double,price double)";
+
+        String item= "CREATE TABLE IF NOT EXISTS " +
+                "item(fName varchar(400),sName varchar(400) PRIMARY KEY,qty int,cost double,price double,img BLOB)";
+
 
         if (DBcon()){
             try {
@@ -295,8 +301,9 @@ public class logAdmin extends DBconnect {
                 st.execute(businessName);
                 st.execute(seller);
                 st.execute(password);
-
+                st.execute(tmpL1);
                 st.execute(data);
+                st.execute(item);
                 conn.close();
               return true;
             }

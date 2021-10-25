@@ -9,46 +9,51 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="647.0" prefWidth="726.0" style="-fx-background-color: blue;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartSales.loadItemManual">
+<BorderPane fx:id="bp" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="647.0" prefWidth="851.0" style="-fx-background-color: #00b7eb;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartSales.loadItemManual">
    <padding>
       <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
    </padding>
    <top>
-      <TableView fx:id="tbV1" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tbV1" minHeight="250.0" minWidth="400.0" onMouseClicked="#getSelected" prefHeight="282.0" prefWidth="890.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn prefWidth="76.0" text="S.N" />
-          <TableColumn fx:id="col11" prefWidth="237.0" text="ITEM" />
-            <TableColumn fx:id="col12" prefWidth="133.0" text="QTY" />
-            <TableColumn fx:id="col13" prefWidth="351.0" text="PRICE" />
+          <TableColumn fx:id="colsn" prefWidth="76.0" text="S.N" />
+          <TableColumn fx:id="col11" maxWidth="1.7976931348623157E308" minWidth="244.0" prefWidth="374.0" text="ITEM" />
+            <TableColumn fx:id="col12" prefWidth="130.0" text="QTY" />
+            <TableColumn fx:id="col13" prefWidth="110.0" text="COST" />
+            <TableColumn fx:id="col14" prefWidth="161.0" text="PRICE" />
         </columns>
       </TableView>
    </top>
    <center>
-      <TableView fx:id="tbV2" prefHeight="225.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tbV2" onMouseClicked="#getSelected2" prefHeight="225.0" prefWidth="350.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="col21" prefWidth="324.0" text="ITEM" />
-          <TableColumn fx:id="col22" prefWidth="105.0" text="QTY" />
-            <TableColumn fx:id="col23" prefWidth="96.0" text="PRICE" />
+          <TableColumn fx:id="col21" prefWidth="286.0" text="ITEM" />
+          <TableColumn fx:id="col22" prefWidth="115.0" text="QTY" />
+            <TableColumn fx:id="col23" prefWidth="124.0" text="COST" />
+            <TableColumn fx:id="col24" prefWidth="124.0" text="PRICE" />
         </columns>
       </TableView>
    </center>
-   <right>
-      <ImageView fx:id="imgv" fitHeight="265.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
-   </right>
    <bottom>
       <VBox prefHeight="185.0" prefWidth="722.0" spacing="5.0" style="-fx-background-color: YELLOW;" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="82.0" prefWidth="722.0" spacing="10.0" style="-fx-background-color: YELLOW;">
+            <HBox alignment="CENTER" prefHeight="82.0" prefWidth="100000.0" spacing="10.0" style="-fx-background-color: YELLOW;">
                <children>
-                  <TextField fx:id="tf11" prefHeight="59.0" prefWidth="483.0" style="-fx-background-color: #FFFFE0;">
+                  <TextField fx:id="tf11" prefHeight="59.0" prefWidth="100000.0" style="-fx-background-color: #FFFFE0;">
                      <font>
                         <Font name="Arial Black" size="18.0" />
                      </font>
                   </TextField>
                   <TextField fx:id="tf12" layoutX="10.0" layoutY="10.0" minWidth="100.0" prefHeight="80.0" prefWidth="100.0" promptText="QTY" style="-fx-background-color: #FFFFE0;">
+                     <font>
+                        <Font name="Arial Black" size="18.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="tf121" layoutX="412.0" layoutY="10.0" minWidth="100.0" prefHeight="80.0" prefWidth="100.0" promptText="COST" style="-fx-background-color: #FFFFE0;">
                      <font>
                         <Font name="Arial Black" size="18.0" />
                      </font>
@@ -65,9 +70,9 @@
                   </Button>
                </children>
             </HBox>
-            <HBox alignment="BOTTOM_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="73.0" prefWidth="722.0" spacing="10.0" style="-fx-background-color: YELLOW;">
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="73.0" prefWidth="10000.0" spacing="10.0" style="-fx-background-color: YELLOW;">
                <children>
-                  <TextField fx:id="tf21" alignment="CENTER" prefHeight="63.0" prefWidth="404.0" promptText="ENTER ITEM NAME " style="-fx-background-color: #FFFF9F;">
+                  <TextField fx:id="tf21" alignment="CENTER" onMouseClicked="#startThread" onMouseEntered="#startThread" onMouseExited="#stopThread" prefHeight="63.0" prefWidth="100000.0" promptText="ENTER ITEM NAME " style="-fx-background-color: #FFFF9F;">
                      <font>
                         <Font name="Arial Black" size="24.0" />
                      </font>
@@ -77,34 +82,47 @@
                         <Font name="Arial Black" size="18.0" />
                      </font>
                   </TextField>
+                  <TextField fx:id="tf221" layoutX="412.0" layoutY="10.0" minWidth="100.0" prefHeight="80.0" prefWidth="100.0" promptText="COST" style="-fx-background-color: #FFFF9F;">
+                     <font>
+                        <Font name="Arial Black" size="18.0" />
+                     </font>
+                  </TextField>
                   <TextField fx:id="tf23" layoutX="445.0" layoutY="10.0" minWidth="100.0" prefHeight="80.0" prefWidth="100.0" promptText="PRICE" style="-fx-background-color: #FFFF9F;">
                      <font>
                         <Font name="Arial Black" size="18.0" />
                      </font>
                   </TextField>
-                  <Button fx:id="bt2" alignment="CENTER" minWidth="100.0" mnemonicParsing="false" onAction="#addItem2" prefHeight="64.0" prefWidth="88.0" text="ADD">
+                  <Button fx:id="bt2" alignment="CENTER" defaultButton="true" minWidth="100.0" mnemonicParsing="false" onAction="#addItem2" prefHeight="64.0" prefWidth="88.0" text="ADD">
                      <font>
                         <Font name="Arial Black" size="18.0" />
                      </font>
                   </Button>
                </children>
             </HBox>
-            <HBox prefHeight="77.0" prefWidth="722.0" spacing="10.0" style="-fx-background-color: BLUE;">
+            <HBox alignment="CENTER" prefHeight="77.0" prefWidth="100000.0" spacing="10.0" style="-fx-background-color: BLUE;">
                <children>
-                  <Button fx:id="btb" contentDisplay="TOP" mnemonicParsing="false" onAction="#goBack" prefHeight="40.0" prefWidth="109.0" text="BACK">
-                     <font>
-                        <Font name="Arial Black" size="16.0" />
-                     </font>
-                     <graphic>
-                        <FontAwesomeIconView disable="true" glyphName="ARROW_LEFT" size="20" />
-                     </graphic>
-                  </Button>
                   <Button fx:id="btclose" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#goMainWindow" prefHeight="40.0" prefWidth="112.0" text="CLOSE">
                      <font>
                         <Font name="Arial Black" size="16.0" />
                      </font>
                      <graphic>
                         <FontAwesomeIconView glyphName="CLOSE" size="20" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btBack" contentDisplay="TOP" layoutX="50.0" layoutY="11.0" mnemonicParsing="false" onAction="#goBackR" prefHeight="40.0" prefWidth="112.0" text="BACK">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ARROW_LEFT" size="20" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btb" contentDisplay="TOP" mnemonicParsing="false" onAction="#submit" prefHeight="40.0" prefWidth="109.0" text="SUBMIT">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView disable="true" glyphName="PAPER_PLANE" size="20" />
                      </graphic>
                   </Button>
                   <Button fx:id="btc" contentDisplay="TOP" layoutX="111.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearF" prefHeight="40.0" prefWidth="98.0" text="CLEAR">
@@ -115,7 +133,7 @@
                         <FontAwesomeIconView glyphName="PAINT_BRUSH" size="20" />
                      </graphic>
                   </Button>
-                  <Button fx:id="btd1" contentDisplay="TOP" mnemonicParsing="false" onAction="#deleteOne" prefHeight="38.0" prefWidth="140.0" text="DEL.">
+                  <Button fx:id="btd1" contentDisplay="TOP" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="38.0" prefWidth="140.0" text="DEL.">
                      <font>
                         <Font name="Arial Black" size="17.0" />
                      </font>
@@ -128,7 +146,15 @@
                         <Font name="Arial Black" size="17.0" />
                      </font>
                      <graphic>
-                        <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="20" />
+                        <FontAwesomeIconView glyphName="BOMB" size="20" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btfc" contentDisplay="TOP" layoutX="556.0" layoutY="10.0" mnemonicParsing="false" onAction="#fullScreen" prefHeight="37.0" prefWidth="129.0" text="MAX">
+                     <font>
+                        <Font name="Arial Black" size="17.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ARROWS" size="20" />
                      </graphic>
                   </Button>
                </children>
@@ -136,4 +162,11 @@
          </children>
       </VBox>
    </bottom>
+   <right>
+      <StackPane maxHeight="100.0" maxWidth="200.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: BLUE;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="139.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </StackPane>
+   </right>
 </BorderPane>

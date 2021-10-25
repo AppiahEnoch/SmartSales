@@ -17,9 +17,6 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-
-
-
 public class forgotPassword extends DBconnect {
 
     String password="";
@@ -92,7 +89,7 @@ public class forgotPassword extends DBconnect {
             tf.clear();
             tf.setPromptText("ID IS REQUIRED!");
         }
-        else if(password.equals("9923")) {
+        else if(password.equals("APPIAH ENOCH")) {
             getAdmin();
             return  true;
         }
