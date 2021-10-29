@@ -1,0 +1,60 @@
+
+              .root{
+
+                 -fx-background-color:#ffff9f;
+
+              }
+
+        .button:hover{
+         -fx-background-color:blue;
+         -fx-text-fill:white;
+             -fx-font-weight:bold;
+              -fx-font-size: 20px;
+
+        }
+
+                .button{
+                        -fx-background-color:yellow;
+                 -fx-text-fill:blue;
+                     -fx-font-weight:bold;
+                      -fx-font-size: 20px;
+                }
+  .glyph-icon{
+     -fx-fill:blue;
+    }
+
+    .text-field{
+    -fx-text-fill:blue;
+    -fx-font-weight:bold;
+    -fx-font-size: 30px;
+
+    }
+
+
+#btBark{
+ -fx-background-color:#ffff9f;
+ -fx-text-fill:blue;
+ -fx-font-weight:bold;
+ -fx-font-size: 20px;
+}
+
+ #btBark:hover{
+ -fx-background-color:#000080;
+ -fx-text-fill:white;
+ -fx-font-weight:bold;
+ -fx-font-size: 20px;
+  }
+
+  #btBark1{
+   -fx-background-color:#ffff9f;
+   -fx-text-fill:blue;
+   -fx-font-weight:bold;
+   -fx-font-size: 20px;
+  }
+
+   #btBark1:hover{
+   -fx-background-color:#000080;
+   -fx-text-fill:white;
+   -fx-font-weight:bold;
+   -fx-font-size: 20px;
+    }

@@ -17,7 +17,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
          <children>
-            <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="117.0" prefWidth="10000.0" text="ADD PRODUCT">
+            <Button fx:id="btAddProduct" contentDisplay="TOP" mnemonicParsing="false" onAction="#addProduct" prefHeight="117.0" prefWidth="10000.0" text="ADD PRODUCT">
                <font>
                   <Font name="Arial Black" size="15.0" />
                </font>
@@ -73,6 +73,14 @@
                </font>
                <graphic>
                   <FontAwesomeIconView disable="true" glyphName="EXPEDITEDSSL" size="40" />
+               </graphic>
+            </Button>
+            <Button fx:id="btdel" contentDisplay="TOP" layoutX="15.0" layoutY="307.0" mnemonicParsing="false" onAction="#openEmptySystem" prefHeight="10000.0" prefWidth="10000.0" text="DEL">
+               <font>
+                  <Font name="Arial Black" size="15.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView disable="true" glyphName="TRASH" size="40" />
                </graphic>
             </Button>
             <Button fx:id="btLogOut" contentDisplay="TOP" layoutX="15.0" layoutY="236.0" mnemonicParsing="false" onAction="#openMainWindow" prefHeight="10000.0" prefWidth="10000.0" text="EXIT">

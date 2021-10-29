@@ -290,8 +290,8 @@ public class logAdmin extends DBconnect {
                 "tmpL1(ID int,item varchar(255),qty int,cost double,price double)";
 
         String item= "CREATE TABLE IF NOT EXISTS " +
-                "item(fName varchar(400),sName varchar(400) PRIMARY KEY,qty int,cost double,price double,img BLOB)";
-
+                "item(fName varchar(400),sName varchar(400)" +
+                " PRIMARY KEY,qty int,cost double,price double,img BLOB)";
 
         if (DBcon()){
             try {

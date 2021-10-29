@@ -1,9 +1,6 @@
 package SmartSales;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.octicons.OctIconView;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,22 +10,28 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.StageStyle;
 
+import javax.script.Bindings;
+import java.io.*;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class loadItemManual extends DBconnect {
-
+    boolean canDeleteFileNoImageList = true;
     String item;
     String price;
     String qty;
@@ -81,7 +84,7 @@ public class loadItemManual extends DBconnect {
     private TableColumn<ITEM2, String> col24;
 
     @FXML
-    private ImageView imgv;
+    ImageView imageV;
 
     @FXML
     private TextField tf11;
@@ -225,6 +228,8 @@ public class loadItemManual extends DBconnect {
     @FXML
     void addItem1(ActionEvent event) {
 
+      //  isItemInDatabase(checkEmptyFolder());
+
         boolean isWrong = false;
         item = tf11.getText().trim();
         qty = tf12.getText().trim();
@@ -298,6 +303,7 @@ public class loadItemManual extends DBconnect {
             tf121.clear();
             tf21.requestFocus();
 
+             isTableviewEmpty();
 
         }
 
@@ -307,7 +313,7 @@ public class loadItemManual extends DBconnect {
 
     public void initialize() {
         deleteRecord("tmpl1");
-
+        //    loadImage();
 
         col11.setCellValueFactory(new PropertyValueFactory<ITEM, String>("item"));
         col12.setCellValueFactory(new PropertyValueFactory<ITEM, String>("qty"));
@@ -320,9 +326,12 @@ public class loadItemManual extends DBconnect {
         col23.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("cost"));
         col24.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("price"));
 
-
+        getImage();
         startThread();
 
+        if (isTableviewEmpty()){
+            imageV.setImage(null);
+        }
 
     }
 
@@ -401,15 +410,16 @@ public class loadItemManual extends DBconnect {
             tf221.clear();
             tf21.requestFocus();
             startThread();
-
+            isTableviewEmpty();
 
         }
-
 
     }
 
     @FXML
     void clearF(ActionEvent event) {
+
+
         tf21.clear();
         tf22.clear();
         tf23.clear();
@@ -419,9 +429,7 @@ public class loadItemManual extends DBconnect {
         tf12.clear();
         tf13.clear();
 
-
         itemToDelete = null;
-
         savedSN = null;
 
 
@@ -441,7 +449,6 @@ public class loadItemManual extends DBconnect {
 
         if (result.get() == ButtonType.YES) {
 
-
             tbV1.getItems().clear();
             tbV2.getItems().clear();
             tfSN.setText("0");
@@ -451,11 +458,12 @@ public class loadItemManual extends DBconnect {
             tf23.clear();
             tf221.clear();
 
-
             tf11.clear();
             tf12.clear();
             tf13.clear();
             tf121.clear();
+
+            imageV.setImage(null);
 
 
             ctr = 0;
@@ -487,6 +495,8 @@ public class loadItemManual extends DBconnect {
                 String ID2 = ID.toString();
                 deleteSelectedFromTmpl1(ID2);
                 getItems4("tmpl1");
+
+                imageV.setImage(null);
 
             } catch (Exception e) {
 
@@ -520,7 +530,7 @@ public class loadItemManual extends DBconnect {
             }
         }
 
-
+        isItemInDatabase(checkEmptyFolder());
     }
 
     @FXML
@@ -605,7 +615,7 @@ public class loadItemManual extends DBconnect {
 
                 } else {
                     tbV1.getItems().add(new ITEM(sn, item, qty,
-                            cost, price));
+                          price,  cost));
                 }
 
 
@@ -665,6 +675,9 @@ public class loadItemManual extends DBconnect {
             tf23.setText(price.toString());
             tf221.setText(cost.toString());
 
+
+
+
         } catch (Exception e) {
 
         }
@@ -686,6 +699,7 @@ public class loadItemManual extends DBconnect {
             tf12.setText(qty.toString());
             tf121.setText(cost.toString());
             tf13.setText(price.toString());
+            getImage(tf11.getText().trim());
 
 
         } catch (Exception e) {
@@ -719,8 +733,8 @@ public class loadItemManual extends DBconnect {
         openConn(conn);
         try {
             qry = "INSERT IGNORE INTO " +
-                    "item(fName,sName,qty,cost,price)" +
-                    " values('" + fName + "','" + sName + "','" + qty2 + "','" + cost2 + "','" + price2 + "')";
+                    "item(fName,sName,qty,cost,price,img)" +
+                    " values('" + fName + "','" + sName + "','" + qty2 + "','" + cost2 + "','" + price2 + "',null)";
 
             st = conn.createStatement();
             st.executeUpdate(qry);
@@ -752,14 +766,19 @@ public class loadItemManual extends DBconnect {
         }
         return false;
     }
+
     @FXML
     synchronized private boolean fillTbV2() {
+
         openConn(conn);
         String i = "";
         while (continueItemSuggestion) {
+
+
             String keyword = tf21.getText().trim();
             if (!(i.equals(keyword))) {
-                tbV2.getItems().clear(); }
+                tbV2.getItems().clear();
+            }
             if (!(keyword.isEmpty())) {
 
                 qry = "SELECT distinct sName,qty,cost,price" +
@@ -811,7 +830,340 @@ public class loadItemManual extends DBconnect {
     @FXML
     void stopThread() {
         continueItemSuggestion = false;
+    }
+
+    private void loadImage(File myfile, String name) {
+
+        System.out.println("myfff:" + myfile);
+        try {
+            PreparedStatement pst = null;
+            openConn(conn);
+            ShareData shareData = ShareData.getInstance();
+            //  File file=new File("C:/Users/AECleanCodes/Downloads/biscuits/digestive.jpg");  //correct
+
+
+            qry = "update item set img= ? where sName= ? ";
+            pst = conn.prepareStatement(qry);
+            FileInputStream fileInputStream = new FileInputStream(myfile);
+            pst.setBinaryStream(1, fileInputStream);
+            pst.setString(2, name);
+            pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    @FXML
+    private void getImage() {
+        Blob img = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        File file = null;
+
+        try {
+            openConn(conn);
+            st = conn.createStatement();
+            qry = "SELECT img from item where sName= 'TOMBNAIL1'";
+            rs = st.executeQuery(qry);
+
+            if (rs.next()) {
+                inputStream = rs.getBinaryStream("img");
+
+            }
+            inputStreamReader = new InputStreamReader(inputStream);
+
+            if (inputStreamReader.ready()) {
+                file = new File("item.png");
+            }
+
+            OutputStream os = new FileOutputStream(file);
+            byte[] content = new byte[1024];
+
+            while (inputStream.read(content) > 0) {
+                os.write(content);
+            }
+
+            Image image1 = new Image(file.toURI().toString());
+            imageV.setImage(image1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+   @FXML
+    private int getImage(String sName) {
+        Blob img = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        File file = null;
+
+        try {
+            openConn(conn);
+            st = conn.createStatement();
+            qry = "SELECT img from item where sName= '"+sName+"'";
+            rs = st.executeQuery(qry);
+
+            if (rs.next()) {
+                inputStream = rs.getBinaryStream("img");
+
+
+            }
+
+            if (inputStream==null){
+
+                imageV.setImage(null);
+                return 0;
+            }
+            inputStreamReader = new InputStreamReader(inputStream);
+
+            if (inputStreamReader.ready()) {
+                file = new File("item.png");
+            }
+
+            OutputStream os = new FileOutputStream(file);
+            byte[] content = new byte[1024];
+
+            while (inputStream.read(content) > 0) {
+                os.write(content);
+            }
+
+            Image image1 = new Image(file.toURI().toString());
+            imageV.setImage(image1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+return 1;
+    }
+
+
+    public String[] checkEmptyFolder() {
+
+
+        ShareData shareData = ShareData.getInstance();
+        File file = new File(shareData.file.toString());
+        System.out.println("CHECK FOLDER " + file);
+        if (file.isDirectory()) {
+            String[] avail = file.list();
+
+            if (avail.length > 0) {
+
+                System.out.println("avail:" + avail.length);
+                return avail;
+            } else {
+                System.out.println("folder empty");
+            }
+        }
+
+        return null;
+    }
+
+
+    public boolean isItemInDatabase(String[] avail) {
+
+        boolean isCorrect = false;
+        ShareData shareData = ShareData.getInstance();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String i : avail) {
+
+            sb.delete(0, sb.length());
+            sb.append(shareData.file.toString() + "\\");
+
+            String name = removeFileExtension(i);
+            sb.append(i);
+            if (getItemName("item", "sName", name) != null) {
+
+                if (hasNoImage(name)) {
+                    File myFile = new File(sb.toString());
+
+                    System.out.println("Myfile: " + myFile);
+
+                    loadImage(myFile, name);
+
+                    isCorrect = true;
+                }
+
+                //  loadImage(myFile);
+
+
+            }
+
+
+        }
+        return isCorrect;
+    }
+
+
+    public String getAllItemNames() {
+        arraylistItems.clear();
+
+        qry = "SELECT sName as name FROM item";
+
+        try {
+            DBcon();
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
+
+            while (rs.next()) {
+
+                String item = rs.getString("name").trim();
+                arraylistItems.add(item);
+
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("here");
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
+
+    public void createFile(String url, int ctr, String item, String lastItem) {
+
+        String fileName = "noImageList.txt";
+        File noImageFile = new File(url, fileName);
+
+        try {
+
+            if (canDeleteFileNoImageList) {
+                if (noImageFile.exists()) {
+                    noImageFile.delete();
+
+                }
+            }
+
+            if (!noImageFile.exists()) {
+                noImageFile.createNewFile();
+                canDeleteFileNoImageList = false;
+
+            }
+
+            PrintWriter writeToFile = new PrintWriter(new BufferedWriter(new FileWriter(noImageFile, true)));
+            writeToFile.append("\n");
+            if (ctr == 1) {
+                writeToFile.append("\n");
+                writeToFile.append(" POWERED BY APPIAH ENOCH-Clean Codes");
+                writeToFile.append(" Call 0549822202 for any Enquiries!! ");
+                writeToFile.append("\n***************************************************************");
+                writeToFile.append("\n\n\n ALL THESE ITEMS DO NOT HAVE IMAGES PASTE THEIR IMAGES INSIDE THIS FOLDER AND\n" +
+                        " COPY THEIR NAMES HERE TO RENAME THE IMAGES.\n THEIR IMAGES WILL BE AUTOMATICALLY ADDED TO DATABASE.");
+            }
+
+            // writeToFile.append("\n\n\t"+ctr);
+
+            writeToFile.append("\n\n");
+            writeToFile.append("\t" + item);
+            writeToFile.append("\n");
+
+            writeToFile.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // check if file does not exist then create it
+
+    }
+
+    public void writeAllNoImageItems() {
+
+        canDeleteFileNoImageList = true;
+        ShareData shareData = ShareData.getInstance();
+        String url = shareData.file.toString();
+        int ctr = 0;
+        getAllItemNames();
+        String lastItem = arraylistItems.get(arraylistItems.size() - 1);
+
+        for (String i : arraylistItems) {
+            if (hasNoImage(i)) {
+                ctr++;
+                createFile(url, ctr, i, lastItem);
+            } else {
+                deleteFile(i);
+            }
+
+        }
+    }
+
+    public void deleteFile(String fileName) {
+        ShareData shareData = ShareData.getInstance();
+        String url = shareData.file.toString();
+        File file = new File(url, fileName);
+
+        if (file.exists()) {
+            System.out.println("EXITS: " + fileName);
+            file.delete();
+        }
+
+    }
+
+    public void getImagesFromFolder() {
+        ArrayList<String> availableImages=new ArrayList<>();
+        ShareData shareData = ShareData.getInstance();
+        File file = new File(shareData.file.toString());
+        if (file.isDirectory()) {
+            String[] avail = file.list();
+            for (String i:avail){
+              String name= removeFileExtension(i);
+              if (hasNoImage(name)){
+              }
+              else {
+                 deleteFile(i);
+              }
+
+            }
+        }
+
+
+
+    }
+
+    @FXML
+    void showImages(ActionEvent event){
+
+         Stage st=new Stage();
+        Scene scene;
+        Parent r;
+
+        try {
+            r = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
+         String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            r.getStylesheets().add(css);
+            st.setTitle("Smart Sales - AECleanCodes");
+            st.setScene(new Scene(r));
+            r.requestFocus();
+            st.initStyle(StageStyle.UTILITY);
+            st.show();
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    public  boolean isTableviewEmpty(){
+        ObservableList<ITEM> list=tbV1.getItems();
+        if (list.isEmpty()){
+            imageV.setImage(null);
+            return true;
+        }
+        return false;
+
 
     }
 
 }
+

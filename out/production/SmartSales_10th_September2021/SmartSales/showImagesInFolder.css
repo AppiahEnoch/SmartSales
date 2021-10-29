@@ -1,0 +1,31 @@
+
+        .button{
+         -fx-text-fill:Black;
+        -fx-background-color:#00b7eb;
+        -fx-font-family:Arial Black;
+        -fx-font-size: 16px;
+          -fx-text-fill:Black;
+          -fx-font-size:20px;
+        }
+
+
+           .button:hover{
+                -fx-font-family:Arial Black;
+                -fx-font-size: 16px;
+                -fx-text-fill:Black;
+               -fx-font-size:20px;
+                 -fx-font-weight:bold;
+                 -fx-text-fill:white;
+                  -fx-background-color:red;
+                    }
+
+                  #ta{
+                /*   -fx-control-inner-background:#89cff0; */
+                   -fx-control-inner-background:yellow;
+                   -fx-font-family:Arial Black;
+                    -fx-font-size: 16px;
+                    -fx-text-fill:blue;
+                    -fx-font-size:20px;
+                    -fx-font-weight:bold;
+                   }
+

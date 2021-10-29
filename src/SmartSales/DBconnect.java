@@ -1,15 +1,15 @@
 package SmartSales;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Optional;
+import java.io.*;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class DBconnect extends passData {
+    ArrayList<String> arraylistItems=new ArrayList<>();
+
     Connection conn;
     Statement st;
     ResultSet rs;
@@ -304,6 +304,36 @@ public class DBconnect extends passData {
         return false;
   }
 
+    public boolean doesThisExist(String table,String firstColumn,String secondColumn, String firstValue){
+        DBcon();
+        openConn(conn);
+        qry="SELECT "+firstColumn+" from "+table+"  where "+firstColumn+"= '"+firstValue+"'";
+
+        System.out.println("fC:"+firstColumn+" v:"+firstValue);
+
+        try {
+            st=conn.createStatement();
+            rs=st.executeQuery(qry);
+
+            if (rs.next()){
+                conn.close();
+                return true;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            try {
+                conn.close();
+            }
+            catch (Exception ee){
+                ee.printStackTrace();
+            }
+
+        }
+        return false;
+    }
+
 
     public void getItems4(String table){
         System.out.println("getIntData2: "+getIntData());
@@ -355,7 +385,168 @@ public class DBconnect extends passData {
         }
     }
 
+    public void insertItem1(String tb,String thisData) {
+        DBcon();
+        try {
+            qry = "INSERT IGNORE INTO "+tb+" values('"+thisData+"')";
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                conn.close();
+            }
+            catch (Exception ee){
+
+            }
+
+        }
+    }
+
+    public void loadImage(File file){
+        System.out.println("file fromload2 "+file);
+        try {
+            PreparedStatement pst=null;
+            openConn(conn);
+            ShareData shareData=ShareData.getInstance();
+           // File file=new File("C:/Users/AECleanCodes/Downloads/biscuits/digestive.jpg");  //correct
 
 
 
+            qry="update item set img= ? ";
+            pst=conn.prepareStatement(qry);
+            FileInputStream fileInputStream=new FileInputStream(file);
+            pst.setBinaryStream(1,fileInputStream);
+            pst.executeUpdate();
+
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
+    public String  getItemName(String table,String column,String searchThis){
+
+        qry="SELECT "+column+" from "+table+" where "+column+" like '"+searchThis+"'";
+
+        try {
+            DBcon();
+            st=conn.createStatement();
+            rs=st.executeQuery(qry);
+
+            if (rs.next()){
+                String item= rs.getString(column).trim();
+                return item;
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("here");
+            e.printStackTrace();
+        }
+
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+return null;
+    }
+
+
+
+
+
+    public static String getExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 &&  i < s.length() - 1) {
+            ext = s.substring(i+1).toLowerCase();
+        }
+        return ext;
+    }
+
+    public static String getExtension(String fileName) {
+        String ext = null;
+        String s = fileName;
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 &&  i < s.length() - 1) {
+            ext = s.substring(i+1).toLowerCase();
+        }
+        return ext;
+    }
+    public String removeFileExtension(String fileName){
+        try {
+            String rmx=getExtension(fileName).trim();
+
+            int rx=rmx.length();
+            StringBuilder name=new StringBuilder();
+            name.append(fileName);
+            int l=name.length();
+            int endOfString= l- (rx+1);
+            String validName=name.substring(0,endOfString);
+            return validName;
+        }
+        catch (Exception e){
+
+        }
+
+        return null;
+    }
+
+
+
+
+
+
+
+    public boolean  hasNoImage(String sName){
+        Blob img=null;
+        InputStream inputStream=null;
+        InputStreamReader inputStreamReader=null;
+        File file=null;
+
+
+
+        try {
+            openConn(conn);
+            st=conn.createStatement();
+            qry="SELECT img from item where sName='"+sName+"'";
+            rs=  st.executeQuery(qry);
+
+            if(rs.next()){
+                inputStream=rs.getBinaryStream("img");
+
+            }
+            try {
+                inputStreamReader=new InputStreamReader(inputStream);
+                return false;
+            }
+            catch (Exception ee){
+
+             return true;
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+return false;
+    }
 }

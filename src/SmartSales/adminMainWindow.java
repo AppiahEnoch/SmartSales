@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 
 public class adminMainWindow extends DBconnect {
+    public Button btAddProduct;
     @FXML
     private Stage currentStage;
     private Scene currentScene;
@@ -108,7 +109,52 @@ public class adminMainWindow extends DBconnect {
     }
 
 
+    @FXML
+    public void addProduct(ActionEvent event) {
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("loadItemManual.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+            String css=this.getClass().getResource("loadItemManual.css").toExternalForm();
+            root.getStylesheets().add(css);
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+        }
+        catch (Exception e){
 
 
+        }
 
+
+    }
+
+    @FXML
+    public void openEmptySystem(ActionEvent event) {
+        try {
+            root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+            String css=this.getClass().getResource("emptySystemWindow.css").toExternalForm();
+            root.getStylesheets().add(css);
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+        }
+        catch (Exception e){
+
+
+        }
+    }
 }
