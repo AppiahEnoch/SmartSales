@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="fontawesome" level="project" />
     <orderEntry type="library" name="DB" level="project" />
+    <orderEntry type="library" name="POI" level="project" />
   </component>
 </module>

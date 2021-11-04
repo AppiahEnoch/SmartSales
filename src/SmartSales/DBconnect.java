@@ -1,11 +1,18 @@
 package SmartSales;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class DBconnect extends passData {
     ArrayList<String> arraylistItems=new ArrayList<>();
@@ -384,6 +391,27 @@ public class DBconnect extends passData {
 
         }
     }
+    public void insertItem2(String item,int qty,double cost,double price) {
+        DBcon();
+        try {
+            qry = "INSERT  INTO item1 (sName,qty,cost,price) values('"+item+"','"+qty+"','"+cost+"','"+price+"')";
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                conn.close();
+            }
+            catch (Exception ee){
+
+            }
+
+        }
+    }
+
+
+
 
     public void insertItem1(String tb,String thisData) {
         DBcon();
@@ -548,5 +576,17 @@ return null;
             e.printStackTrace();
         }
 return false;
+    }
+
+    public void loadItemFromExcel(){
+
+    }
+
+
+
+    @FXML
+    void showLoadedItems(ActionEvent event){
+
+
     }
 }

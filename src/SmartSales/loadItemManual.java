@@ -228,7 +228,7 @@ public class loadItemManual extends DBconnect {
     @FXML
     void addItem1(ActionEvent event) {
 
-      //  isItemInDatabase(checkEmptyFolder());
+        //  isItemInDatabase(checkEmptyFolder());
 
         boolean isWrong = false;
         item = tf11.getText().trim();
@@ -286,6 +286,7 @@ public class loadItemManual extends DBconnect {
             deleteRecord("tmpl1", "where id=" + i);
 
             insertItem4("tmpl1", Integer.parseInt(sn), item, Integer.parseInt(qty),
+
                     Double.parseDouble(cost), Double.parseDouble(price));
 
 
@@ -303,7 +304,7 @@ public class loadItemManual extends DBconnect {
             tf121.clear();
             tf21.requestFocus();
 
-             isTableviewEmpty();
+            isTableviewEmpty();
 
         }
 
@@ -326,10 +327,10 @@ public class loadItemManual extends DBconnect {
         col23.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("cost"));
         col24.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("price"));
 
-        getImage();
+        //  getImage();
         startThread();
 
-        if (isTableviewEmpty()){
+        if (isTableviewEmpty()) {
             imageV.setImage(null);
         }
 
@@ -612,10 +613,11 @@ public class loadItemManual extends DBconnect {
                 if (isUpdateMainItem) {
 
                     updateMainItem(item, "noFName", Integer.parseInt(qty), Double.parseDouble(cost), Double.parseDouble(price));
+                    insertItem2(item, Integer.parseInt(qty), Double.parseDouble(cost), Double.parseDouble(price));
 
                 } else {
                     tbV1.getItems().add(new ITEM(sn, item, qty,
-                          price,  cost));
+                            price, cost));
                 }
 
 
@@ -674,8 +676,6 @@ public class loadItemManual extends DBconnect {
             tf22.setText(qty.toString());
             tf23.setText(price.toString());
             tf221.setText(cost.toString());
-
-
 
 
         } catch (Exception e) {
@@ -772,49 +772,57 @@ public class loadItemManual extends DBconnect {
 
         openConn(conn);
         String i = "";
-        while (continueItemSuggestion) {
+
+        try {
 
 
-            String keyword = tf21.getText().trim();
-            if (!(i.equals(keyword))) {
-                tbV2.getItems().clear();
-            }
-            if (!(keyword.isEmpty())) {
-
-                qry = "SELECT distinct sName,qty,cost,price" +
-                        " from item " +
-                        "where sName like '%" + keyword + "%' " +
-                        "order by sName ASC";
-                try {
-                    openConn(conn);
-                    st = conn.createStatement();
-                    rs = st.executeQuery(qry);
-
-                    while (rs.next()) {
-                        String s = rs.getString("sName").trim();
-                        String q = rs.getString("qty").trim();
-                        String c = rs.getString("cost").trim();
-                        String p = rs.getString("price").trim();
+            while (continueItemSuggestion) {
 
 
-                        if (!(i.equals(keyword))) {
-                            tbV2.refresh();
-                            tbV2.getItems().addAll(new ITEM2(s, q, c, p));
+                String keyword = tf21.getText().trim();
+                if (!(i.equals(keyword))) {
+                    tbV2.getItems().clear();
+                }
+                if (!(keyword.isEmpty())) {
+
+                    qry = "SELECT distinct sName,qty,cost,price" +
+                            " from item " +
+                            "where sName like '%" + keyword + "%' " +
+                            "order by sName ASC";
+                    try {
+                        openConn(conn);
+                        st = conn.createStatement();
+                        rs = st.executeQuery(qry);
+
+                        while (rs.next()) {
+                            String s = rs.getString("sName").trim();
+                            String q = rs.getString("qty").trim();
+                            String c = rs.getString("cost").trim();
+                            String p = rs.getString("price").trim();
+
+
+                            if (!(i.equals(keyword))) {
+                                tbV2.refresh();
+                                tbV2.getItems().addAll(new ITEM2(s, q, c, p));
+
+                            }
 
                         }
+                        i = keyword;
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
 
                     }
-                    i = keyword;
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
 
                 }
 
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         return false;
     }
@@ -866,14 +874,21 @@ public class loadItemManual extends DBconnect {
         try {
             openConn(conn);
             st = conn.createStatement();
-            qry = "SELECT img from item where sName= 'TOMBNAIL1'";
+            qry = "SELECT img from item";
             rs = st.executeQuery(qry);
 
             if (rs.next()) {
                 inputStream = rs.getBinaryStream("img");
 
             }
-            inputStreamReader = new InputStreamReader(inputStream);
+
+
+            try {
+
+                inputStreamReader = new InputStreamReader(inputStream);
+            } catch (Exception ee) {
+
+            }
 
             if (inputStreamReader.ready()) {
                 file = new File("item.png");
@@ -894,7 +909,7 @@ public class loadItemManual extends DBconnect {
 
     }
 
-   @FXML
+    @FXML
     private int getImage(String sName) {
         Blob img = null;
         InputStream inputStream = null;
@@ -904,7 +919,7 @@ public class loadItemManual extends DBconnect {
         try {
             openConn(conn);
             st = conn.createStatement();
-            qry = "SELECT img from item where sName= '"+sName+"'";
+            qry = "SELECT img from item where sName= '" + sName + "'";
             rs = st.executeQuery(qry);
 
             if (rs.next()) {
@@ -913,7 +928,7 @@ public class loadItemManual extends DBconnect {
 
             }
 
-            if (inputStream==null){
+            if (inputStream == null) {
 
                 imageV.setImage(null);
                 return 0;
@@ -936,7 +951,7 @@ public class loadItemManual extends DBconnect {
         } catch (Exception e) {
             e.printStackTrace();
         }
-return 1;
+        return 1;
     }
 
 
@@ -946,17 +961,23 @@ return 1;
         ShareData shareData = ShareData.getInstance();
         File file = new File(shareData.file.toString());
         System.out.println("CHECK FOLDER " + file);
-        if (file.isDirectory()) {
-            String[] avail = file.list();
+        try {
 
-            if (avail.length > 0) {
+            if (file.isDirectory()) {
+                String[] avail = file.list();
 
-                System.out.println("avail:" + avail.length);
-                return avail;
-            } else {
-                System.out.println("folder empty");
+                if (avail.length > 0) {
+
+                    System.out.println("avail:" + avail.length);
+                    return avail;
+                } else {
+                    System.out.println("folder empty");
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         return null;
     }
@@ -964,37 +985,47 @@ return 1;
 
     public boolean isItemInDatabase(String[] avail) {
 
+
         boolean isCorrect = false;
         ShareData shareData = ShareData.getInstance();
 
         StringBuilder sb = new StringBuilder();
 
-        for (String i : avail) {
 
-            sb.delete(0, sb.length());
-            sb.append(shareData.file.toString() + "\\");
+        try {
 
-            String name = removeFileExtension(i);
-            sb.append(i);
-            if (getItemName("item", "sName", name) != null) {
 
-                if (hasNoImage(name)) {
-                    File myFile = new File(sb.toString());
+            for (String i : avail) {
 
-                    System.out.println("Myfile: " + myFile);
+                sb.delete(0, sb.length());
+                sb.append(shareData.file.toString() + "\\");
 
-                    loadImage(myFile, name);
+                String name = removeFileExtension(i);
+                sb.append(i);
+                if (getItemName("item", "sName", name) != null) {
 
-                    isCorrect = true;
+                    if (hasNoImage(name)) {
+                        File myFile = new File(sb.toString());
+
+                        System.out.println("Myfile: " + myFile);
+
+                        loadImage(myFile, name);
+
+                        isCorrect = true;
+                    }
+
+                    //  loadImage(myFile);
+
+
                 }
-
-                //  loadImage(myFile);
 
 
             }
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
         return isCorrect;
     }
 
@@ -1034,7 +1065,6 @@ return 1;
 
 
     public void createFile(String url, int ctr, String item, String lastItem) {
-
         String fileName = "noImageList.txt";
         File noImageFile = new File(url, fileName);
 
@@ -1047,10 +1077,9 @@ return 1;
                 }
             }
 
-            if (!noImageFile.exists()) {
+            if (!(noImageFile.exists())) {
                 noImageFile.createNewFile();
                 canDeleteFileNoImageList = false;
-
             }
 
             PrintWriter writeToFile = new PrintWriter(new BufferedWriter(new FileWriter(noImageFile, true)));
@@ -1080,90 +1109,138 @@ return 1;
     }
 
     public void writeAllNoImageItems() {
-
+        System.out.println("rrr");
         canDeleteFileNoImageList = true;
         ShareData shareData = ShareData.getInstance();
         String url = shareData.file.toString();
         int ctr = 0;
-        getAllItemNames();
-        String lastItem = arraylistItems.get(arraylistItems.size() - 1);
 
-        for (String i : arraylistItems) {
-            if (hasNoImage(i)) {
-                ctr++;
-                createFile(url, ctr, i, lastItem);
-            } else {
-                deleteFile(i);
+
+        try {
+
+
+            getAllItemNames();
+            String lastItem = arraylistItems.get(arraylistItems.size() - 1);
+
+            for (String i : arraylistItems) {
+                if (hasNoImage(i)) {
+                    System.out.println("has no img");
+                    ctr++;
+                    createFile(url, ctr, i, lastItem);
+                } else {
+                    deleteFile(i);
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void deleteFile(String fileName) {
-        ShareData shareData = ShareData.getInstance();
-        String url = shareData.file.toString();
-        File file = new File(url, fileName);
+        try {
 
-        if (file.exists()) {
-            System.out.println("EXITS: " + fileName);
-            file.delete();
+            ShareData shareData = ShareData.getInstance();
+            String url = shareData.file.toString();
+            File file = new File(url, fileName);
+
+            if (file.exists()) {
+                System.out.println("EXITS: " + fileName);
+                file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
     }
 
     public void getImagesFromFolder() {
-        ArrayList<String> availableImages=new ArrayList<>();
-        ShareData shareData = ShareData.getInstance();
-        File file = new File(shareData.file.toString());
-        if (file.isDirectory()) {
-            String[] avail = file.list();
-            for (String i:avail){
-              String name= removeFileExtension(i);
-              if (hasNoImage(name)){
-              }
-              else {
-                 deleteFile(i);
-              }
+        try {
+            ArrayList<String> availableImages = new ArrayList<>();
+            ShareData shareData = ShareData.getInstance();
+            File file = new File(shareData.file.toString());
+            if (file.isDirectory()) {
+                String[] avail = file.list();
+                for (String i : avail) {
+                    String name = removeFileExtension(i);
+                    if (hasNoImage(name)) {
+                    } else {
+                        deleteFile(i);
+                    }
 
+                }
             }
-        }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
 
     @FXML
-    void showImages(ActionEvent event){
+    void showImages(ActionEvent event) {
 
-         Stage st=new Stage();
+        Stage st = new Stage();
         Scene scene;
         Parent r;
 
         try {
             r = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
-         String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            String css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
             r.getStylesheets().add(css);
             st.setTitle("Smart Sales - AECleanCodes");
             st.setScene(new Scene(r));
             r.requestFocus();
             st.initStyle(StageStyle.UTILITY);
             st.show();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    public  boolean isTableviewEmpty(){
-        ObservableList<ITEM> list=tbV1.getItems();
-        if (list.isEmpty()){
-            imageV.setImage(null);
-            return true;
+    public boolean isTableviewEmpty() {
+        try {
+            ObservableList<ITEM> list = tbV1.getItems();
+            if (list.isEmpty()) {
+                imageV.setImage(null);
+                return true;
+            }
+        } catch (Exception e) {
+
         }
+
         return false;
 
 
     }
+
+    @FXML
+    void showLoadedItems(ActionEvent event) {
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("viewItems.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+            String css=this.getClass().getResource("viewItems.css").toExternalForm();
+           root.getStylesheets().add(css);
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+        }
+        catch (Exception e){
+          e.printStackTrace();
+        }
+    }
+
+
 
 }
 
