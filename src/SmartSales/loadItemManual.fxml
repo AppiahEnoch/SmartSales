@@ -22,20 +22,20 @@
       <TableView fx:id="tbV1" minHeight="250.0" minWidth="400.0" onMouseClicked="#getSelected" prefHeight="282.0" prefWidth="890.0" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn fx:id="colsn" prefWidth="76.0" text="S.N" />
-          <TableColumn fx:id="col11" maxWidth="1.7976931348623157E308" minWidth="244.0" prefWidth="374.0" text="ITEM" />
-            <TableColumn fx:id="col12" prefWidth="130.0" text="QTY" />
-            <TableColumn fx:id="col13" prefWidth="110.0" text="COST" />
-            <TableColumn fx:id="col14" prefWidth="156.0" text="PRICE" />
+          <TableColumn fx:id="col11" maxWidth="1.7976931348623157E308" minWidth="244.0" prefWidth="467.0" text="ITEM" />
+            <TableColumn fx:id="col12" prefWidth="169.0" text="QTY" />
+            <TableColumn fx:id="col13" prefWidth="147.0" text="COST" />
+            <TableColumn fx:id="col14" prefWidth="142.0" text="PRICE" />
         </columns>
       </TableView>
    </top>
    <center>
       <TableView fx:id="tbV2" onMouseClicked="#getSelected2" prefHeight="225.0" prefWidth="350.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="col21" prefWidth="286.0" text="ITEM" />
-          <TableColumn fx:id="col22" prefWidth="115.0" text="QTY" />
-            <TableColumn fx:id="col23" prefWidth="124.0" text="COST" />
-            <TableColumn fx:id="col24" prefWidth="124.0" text="PRICE" />
+          <TableColumn fx:id="col21" prefWidth="407.0" text="ITEM" />
+          <TableColumn fx:id="col22" prefWidth="133.0" text="QTY" />
+            <TableColumn fx:id="col23" prefWidth="128.0" text="COST" />
+            <TableColumn fx:id="col24" prefWidth="133.0" text="PRICE" />
         </columns>
       </TableView>
    </center>

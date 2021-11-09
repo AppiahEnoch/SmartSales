@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
+import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -33,6 +34,11 @@ public class DBconnect extends passData {
     String DBqty;
     String DBsn;
     String DBCost;
+    String DBtime;
+
+
+
+
 
     int windowSize0=20;
 

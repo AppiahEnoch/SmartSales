@@ -1,70 +1,32 @@
 
-.root{
 
-  -fx-background-color:white;
-   -fx-alignment:Center;
+
+
+
+
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color:  #6622CC;
 }
 
-#c1{
-        -fx-font-family:Arial Black;
-           -fx-font-size: 16px;
-          -fx-text-fill:BLUE;
-       -fx-font-size:20px;
-        -fx-font-weight:bold;
-}
-
-#c2{
-        -fx-font-family:Arial Black;
-           -fx-font-size: 16px;
-          -fx-text-fill:BLUE;
-       -fx-font-size:20px;
-        -fx-font-weight:bold;
+.table-view .column-header .label{
+   -fx-text-fill: yellow;
+   -fx-font-weight: bold;
+   -fx-alignment: CENTER_LEFT;
 }
 
 
-#c3{
-        -fx-font-family:Arial Black;
-           -fx-font-size: 16px;
-          -fx-text-fill:BLUE;
-       -fx-font-size:20px;
-        -fx-font-weight:bold;
+
+
+.table-column{
+
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+
 }
 
-#c4{
-        -fx-font-family:Arial Black;
-           -fx-font-size: 16px;
-          -fx-text-fill:BLUE;
-       -fx-font-size:20px;
-        -fx-font-weight:bold;
+.table-row-cell:selected{
+ -fx-background-color:blue;
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
 }
-
-
-  .glyph-icon {
-     -fx-fill:blue;
-    }
-
-    .button{
-          -fx-font-family:Arial Black;
-           -fx-font-size: 16px;
-          -fx-text-fill:BLUE;
-       -fx-font-size:20px;
-         -fx-font-weight:bold;
-           -fx-background-color:yellow;
-    }
-
-        .button:hover{
-         -fx-text-fill:Yellow;
-           -fx-font-size:20px;
-             -fx-font-weight:bold;
-              -fx-border-width:2px;
-               -fx-border-color:white;
-                -fx-background-color:red;
-
-        }
-
-
-
-
-
-
-

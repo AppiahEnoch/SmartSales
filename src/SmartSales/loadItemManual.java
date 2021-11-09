@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class loadItemManual extends DBconnect {
+    ShareData m = ShareData.getInstance();
     boolean canDeleteFileNoImageList = true;
     String item;
     String price;
@@ -39,7 +40,9 @@ public class loadItemManual extends DBconnect {
     String cost;
     String savedSN = null;
     int ctr = 0;
-    boolean continueItemSuggestion = true;
+
+
+
 
     boolean isUpdateMainItem = false;
 
@@ -776,7 +779,7 @@ public class loadItemManual extends DBconnect {
         try {
 
 
-            while (continueItemSuggestion) {
+            while (m.continueItemSuggestion) {
 
 
                 String keyword = tf21.getText().trim();
@@ -831,13 +834,13 @@ public class loadItemManual extends DBconnect {
     void startThread() {
         stopThread();
 
-        continueItemSuggestion = true;
+        m.continueItemSuggestion = true;
         new Thread(() -> fillTbV2()).start();
     }
 
     @FXML
     void stopThread() {
-        continueItemSuggestion = false;
+        m.continueItemSuggestion = false;
     }
 
     private void loadImage(File myfile, String name) {
@@ -1109,7 +1112,7 @@ public class loadItemManual extends DBconnect {
     }
 
     public void writeAllNoImageItems() {
-        System.out.println("rrr");
+
         canDeleteFileNoImageList = true;
         ShareData shareData = ShareData.getInstance();
         String url = shareData.file.toString();
@@ -1179,25 +1182,28 @@ public class loadItemManual extends DBconnect {
 
 
     }
-
+    Stage sst = new Stage();
+    Scene scene;
+    Parent r;
     @FXML
     void showImages(ActionEvent event) {
 
-        Stage st = new Stage();
-        Scene scene;
-        Parent r;
+        if (sst.isShowing()){
+            sst.close();
+
+        }
 
         try {
             r = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
             String css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
             r.getStylesheets().add(css);
-            st.setTitle("Smart Sales - AECleanCodes");
-            st.setScene(new Scene(r));
+            sst.setTitle("Smart Sales - AECleanCodes");
+            sst.setScene(new Scene(r));
             r.requestFocus();
-            st.initStyle(StageStyle.UTILITY);
-            st.show();
+           // sst.initStyle(StageStyle.UTILITY);
+            sst.show();
         } catch (Exception e) {
-
+             e.printStackTrace();
         }
     }
 

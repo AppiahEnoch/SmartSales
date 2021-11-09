@@ -3,6 +3,7 @@ package SmartSales;
 import com.sun.xml.internal.bind.v2.schemagen.episode.Bindings;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,11 +15,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-
+import javafx.stage.WindowEvent;
 
 
 public class adminMainWindow extends DBconnect {
+    ShareData m = ShareData.getInstance();
     public Button btAddProduct;
     @FXML
     private Stage currentStage;
@@ -126,6 +127,14 @@ public class adminMainWindow extends DBconnect {
             currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
             currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
             currentStage.setResizable(false);
+
+            currentStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                 m.continueItemSuggestion=false;
+
+                }
+            });
         }
         catch (Exception e){
 

@@ -9,17 +9,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="775.0" stylesheets="@viewItems.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartSales.recentItem">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="1008.0" stylesheets="@viewItems.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartSales.recentItem">
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@EditSellerName.css" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="tbv" editable="true" prefHeight="557.0" prefWidth="712.0">
+            <TableView fx:id="tbv" editable="true" onMouseClicked="#showPopImg" prefHeight="550.0" prefWidth="1017.0" stylesheets="@recentItem.css">
               <columns>
                 <TableColumn fx:id="c" prefWidth="58.0" text="ID" />
                 <TableColumn fx:id="c1" minWidth="0.0" onEditCommit="#editItem" prefWidth="405.0" text="ITEM" />
                   <TableColumn fx:id="c2" onEditCommit="#editQty" prefWidth="115.0" text="QTY" />
                   <TableColumn fx:id="c3" minWidth="0.0" onEditCommit="#editCost" prefWidth="110.0" text="COST" />
                   <TableColumn fx:id="c4" minWidth="0.0" onEditCommit="#editPrice" prefWidth="85.0" text="PRICE" />
+                  <TableColumn fx:id="c5" minWidth="0.0" onEditCommit="#editPrice" prefWidth="234.0" text="TIME LOADED" />
               </columns>
             </TableView>
             <HBox alignment="CENTER" prefHeight="80.0" prefWidth="775.0" spacing="10.0">

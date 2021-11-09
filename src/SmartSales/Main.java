@@ -25,8 +25,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+
+
+        DBconnect dBconnect = new DBconnect();
+        boolean DBExists = dBconnect.DBExists();
+
         createExcelLoadItemsFile();
-                 loadItemFromExcel();
+        loadItemFromExcel();
         //basic routines
 
         try {
@@ -45,27 +51,23 @@ public class Main extends Application {
         } catch (Exception ee) {
 
         }
-
-
-        DBconnect dBconnect = new DBconnect();
-        boolean DBExists = dBconnect.DBExists();
         Parent root;
         String css;
         if (DBExists) {
             //  root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
             //  root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
-            //    root = FXMLLoader.load(getClass().getResource("loadItemManual.fxml"));
+              //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
 
             //  root = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
-            //  root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
+           //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
             root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
 
 
             //    css = this.getClass().getResource("mainLock.css").toExternalForm();
             // css = this.getClass().getResource("loadItemManual.css").toExternalForm();
-            //  css = this.getClass().getResource("loadItemManual.css").toExternalForm();
+              css = this.getClass().getResource("recentItem.css").toExternalForm();
             // css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
-            css = this.getClass().getResource("recentItem.css").toExternalForm();
+           // css = this.getClass().getResource("recentItem.css").toExternalForm();
 
         } else {
             root = FXMLLoader.load(getClass().getResource("logAdmin.fxml"));
@@ -85,6 +87,9 @@ public class Main extends Application {
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
         primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+
+
 
 
     }
@@ -170,7 +175,7 @@ public class Main extends Application {
 
     public static void createExcelLoadItemsFile(){
         ShareData shareData = ShareData.getInstance();
-        File file = new File(shareData.file.toString() + "\\loadItems1.xlsx");
+        File file = new File(shareData.file.toString() + "\\loadItems.xlsx");
         try {
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet spreadsheet = workbook.createSheet("items");

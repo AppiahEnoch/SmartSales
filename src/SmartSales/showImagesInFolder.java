@@ -54,7 +54,7 @@ public class showImagesInFolder extends DBconnect {
         try {
             list=checkEmptyFolder();
             for (String i:list){
-                if(!(i.equals("noImageList"))){
+                if((!(i.equals("noImageList"))&& (!(i.equals("loadItems"))))){
                     ta.appendText(i+"\n");
                 }
             }

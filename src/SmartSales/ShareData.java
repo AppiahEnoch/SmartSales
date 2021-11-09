@@ -1,11 +1,15 @@
 package SmartSales;
 
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 
 public class ShareData {
+
+
     private static ShareData instance;
     Paths path;
     int intData1;
@@ -13,6 +17,7 @@ public class ShareData {
     int anIntData3;
     int anIntData4;
     String stringData1;
+    boolean continueItemSuggestion = true;
 
     public File file;
 
