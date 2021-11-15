@@ -291,7 +291,7 @@ public class logAdmin extends DBconnect {
 
         String item= "CREATE TABLE IF NOT EXISTS " +
                 "item(fName varchar(400),sName varchar(400)" +
-                " PRIMARY KEY,qty int,cost double,price double,img LONGBLOB)";
+                " PRIMARY KEY,qty int,cost double,price double,img LONGBLOB,time timestamp  DEFAULT CURRENT_TIMESTAMP)";
 
         String item1= "CREATE TABLE IF NOT EXISTS " +
                 "item1(id int primary key auto_Increment, fName varchar(400),sName varchar(400)" +

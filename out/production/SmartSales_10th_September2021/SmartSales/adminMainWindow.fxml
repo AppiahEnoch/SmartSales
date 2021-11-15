@@ -75,7 +75,7 @@
                   <FontAwesomeIconView disable="true" glyphName="EXPEDITEDSSL" size="40" />
                </graphic>
             </Button>
-            <Button fx:id="btdel" contentDisplay="TOP" layoutX="15.0" layoutY="307.0" mnemonicParsing="false" onAction="#openEmptySystem" prefHeight="10000.0" prefWidth="10000.0" text="DEL">
+            <Button fx:id="btdel" contentDisplay="TOP" layoutX="15.0" layoutY="307.0" mnemonicParsing="false" onAction="#openEmptySystem" prefHeight="10000.0" prefWidth="10000.0" text="EDIT SUG.">
                <font>
                   <Font name="Arial Black" size="15.0" />
                </font>

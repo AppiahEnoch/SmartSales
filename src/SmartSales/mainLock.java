@@ -342,7 +342,7 @@ public class mainLock extends DBconnect {
 
 
     public boolean sellerHasRegistered(){
-        System.out.println("getIntData2: "+getIntData());
+
         qry="SELECT seller.ID as ID FROM seller  inner join password on seller.ID=password.ID && seller.ID='"+username+"'";
         try {
             DBcon();

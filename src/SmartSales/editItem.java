@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-public class recentItem extends DBconnect {
+public class editItem extends DBconnect {
 
     Stage sst=new Stage();
 
@@ -97,11 +97,7 @@ public class recentItem extends DBconnect {
 
     @FXML
     public void initialize() {
-
-
-        c.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("id"));
         c1.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("name"));
-
         c2.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("qty"));
         c3.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("cost"));
         c4.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("price"));
@@ -113,16 +109,13 @@ public class recentItem extends DBconnect {
         c4.setCellFactory(TextFieldTableCell.forTableColumn());
 
         getRecentItems();
-
-
-
     }
 
 
     private void getRecentItems() {
         DBcon();
         openConn(conn);
-        qry = "select id, sName,qty,cost,price,time from item1 order by time";
+        qry = "select  sName,qty,cost,price,time from item order by time";
 
         try {
             st = conn.createStatement();
@@ -130,7 +123,6 @@ public class recentItem extends DBconnect {
 
 
             while (rs.next()) {
-                DBsn = rs.getString("id").trim();
                 DBitem = rs.getString("sName").trim();
                 DBqty = rs.getString("qty").trim();
                 DBCost = rs.getString("cost").trim();
@@ -139,7 +131,7 @@ public class recentItem extends DBconnect {
 
                 System.out.println(DBitem);
 
-                tbv.getItems().addAll(new ITEM2(DBsn, DBitem, DBqty, DBCost, DBprice, DBtime));
+                tbv.getItems().addAll(new ITEM2(DBitem, DBqty, DBCost, DBprice, DBtime));
 
 
             }
@@ -166,7 +158,6 @@ public class recentItem extends DBconnect {
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getName();
         Object id = colSelected1.getId();
-        updateItem1("sName", n, id);
         String nn=m.stringData1;
         updateItem("sName", n, nn);
 
@@ -179,7 +170,7 @@ public class recentItem extends DBconnect {
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getQty();
         Object id = colSelected1.getId();
-        updateItem1("qty", n, id);
+        updateItem("qty", n, m.stringData1);
 
     }
 
@@ -189,7 +180,7 @@ public class recentItem extends DBconnect {
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getCost();
         Object id = colSelected1.getId();
-        updateItem1("cost", n, id);
+        updateItem("cost", n, m.stringData1);
 
     }
 
@@ -198,10 +189,7 @@ public class recentItem extends DBconnect {
         ITEM2 colSelected = tbv.getItems().get(editEvent.getTablePosition().getRow()).setPrice(editEvent.getNewValue());
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getPrice();
-        Object id = colSelected1.getId();
-
-
-        updateItem1("price", n, id);
+        updateItem("price", n, m.stringData1);
 
     }
 
@@ -226,31 +214,13 @@ public class recentItem extends DBconnect {
     }
 
 
-    public void updateItem1(String column, Object newName, Object id) {
-        DBcon();
-        qry = "UPDATE item1 SET " + column + "='" + newName + "' where ID = '" + id + "'";
-        try {
-            st = conn.createStatement();
-            st.executeUpdate(qry);
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
 
 
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
-
-    public void deleteSelectedItem(String ID) {
+    public void deleteSelectedItem() {
         openConn(conn);
 
-        qry = "DELETE FROM item1 where ID=" + ID;
+        qry = "DELETE FROM item where sName=" + m.stringData1;
         try {
             st = conn.createStatement();
             st.executeUpdate(qry);
@@ -334,14 +304,7 @@ public class recentItem extends DBconnect {
 
 
                 try {
-                    ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
-                    Object n = colSelected1.getName();
-                    Object ID = colSelected1.getId();
-                    System.out.println(n);
-                    System.out.println(ID);
-                    String ID2 = ID.toString();
-                    deleteSelectedItem(ID2);
-
+                    deleteSelectedItem();
 
                     try {
                         root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
@@ -411,7 +374,7 @@ public class recentItem extends DBconnect {
 
 
                 DBcon();
-                qry = "DELETE FROM    item1";
+                qry = "DELETE FROM    item";
                 try {
                     st = conn.createStatement();
                     st.executeUpdate(qry);
@@ -427,11 +390,11 @@ public class recentItem extends DBconnect {
 
 
                     try {
-                        root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
+                        root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
                         currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         currentScene = new Scene(root);
-                        String css = this.getClass().getResource("recentItem.css").toExternalForm();
-                        root.getStylesheets().add(css);
+                     //   String css = this.getClass().getResource("recentItem.css").toExternalForm();
+                     //   root.getStylesheets().add(css);
                         currentStage.setScene(currentScene);
 
                         currentStage.show();
@@ -460,8 +423,6 @@ public class recentItem extends DBconnect {
 
 
             }
-
-
 
 
 

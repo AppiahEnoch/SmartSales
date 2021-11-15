@@ -535,6 +535,8 @@ public class loadItemManual extends DBconnect {
         }
 
         isItemInDatabase(checkEmptyFolder());
+
+        writeAllNoImageItems();
     }
 
     @FXML
@@ -637,18 +639,14 @@ public class loadItemManual extends DBconnect {
 
     public void deleteSelectedFromTmpl1(String ID) {
         DBcon();
-
         qry = "DELETE FROM tmpl1 where ID=" + ID;
         try {
             st = conn.createStatement();
             st.executeUpdate(qry);
-
-
             conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
-
 
         } finally {
             try {
@@ -1010,7 +1008,7 @@ public class loadItemManual extends DBconnect {
                     if (hasNoImage(name)) {
                         File myFile = new File(sb.toString());
 
-                        System.out.println("Myfile: " + myFile);
+
 
                         loadImage(myFile, name);
 

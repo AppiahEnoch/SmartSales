@@ -48,12 +48,12 @@ public class ITEM2 {
         return null;
     }
 
-    public ITEM2(Object id, Object name, Object qty, Object cost, Object price) {
-        this.id = id;
+    public ITEM2( Object name, Object qty, Object cost, Object price,Object time) {
         this.name = name;
         this.qty = qty;
         this.cost = cost;
         this.price = price;
+        this.time = time;
     }
 
     public ITEM2(Object id, Object name, Object qty, Object cost, Object price,Object time) {
@@ -80,7 +80,6 @@ public class ITEM2 {
         this.cost = cost;
         this.price = price;
     }
-
 
     Object id;
     Object name;
