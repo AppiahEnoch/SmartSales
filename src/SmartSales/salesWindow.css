@@ -1,0 +1,102 @@
+
+        .root{
+       -fx-background-color: #FFFF9F;
+        }
+
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color: #FFFF9F;
+}
+
+.table-view .column-header .label{
+   -fx-text-fill: Black;
+   -fx-font-weight: bold;
+   -fx-alignment: CENTER;
+}
+
+.table-row-cell:selected {
+   -fx-background-color: RED;
+   -fx-text-background-color:  #6622CC;
+
+
+}
+        .vbox{
+           -fx-background-color:blue;
+        }
+        .button{
+         -fx-text-fill:Black;
+        -fx-background-color:#00b7eb;
+        }
+        .button:hover{
+         -fx-text-fill:white;
+                -fx-background-color:BLUE;
+        }
+
+
+           #bt1{
+                    -fx-background-color:#FFFFE0;
+
+                            -fx-font-family:Arial Black;
+                             -fx-font-size: 16px;
+                            -fx-text-fill:Black;
+                         -fx-font-size:20px;
+                           -fx-font-weight:bold;
+                             -fx-background-color:#FFFFE0;
+                    }
+
+
+           #bt1:hover{
+                    -fx-background-color:red;
+                            -fx-font-family:Arial Black;
+                             -fx-font-size: 16px;
+                            -fx-text-fill:white;
+                         -fx-font-size:20px;
+                           -fx-font-weight:bold;
+                    }
+
+
+           #bt2{
+                    -fx-background-color: #FFFF9F;
+                            -fx-font-family:Arial Black;
+                             -fx-font-size: 16px;
+                            -fx-text-fill:Black;
+                         -fx-font-size:20px;
+                           -fx-font-weight:bold;
+
+                    }
+
+
+           #bt2:hover{
+                    -fx-background-color:red;
+                            -fx-font-family:Arial Black;
+                             -fx-font-size: 16px;
+                            -fx-text-fill:white;
+                         -fx-font-size:20px;
+                           -fx-font-weight:bold;
+                    }
+
+
+
+
+                    #col1{
+                      -fx-font-size:20px;
+                       -fx-alignment:Center;
+                        -fx-font-weight:Bold;
+                       -fx-text-fill:BLUE;
+                    }
+
+                    #col3{
+
+                      -fx-font-size:20px;
+                       -fx-alignment:Center;
+                        -fx-font-weight:Bold;
+                      -fx-text-fill:BLUE;
+                    }
+
+                    #col2{
+
+                      -fx-font-size:20px;
+                       -fx-alignment:Center;
+                        -fx-font-weight:Bold;
+                        -fx-text-fill:BLUE;
+                    }

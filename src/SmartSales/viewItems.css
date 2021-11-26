@@ -5,6 +5,7 @@
 
               }
         .button:hover{
+
          -fx-background-color:#000080;
          -fx-text-fill:white;
              -fx-font-weight:bold;

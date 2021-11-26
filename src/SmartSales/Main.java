@@ -1,5 +1,4 @@
 package SmartSales;
-
 import com.sun.prism.paint.Color;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.*;
+import java.beans.EventHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
+import javafx.stage.WindowEvent;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
@@ -63,7 +64,7 @@ public class Main extends Application {
         Parent root;
         String css;
         if (DBExists) {
-              root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
+           //   root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
             //  root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
               //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
 
@@ -71,9 +72,10 @@ public class Main extends Application {
            //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
           //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
            // root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
+           root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
 
 
-               css = this.getClass().getResource("mainLock.css").toExternalForm();
+             //  css = this.getClass().getResource("mainLock.css").toExternalForm();
             // css = this.getClass().getResource("loadItemManual.css").toExternalForm();
            //   css = this.getClass().getResource("recentItem.css").toExternalForm();
             // css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
@@ -86,7 +88,7 @@ public class Main extends Application {
             logAdmin.createTables();
         }
 
-        root.getStylesheets().add(css);
+     //   root.getStylesheets().add(css);
         primaryStage.setTitle("Smart Sales - AECleanCodes");
         primaryStage.setScene(new Scene(root));
         root.requestFocus();
@@ -97,6 +99,17 @@ public class Main extends Application {
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
         primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+//
+//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//
+//            public void handle(WindowEvent event) {
+//                System.out.println("closed0000000000000000000000000");
+//
+//
+//            }
+//        });
+
 
     }
 

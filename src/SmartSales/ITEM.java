@@ -3,6 +3,13 @@ package SmartSales;
 public class ITEM {
 
 
+    public ITEM(Object item, String qty, String price) {
+        this.qty = qty;
+        this.item = (String) item;
+        this.price = price;
+
+    }
+
     public String getQty() {
         return qty;
     }

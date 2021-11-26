@@ -297,6 +297,10 @@ public class logAdmin extends DBconnect {
                 "item1(id int primary key auto_Increment, fName varchar(400),sName varchar(400)" +
                 ",  qty int,cost double,price double,time timestamp  DEFAULT CURRENT_TIMESTAMP)";
 
+        String sales= "CREATE TABLE IF NOT EXISTS " +
+                "sales(id int primary key auto_Increment, salesID varchar(400),sName varchar(400)" +
+                ",  qty int, UPrice double,TPrice double,profit double,time timestamp  DEFAULT CURRENT_TIMESTAMP)";
+
         if (DBcon()){
             try {
                openConn(conn);
@@ -309,6 +313,7 @@ public class logAdmin extends DBconnect {
                 st.execute(data);
                 st.execute(item);
                 st.execute(item1);
+                st.execute(sales);
                 conn.close();
               return true;
             }
