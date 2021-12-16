@@ -10,18 +10,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.sql.Blob;
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class salesWindow extends DBconnect {
+
+    Map<String, Object[]> itemQuantityUpdate = new HashMap<String, Object[]>();
+
     ShareData m = ShareData.getInstance();
     boolean canDeleteFileNoImageList = true;
     String item;
@@ -62,21 +64,32 @@ public class salesWindow extends DBconnect {
 
     public void initialize() {
 
-
+tbV.setEditable(true);
+col2.setEditable(true);
         col1.setCellValueFactory(new PropertyValueFactory<ITEM, String>("item"));
         col2.setCellValueFactory(new PropertyValueFactory<ITEM, String>("qty"));
         col3.setCellValueFactory(new PropertyValueFactory<ITEM, String>("price"));
 
+        col1.setCellFactory(TextFieldTableCell.forTableColumn());
+        col2.setCellFactory(TextFieldTableCell.forTableColumn());
+        col3.setCellFactory(TextFieldTableCell.forTableColumn());
 
+
+                     deleteRecord("receipt");
+
+
+
+               showReceipt();
         //  getImage();
-        startThread();
+
 
         if (isTableviewEmpty()) {
             imageV.setImage(null);
         }
 
-    }
 
+
+    }
 
 
 
@@ -114,23 +127,7 @@ public class salesWindow extends DBconnect {
 
 
 
-    @FXML
-    void getSelected() {
 
-        try {
-            ITEM colSelected1 = tbV.getSelectionModel().getSelectedItem();
-            Object item = colSelected1.getItem();
-            Object qty = colSelected1.getQty();
-            Object price = colSelected1.getPrice();
-            itemToDelete = item.toString();
-
-            tf.setText(item.toString());
-
-
-        } catch (Exception e) {
-
-        }
-    }
 
 
 
@@ -160,22 +157,15 @@ public class salesWindow extends DBconnect {
     }
 
     @FXML
-    synchronized private boolean fillTbV2() {
+    boolean fillTbV2(KeyEvent event) {
                 DBcon();
         openConn(conn);
         String i = "";
 
         try {
-
-
-            while (m.continueItemSuggestion) {
-
-
-
                 String keyword = tf.getText().trim();
-                if (!(i.equals(keyword))) {
                     tbV.getItems().clear();
-                }
+
                 if (!(keyword.isEmpty())) {
 
                     qry = "SELECT distinct sName,qty,price" +
@@ -193,17 +183,13 @@ public class salesWindow extends DBconnect {
 
                             String p = rs.getString("price").trim();
 
-
-
-
-                            if (!(i.equals(keyword))) {
-                                tbV.refresh();
+                            itemQuantityUpdate.put(s,new Object[]{Integer.parseInt(q),Double.parseDouble(p)});
                                 tbV.getItems().addAll(new ITEM(s, q, p));
 
-                            }
+                            System.out.println("fet:");
 
                         }
-                        i = keyword;
+
 
 
                     } catch (Exception e) {
@@ -213,7 +199,7 @@ public class salesWindow extends DBconnect {
 
                 }
 
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -224,10 +210,10 @@ public class salesWindow extends DBconnect {
 
     @FXML
     void startThread() {
-        stopThread();
-
-        m.continueItemSuggestion = true;
-        new Thread(() -> fillTbV2()).start();
+//        stopThread();
+//
+//        m.continueItemSuggestion = true;
+//       // new Thread(() -> fillTbV2()).start();
     }
 
     @FXML
@@ -237,8 +223,18 @@ public class salesWindow extends DBconnect {
 
 
 
+@FXML
+    public void editQty(TableColumn.CellEditEvent editEvent) {
+    ITEM c = tbV.getItems().get(editEvent.getTablePosition().getRow()).setQty(editEvent.getNewValue());
+        ITEM colSelected1 = tbV.getSelectionModel().getSelectedItem();
+        Object n=colSelected1.getQty();
+        Object ID=colSelected1.getItem();
+
+    System.out.println(" edit:"+n.toString());
 
 
+
+    }
 
 
 
@@ -250,7 +246,7 @@ public class salesWindow extends DBconnect {
     Scene scene;
     Parent r;
     @FXML
-    void showImages(ActionEvent event) {
+    void showReceipt() {
 
         if (sst.isShowing()){
             sst.close();
@@ -258,9 +254,7 @@ public class salesWindow extends DBconnect {
         }
 
         try {
-            r = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
-            String css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
-            r.getStylesheets().add(css);
+            r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
             sst.setTitle("Smart Sales - AECleanCodes");
             sst.setScene(new Scene(r));
             r.requestFocus();
@@ -311,6 +305,77 @@ public class salesWindow extends DBconnect {
     }
 
 
+    @FXML
+    public void addToReceipt(ActionEvent event) {
 
+            getSelected();
+            showReceipt();
+        tf.clear();
+    }
+    void getSelected() {
+
+        ShareData m=ShareData.getInstance();
+        m.continueItemSuggestion=false;
+
+        try {
+            ITEM colSelected1 = tbV.getSelectionModel().getSelectedItem();
+            String item = colSelected1.getItem().toString().trim();
+            String qty = colSelected1.getQty().toString().trim();
+            String price = colSelected1.getPrice().toString().trim();
+
+
+            boolean isWrong=false;
+
+            try {
+
+               if (qty.isEmpty()){
+                 isWrong=true;
+               }
+
+                if (price.isEmpty()){
+                    isWrong=true;
+                }
+
+
+
+                if (!isWrong){
+                    double p=Double.parseDouble(price);
+                    int q=Integer.parseInt(qty);
+
+
+                    insertItem2(item,q,p);
+                }
+
+            }
+            catch (Exception e){
+              e.printStackTrace();
+            }
+
+
+
+        } catch (Exception e) {
+e.printStackTrace();
+        }
+    }
+
+    public void insertItem2(String item, int qty, double price) {
+        DBcon();
+        openConn(conn);
+        try {
+            qry = "INSERT  INTO receipt (sName,qty,UPrice) values('" + item + "','" + qty + "','" + price + "')";
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+            m.continueItemSuggestion=true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                conn.close();
+            } catch (Exception ee) {
+
+            }
+
+        }
+    }
 }
 

@@ -11,11 +11,11 @@ public class ITEM {
     }
 
     public String getQty() {
-        return qty;
+        return qty.toString();
     }
 
     public String getItem() {
-        return item;
+        return (String) item;
     }
 
     public String getPrice() {
@@ -26,13 +26,11 @@ public class ITEM {
         return sn;
     }
 
-    public void setQty(String qty) {
-        this.qty = qty;
+    public ITEM setQty(Object qty) {
+        this.qty = (String) qty;
+        return null;
     }
 
-    public void setItem(String item) {
-        this.item = item;
-    }
 
     public void setPrice(String price) {
         this.price = price;
@@ -43,13 +41,14 @@ public class ITEM {
     }
 
 
-    public ITEM(String sn,String item, String qty, String cost, String price) {
+    public ITEM(String sn, String item, String qty, String cost, String price) {
         this.qty = qty;
         this.item = item;
         this.price = price;
         this.sn = sn;
         this.cost = cost;
     }
+
     public String getCost() {
         return cost;
     }
@@ -59,19 +58,10 @@ public class ITEM {
     }
 
 
-
-    String qty;
-    String item=null;
-    String price=null;
+    Object qty;
+    Object item = null;
+    String price = null;
     String sn;
     String cost;
-
-
-
-
-
-
-
-
 
 }

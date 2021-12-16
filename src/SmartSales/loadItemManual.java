@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -769,7 +770,7 @@ public class loadItemManual extends DBconnect {
     }
 
     @FXML
-    synchronized private boolean fillTbV2() {
+     boolean fillTbV2(KeyEvent event) {
 
         openConn(conn);
         String i = "";
@@ -777,13 +778,13 @@ public class loadItemManual extends DBconnect {
         try {
 
 
-            while (m.continueItemSuggestion) {
+
 
 
                 String keyword = tf21.getText().trim();
-                if (!(i.equals(keyword))) {
+
                     tbV2.getItems().clear();
-                }
+
                 if (!(keyword.isEmpty())) {
 
                     qry = "SELECT distinct sName,qty,cost,price" +
@@ -802,14 +803,12 @@ public class loadItemManual extends DBconnect {
                             String p = rs.getString("price").trim();
 
 
-                            if (!(i.equals(keyword))) {
-                                tbV2.refresh();
                                 tbV2.getItems().addAll(new ITEM2(s, q, c, p));
 
-                            }
+
 
                         }
-                        i = keyword;
+
 
 
                     } catch (Exception e) {
@@ -819,7 +818,7 @@ public class loadItemManual extends DBconnect {
 
                 }
 
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -830,15 +829,15 @@ public class loadItemManual extends DBconnect {
 
     @FXML
     void startThread() {
-        stopThread();
-
-        m.continueItemSuggestion = true;
-        new Thread(() -> fillTbV2()).start();
+//        stopThread();
+//
+//        m.continueItemSuggestion = true;
+//        new Thread(() -> fillTbV2()).start();
     }
 
     @FXML
     void stopThread() {
-        m.continueItemSuggestion = false;
+//        m.continueItemSuggestion = false;
     }
 
     private void loadImage(File myfile, String name) {

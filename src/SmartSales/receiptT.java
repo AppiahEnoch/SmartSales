@@ -11,10 +11,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 public class receiptT extends DBconnect {
@@ -25,18 +27,24 @@ public class receiptT extends DBconnect {
     Parent r;
 
     @FXML
+    Label lbAmount;
+    @FXML
+    Label  lbChange;
+
+    @FXML
     private Stage currentStage;
     private Scene currentScene;
     private Parent root;
 
+    @FXML
+    TextField tfcash;
     @FXML
     private TableView<ITEM2> tbv;
 
     @FXML
     private TableColumn<ITEM2, String> c;
 
-    @FXML
-    private TableColumn<ITEM2, String> c5;
+
 
     @FXML
     private TableColumn<ITEM2, String> c1;
@@ -58,11 +66,8 @@ public class receiptT extends DBconnect {
 @FXML
     String  getSelected(){
 
-        ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
-        Object n=colSelected1.getName();
-
-        System.out.println(n);
-
+        ITEM2 colSelected = tbv.getSelectionModel().getSelectedItem();
+        Object n=colSelected.getName();
         return n.toString();
     }
 
@@ -101,21 +106,26 @@ public class receiptT extends DBconnect {
         c2.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("qty"));
         c3.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("cost"));
         c4.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("price"));
-        c5.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("time"));
+
 
         c1.setCellFactory(TextFieldTableCell.forTableColumn());
         c2.setCellFactory(TextFieldTableCell.forTableColumn());
         c3.setCellFactory(TextFieldTableCell.forTableColumn());
         c4.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        getRecentItems();
+
+        getReceipt();
+
     }
 
+    DecimalFormat dp2=new DecimalFormat("0.00");
 
-    private void getRecentItems() {
+
+    private void getAmount() {
+
         DBcon();
         openConn(conn);
-        qry = "select  sName,qty,cost,price,time from item order by time";
+        qry = "select sum(amount) as gg from receipt";
 
         try {
             st = conn.createStatement();
@@ -123,15 +133,11 @@ public class receiptT extends DBconnect {
 
 
             while (rs.next()) {
-                DBitem = rs.getString("sName").trim();
-                DBqty = rs.getString("qty").trim();
-                DBCost = rs.getString("cost").trim();
-                DBprice = rs.getString("price").trim();
-                DBtime = rs.getString("time").trim();
+                String amt= rs.getString("gg").trim();
+                  double amt2=Double.parseDouble(amt);
 
-                System.out.println(DBitem);
+                lbAmount.setText((String.valueOf(dp2.format(amt2))));
 
-                tbv.getItems().addAll(new ITEM2(DBitem, DBqty, DBCost, DBprice, DBtime));
 
 
             }
@@ -149,12 +155,84 @@ public class receiptT extends DBconnect {
 
 
     }
+    private void getReceipt() {
+    tbv.getItems().clear();
+        DBcon();
+        openConn(conn);
+        qry = "select  sName,qty,amount,UPrice,time from receipt order by time";
 
+        try {
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
+            while (rs.next()) {
+
+                DBitem = rs.getString("sName").trim();
+                DBqty = rs.getString("qty").trim();
+                DBCost = rs.getString("amount").trim();
+                DBprice = rs.getString("UPrice").trim();
+                tbv.getItems().addAll(new ITEM2(DBitem, DBqty, DBCost, DBprice));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+        }
+
+     getAmount();
+    }
+
+
+
+    @FXML
+    void getChange(KeyEvent event) {
+        double cashIssued;
+        double amount;
+        double change;
+        try {
+            try {
+                cashIssued = Double.parseDouble(tfcash.getText().trim());
+                ;
+            } catch (Exception e) {
+                cashIssued = 0;
+            }
+
+            try {
+                try {
+                    amount = Double.parseDouble(lbAmount.getText().trim());
+                } catch (Exception e) {
+                    amount = 0;
+                }
+
+                if (cashIssued > 0 && amount > 0) {
+                    change = cashIssued - amount;
+                    DecimalFormat dp2=new DecimalFormat("0.00");
+                    lbChange.setText((String.valueOf(dp2.format( change))));
+                } else {
+                    lbChange.setText("#####");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     void editItem(TableColumn.CellEditEvent editEvent) {
         ITEM2 c = tbv.getItems().get(editEvent.getTablePosition().getRow()).setName(editEvent.getNewValue());
-
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getName();
         Object id = colSelected1.getId();
@@ -220,7 +298,8 @@ public class receiptT extends DBconnect {
     public void deleteSelectedItem() {
         openConn(conn);
 
-        qry = "DELETE FROM item where sName=" + m.stringData1;
+
+        qry = "DELETE FROM receipt where sName='"+m.stringData1+"'";
         try {
             st = conn.createStatement();
             st.executeUpdate(qry);
@@ -274,7 +353,7 @@ public class receiptT extends DBconnect {
                 sst.show();
 
 
-            sst.getOnCloseRequest();
+
 
             }
             catch (Exception e){
@@ -304,14 +383,18 @@ public class receiptT extends DBconnect {
 
 
                 try {
+
+
                     deleteSelectedItem();
 
+                         getReceipt();
+
                     try {
-                        root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
+                        root = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
                         currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         currentScene = new Scene(root);
-                        String css = this.getClass().getResource("recentItem.css").toExternalForm();
-                        root.getStylesheets().add(css);
+//                        String css = this.getClass().getResource("viewItems.css").toExternalForm();
+//                        root.getStylesheets().add(css);
                         currentStage.setScene(currentScene);
 
                         currentStage.show();
@@ -356,11 +439,7 @@ public class receiptT extends DBconnect {
     @FXML
     public void deleteAll(ActionEvent event) {
 
-
-
         if (!isTableviewEmpty()){
-
-
             Alert alert =
                     new Alert(Alert.AlertType.WARNING,
                             "DO YOU REALLY WANT TO DELETE THE SELECTED RECORD?\n\n\t NB: \n YOU CANNOT UNDO THIS CHANGES\n AFTER" +
@@ -374,7 +453,7 @@ public class receiptT extends DBconnect {
 
 
                 DBcon();
-                qry = "DELETE FROM    item";
+                qry = "DELETE FROM    receipt";
                 try {
                     st = conn.createStatement();
                     st.executeUpdate(qry);
@@ -385,12 +464,8 @@ public class receiptT extends DBconnect {
                     alert1.setHeaderText("ALL LOADED ITEMS  DELETED SUCCESSFULLY!");
                     alert1.showAndWait();
 
-
-
-
-
                     try {
-                        root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
+                        root = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
                         currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         currentScene = new Scene(root);
                      //   String css = this.getClass().getResource("recentItem.css").toExternalForm();

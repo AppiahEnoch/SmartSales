@@ -73,7 +73,7 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="73.0" prefWidth="10000.0" spacing="10.0" style="-fx-background-color: YELLOW;">
                <children>
-                  <TextField fx:id="tf21" alignment="CENTER" onMouseClicked="#startThread" onMouseEntered="#startThread" onMouseExited="#stopThread" prefHeight="63.0" prefWidth="100000.0" promptText="ENTER ITEM NAME " style="-fx-background-color: #FFFF9F;">
+                  <TextField fx:id="tf21" alignment="CENTER" onKeyReleased="#fillTbV2" prefHeight="63.0" prefWidth="100000.0" promptText="ENTER ITEM NAME " style="-fx-background-color: #FFFF9F;">
                      <font>
                         <Font name="Arial Black" size="24.0" />
                      </font>

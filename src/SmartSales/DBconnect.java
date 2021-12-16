@@ -71,25 +71,55 @@ public class DBconnect {
 
     public boolean DBExists() {
         DBcon();
-        String qryt = "CREATE TABLE admin(ID int)";
+        String qryt = "SELECT COUNT(name) as totalNames FROM businessName";
+
+
         try {
             st = conn.createStatement();
-            st.execute(qryt);
-            String qry2 = "Drop table admin";
-            st.execute(qry2);
-            return false;
+            rs = st.executeQuery(qryt);
+            if (rs.next()) {
+
+                String i = rs.getString("totalNames").trim();
+
+                if (i.isEmpty()) {
+
+                    return false;
+                }
+
+
+                int ii = Integer.parseInt(i);
+
+                if (ii == 0) {
+
+                    return false;
+
+                }
+
+            } else {
+
+
+                return false;
+            }
+
+
+
         } catch (Exception e) {
-            //e.printStackTrace();
+
+            e.printStackTrace();
+
+
             try {
                 conn.close();
             } catch (Exception ee) {
 
             }
-            return true;
+            return false;
         }
 
-
+return true;
     }
+
+
 
     public String getS1() {
         String ID = null;

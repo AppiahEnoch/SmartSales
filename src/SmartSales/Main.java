@@ -1,6 +1,7 @@
 package SmartSales;
 import com.sun.prism.paint.Color;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.*;
-import java.beans.EventHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.util.*;
 
 import javafx.stage.WindowEvent;
+import jdk.nashorn.internal.codegen.CompilerConstants;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,32 +36,37 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-
         DBconnect dBconnect = new DBconnect();
 
         boolean DBExists = dBconnect.DBExists();
+        ShareData m = ShareData.getInstance();
+        if (DBExists){
+            loadItemFromExcel();
+            createExcelLoadItemsFile();
 
-       loadItemFromExcel();
-        createExcelLoadItemsFile();
-
-        //basic routines
-
-        try {
-            ShareData m = ShareData.getInstance();
-            loadItemManual obj = new loadItemManual();
-
-            obj.isItemInDatabase(obj.checkEmptyFolder());
+            //basic routines
 
             try {
 
+                loadItemManual obj = new loadItemManual();
+
+                obj.isItemInDatabase(obj.checkEmptyFolder());
+
+                try {
+
+                } catch (Exception ee) {
+
+                }
+                obj.writeAllNoImageItems();
+                obj.getImagesFromFolder();
             } catch (Exception ee) {
 
             }
-            obj.writeAllNoImageItems();
-            obj.getImagesFromFolder();
-        } catch (Exception ee) {
-
         }
+
+
+
+
         Parent root;
         String css;
         if (DBExists) {
@@ -100,15 +106,13 @@ public class Main extends Application {
         primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
         primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
 
-//
-//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//
-//            public void handle(WindowEvent event) {
-//                System.out.println("closed0000000000000000000000000");
-//
-//
-//            }
-//        });
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            public void handle(WindowEvent event) {
+                m.continueItemSuggestion=false;
+            }
+        });
 
 
     }
