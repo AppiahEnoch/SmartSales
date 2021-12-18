@@ -61,7 +61,7 @@ public class editItem extends DBconnect {
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n=colSelected1.getName();
 
-        System.out.println(n);
+
 
         return n.toString();
     }
@@ -73,10 +73,10 @@ public class editItem extends DBconnect {
         sst.close();
 
         try {
-            root = FXMLLoader.load(getClass().getResource("viewItems.fxml"));
+            root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
             currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentScene = new Scene(root);
-            String css = this.getClass().getResource("viewItems.css").toExternalForm();
+            String css = this.getClass().getResource("emptySystemWindow.css").toExternalForm();
             root.getStylesheets().add(css);
             currentStage.setScene(currentScene);
 
@@ -219,8 +219,8 @@ public class editItem extends DBconnect {
 
     public void deleteSelectedItem() {
         openConn(conn);
-
-        qry = "DELETE FROM item where sName=" + m.stringData1;
+        System.out.println("m.stringData1:"+m.stringData1);
+        qry = "DELETE FROM item where sName='" + m.stringData1+"'";
         try {
             st = conn.createStatement();
             st.executeUpdate(qry);
@@ -307,10 +307,10 @@ public class editItem extends DBconnect {
                     deleteSelectedItem();
 
                     try {
-                        root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
+                        root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
                         currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         currentScene = new Scene(root);
-                        String css = this.getClass().getResource("recentItem.css").toExternalForm();
+                        String css = this.getClass().getResource("editItem.css").toExternalForm();
                         root.getStylesheets().add(css);
                         currentStage.setScene(currentScene);
 

@@ -77,8 +77,11 @@ public class Main extends Application {
             //  root = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
            //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
           //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
-           // root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
-           root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+         //   root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
+         root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+      //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
+      //      root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
+
 
 
              //  css = this.getClass().getResource("mainLock.css").toExternalForm();
@@ -97,7 +100,7 @@ public class Main extends Application {
      //   root.getStylesheets().add(css);
         primaryStage.setTitle("Smart Sales - AECleanCodes");
         primaryStage.setScene(new Scene(root));
-        root.requestFocus();
+       // root.requestFocus();
 
 
         primaryStage.initStyle(StageStyle.UTILITY);

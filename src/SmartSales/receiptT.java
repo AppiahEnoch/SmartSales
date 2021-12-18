@@ -21,15 +21,17 @@ import java.util.Optional;
 
 public class receiptT extends DBconnect {
 
-    Stage sst=new Stage();
+    Stage sst = new Stage();
 
     Scene scene;
     Parent r;
+    @FXML
+    Button btOk;
 
     @FXML
     Label lbAmount;
     @FXML
-    Label  lbChange;
+    Label lbChange;
 
     @FXML
     private Stage currentStage;
@@ -43,7 +45,6 @@ public class receiptT extends DBconnect {
 
     @FXML
     private TableColumn<ITEM2, String> c;
-
 
 
     @FXML
@@ -63,11 +64,11 @@ public class receiptT extends DBconnect {
     @FXML
     private Button btd2;
 
-@FXML
-    String  getSelected(){
+    @FXML
+    String getSelected() {
 
         ITEM2 colSelected = tbv.getSelectionModel().getSelectedItem();
-        Object n=colSelected.getName();
+        Object n = colSelected.getName();
         return n.toString();
     }
 
@@ -92,10 +93,9 @@ public class receiptT extends DBconnect {
             currentStage.setY((primScreenBounds.getHeight() - currentStage.getHeight()) / 2);
             currentStage.setResizable(false);
 
-            loadItemManual ob=new loadItemManual();
+            loadItemManual ob = new loadItemManual();
             ob.writeAllNoImageItems();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -118,7 +118,7 @@ public class receiptT extends DBconnect {
 
     }
 
-    DecimalFormat dp2=new DecimalFormat("0.00");
+    DecimalFormat dp2 = new DecimalFormat("0.00");
 
 
     private void getAmount() {
@@ -133,11 +133,10 @@ public class receiptT extends DBconnect {
 
 
             while (rs.next()) {
-                String amt= rs.getString("gg").trim();
-                  double amt2=Double.parseDouble(amt);
+                String amt = rs.getString("gg").trim();
+                double amt2 = Double.parseDouble(amt);
 
                 lbAmount.setText((String.valueOf(dp2.format(amt2))));
-
 
 
             }
@@ -155,11 +154,12 @@ public class receiptT extends DBconnect {
 
 
     }
+
     private void getReceipt() {
-    tbv.getItems().clear();
+        tbv.getItems().clear();
         DBcon();
         openConn(conn);
-        qry = "select  sName,qty,amount,UPrice,time from receipt order by time";
+        qry = "select  sName,qty,amount,UPrice,time from receipt order by time desc";
 
         try {
             st = conn.createStatement();
@@ -170,7 +170,14 @@ public class receiptT extends DBconnect {
                 DBqty = rs.getString("qty").trim();
                 DBCost = rs.getString("amount").trim();
                 DBprice = rs.getString("UPrice").trim();
-                tbv.getItems().addAll(new ITEM2(DBitem, DBqty, DBCost, DBprice));
+
+                String amount = null;
+                double b = Double.parseDouble(DBCost);
+
+                amount = dp2.format(b);
+
+
+                tbv.getItems().addAll(new ITEM2(DBitem, DBqty, amount, DBprice));
             }
 
         } catch (Exception e) {
@@ -186,9 +193,8 @@ public class receiptT extends DBconnect {
             }
         }
 
-     getAmount();
+        getAmount();
     }
-
 
 
     @FXML
@@ -213,8 +219,8 @@ public class receiptT extends DBconnect {
 
                 if (cashIssued > 0 && amount > 0) {
                     change = cashIssued - amount;
-                    DecimalFormat dp2=new DecimalFormat("0.00");
-                    lbChange.setText((String.valueOf(dp2.format( change))));
+                    DecimalFormat dp2 = new DecimalFormat("0.00");
+                    lbChange.setText((String.valueOf(dp2.format(change))));
                 } else {
                     lbChange.setText("#####");
                 }
@@ -224,8 +230,7 @@ public class receiptT extends DBconnect {
             }
 
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -236,7 +241,7 @@ public class receiptT extends DBconnect {
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getName();
         Object id = colSelected1.getId();
-        String nn=m.stringData1;
+        String nn = m.stringData1;
         updateItem("sName", n, nn);
 
 
@@ -248,7 +253,13 @@ public class receiptT extends DBconnect {
         ITEM2 colSelected1 = tbv.getSelectionModel().getSelectedItem();
         Object n = colSelected1.getQty();
         Object id = colSelected1.getId();
+        Object itemX = colSelected1.getName();
+        String itemName = itemX.toString().trim();
+
+
         updateItem("qty", n, m.stringData1);
+
+        updateQtyReceipt(itemName, Integer.parseInt(n.toString().trim()));
 
     }
 
@@ -291,15 +302,45 @@ public class receiptT extends DBconnect {
         }
     }
 
+    public void updateQtyReceipt(String itemName, int qty) {
+        DBcon();
+        qry = "UPDATE receipt SET qty= " + qty + " where  sName= '" + itemName + "' ";
+        try {
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
 
 
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        getReceipt();
+    }
 
 
     public void deleteSelectedItem() {
         openConn(conn);
+        try {
+
+            r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
 
 
-        qry = "DELETE FROM receipt where sName='"+m.stringData1+"'";
+            sst.close();
+        } catch (Exception e) {
+
+        }
+
+
+        qry = "DELETE FROM receipt where sName='" + m.stringData1 + "'";
         try {
             st = conn.createStatement();
             st.executeUpdate(qry);
@@ -326,39 +367,43 @@ public class receiptT extends DBconnect {
     ShareData m = ShareData.getInstance();
 
     @FXML
-    void showPopImg(MouseEvent event){
+    void showPopImg(MouseEvent event) {
 
         ShareData m = ShareData.getInstance();
-        m.stringData1=getSelected();
+        m.stringData1 = getSelected();
+
+        try {
+
+            r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
 
 
-            if (sst.isShowing()){
-               sst.close();
+            sst.close();
+        } catch (Exception e) {
 
-            }
-
-            try {
-                r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
-                //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
-                //   r.getStylesheets().add(css);
-                sst.setTitle("Smart Sales - AECleanCodes");
-                sst.setScene(new Scene(r));
-                r.requestFocus();
+        }
 
 
-                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                sst.setX(primScreenBounds.getMinX()+primScreenBounds.getWidth()-500);
-                sst.setY(primScreenBounds.getMinY()+primScreenBounds.getHeight()-300);
+        try {
+            r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
+            sst.setTitle("Smart Sales - AECleanCodes");
+            sst.setScene(new Scene(r));
+            r.requestFocus();
 
-                sst.show();
+
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            sst.setX(primScreenBounds.getMinX() + primScreenBounds.getWidth() - 500);
+            sst.setY(primScreenBounds.getMinY() + primScreenBounds.getHeight() - 300);
+
+            sst.show();
 
 
-
-
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -387,7 +432,7 @@ public class receiptT extends DBconnect {
 
                     deleteSelectedItem();
 
-                         getReceipt();
+                    getReceipt();
 
                     try {
                         root = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
@@ -427,19 +472,16 @@ public class receiptT extends DBconnect {
     public boolean isTableviewEmpty() {
         ObservableList<ITEM2> list = tbv.getItems();
         if (list.isEmpty()) {
-
             return true;
         }
-
-
         return false;
-
     }
 
     @FXML
     public void deleteAll(ActionEvent event) {
 
-        if (!isTableviewEmpty()){
+
+        if (!isTableviewEmpty()) {
             Alert alert =
                     new Alert(Alert.AlertType.WARNING,
                             "DO YOU REALLY WANT TO DELETE THE SELECTED RECORD?\n\n\t NB: \n YOU CANNOT UNDO THIS CHANGES\n AFTER" +
@@ -450,6 +492,19 @@ public class receiptT extends DBconnect {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == ButtonType.YES) {
+
+
+                try {
+
+                    r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+                    //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+                    //   r.getStylesheets().add(css);
+
+
+                    sst.close();
+                } catch (Exception e) {
+
+                }
 
 
                 DBcon();
@@ -468,8 +523,8 @@ public class receiptT extends DBconnect {
                         root = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
                         currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         currentScene = new Scene(root);
-                     //   String css = this.getClass().getResource("recentItem.css").toExternalForm();
-                     //   root.getStylesheets().add(css);
+                        //   String css = this.getClass().getResource("recentItem.css").toExternalForm();
+                        //   root.getStylesheets().add(css);
                         currentStage.setScene(currentScene);
 
                         currentStage.show();
@@ -481,7 +536,6 @@ public class receiptT extends DBconnect {
                     } catch (Exception e) {
 
                     }
-
 
 
                 } catch (Exception e) {
@@ -500,17 +554,111 @@ public class receiptT extends DBconnect {
             }
 
 
-
         }
 
-        }
-
+    }
 
 
     @FXML
     private ImageView imv;
 
 
+    @FXML
+    void closeReceipt(ActionEvent event) {
 
 
+        try {
+
+            r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
+
+
+            sst.close();
+        } catch (Exception e) {
+
+        }
+
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
+            currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentScene = new Scene(root);
+            //   String css = this.getClass().getResource("recentItem.css").toExternalForm();
+            //   root.getStylesheets().add(css);
+            currentStage.setScene(currentScene);
+
+            currentStage.close();
+
+
+        } catch (Exception e) {
+
+        }
+
+
+    }
+
+    @FXML
+    void openPreview(ActionEvent event) {
+
+
+        try {
+            r = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
+            sst.setTitle("Smart Sales - AECleanCodes");
+            sst.setScene(new Scene(r));
+            r.requestFocus();
+
+
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            sst.setX((primScreenBounds.getWidth() - sst.getWidth()) / 2);
+            sst.setY((primScreenBounds.getHeight() - sst.getHeight()) / 2);
+            sst.setResizable(false);
+
+            sst.show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
+
+    @FXML
+    void printReceipt(ActionEvent event) {
+
+        ShareData.isPrint=true;
+
+        try {
+
+            try {
+                r = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
+                sst = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                scene = new Scene(r);
+                //   String css = this.getClass().getResource("recentItem.css").toExternalForm();
+                //   root.getStylesheets().add(css);
+                   sst.setScene(currentScene);
+
+                sst.close();
+
+
+            } catch (Exception e) {
+
+            }
+
+
+
+            ShareData.isPrint=false;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }

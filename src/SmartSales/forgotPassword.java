@@ -77,6 +77,34 @@ public class forgotPassword extends DBconnect {
                  alert.showAndWait();
 
              }
+
+              if(password.equals("PRINTER")) {
+
+
+                 try {
+                     root = FXMLLoader.load(getClass().getResource("print.fxml"));
+                     currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                     currentScene = new Scene(root);
+                     //   String css = this.getClass().getResource("recentItem.css").toExternalForm();
+                     //   root.getStylesheets().add(css);
+                     currentStage.setScene(currentScene);
+
+                     currentStage.requestFocus();
+                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                     currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+                     currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+                     currentStage.setResizable(false);
+
+                     currentStage.show();
+
+
+                 } catch (Exception e) {
+
+                 }
+
+
+
+             }
     }
 
 
@@ -102,6 +130,9 @@ public class forgotPassword extends DBconnect {
                    return true;
 
         }
+
+
+
 
         else {
 

@@ -50,6 +50,11 @@
                         <FontAwesomeIconView glyphName="CLOSE" size="20" />
                      </graphic>
                   </Button>
+                  <Button fx:id="btReceipt" layoutX="931.0" layoutY="7.0" mnemonicParsing="false" onAction="#showReceipt" prefHeight="82.0" prefWidth="170.0" text="Receipt">
+                     <font>
+                        <Font name="Arial Black" size="27.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </children></VBox>
@@ -60,7 +65,7 @@
             <Insets top="10.0" />
          </padding>
          <children>
-            <TableView fx:id="tbV" editable="true" prefHeight="525.0" prefWidth="1110.0">
+            <TableView fx:id="tbV" editable="true" onMouseClicked="#showPopImg" prefHeight="525.0" prefWidth="1110.0">
               <columns>
                 <TableColumn fx:id="col1" editable="false" prefWidth="763.0" text="ITEM" />
                 <TableColumn fx:id="col2" onEditCommit="#editQty" prefWidth="158.0" style="background-color: blue;" text="QTY" />

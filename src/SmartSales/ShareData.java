@@ -1,5 +1,7 @@
 package SmartSales;
 
+import javafx.print.PrinterJob;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -9,7 +11,7 @@ import java.nio.file.Paths;
 
 public class ShareData {
 
-
+public static boolean isPrint=false;
     private static ShareData instance;
     Paths path;
     int intData1;
@@ -57,5 +59,40 @@ public class ShareData {
         }
 
 
+    }
+
+
+    public static void print(Node node)
+    {
+        // Define the Job Status Message
+
+
+        // Create a printer job for the default printer
+        PrinterJob job = PrinterJob.createPrinterJob();
+
+        if (job != null)
+        {
+            // Show the printer job status
+
+
+            // Print the node
+
+            boolean printed = job.printPage(node);
+
+            if (printed)
+            {
+                // End the printer job
+                job.endJob();
+            }
+            else
+            {
+                // Write Error Message
+
+            }
+        }
+        else
+        {
+
+        }
     }
 }

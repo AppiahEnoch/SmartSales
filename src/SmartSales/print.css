@@ -1,0 +1,57 @@
+
+    .button{
+     -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+         -fx-font-weight:bold;
+           -fx-background-color:#89cff0;
+    }
+
+        .button:hover{
+         -fx-text-fill:white;
+           -fx-font-size:20px;
+             -fx-font-weight:bold;
+                 -fx-background-color:#000080;
+
+
+        }
+                .label{
+                 -fx-text-fill:White;
+                   -fx-font-size:20px;
+                     -fx-font-weight:bold;
+                }
+
+
+    .root{
+    -fx-background-color:#191970;
+
+    }
+    #h1{
+    -fx-background-color:#0f4d92;
+
+    }
+        #hDown{
+        -fx-background-color:#0f4d92;
+
+        }
+
+       #txt1{
+                 -fx-fill:White;
+                   -fx-font-size:20px;
+                     -fx-font-weight:bold;
+                }
+
+
+        #taPrinters{
+
+        -fx-control-inner-background:#89cff0;
+            -fx-text-fill:White;
+                   -fx-font-size:20px;
+                     -fx-font-weight:bold;
+
+        }
+
+    #txtStatus{
+                 -fx-fill:Red;
+                   -fx-font-size:20px;
+                     -fx-font-weight:bold;
+                }

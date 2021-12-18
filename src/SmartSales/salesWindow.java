@@ -1,5 +1,6 @@
 package SmartSales;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,16 +14,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class salesWindow extends DBconnect {
 
-    Map<String, Object[]> itemQuantityUpdate = new HashMap<String, Object[]>();
+
 
     ShareData m = ShareData.getInstance();
     boolean canDeleteFileNoImageList = true;
@@ -79,26 +79,76 @@ col2.setEditable(true);
 
 
 
-               showReceipt();
-        //  getImage();
 
+                startThread();
 
         if (isTableviewEmpty()) {
             imageV.setImage(null);
         }
 
 
-
+tf.requestFocus();
     }
+
 
 
 
 
     @FXML
-    void clearF(ActionEvent event) {
+    void showPopImg(MouseEvent event){
+
+
+              getSelected("");
+
+
+
+
+
+        try {
+
+            r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
+
+
+            sst.close();
+        }
+        catch (Exception e){
+
+        }
+
+
+        try {
+            r = FXMLLoader.load(getClass().getResource("imgPop.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
+            sst.setTitle("Smart Sales - AECleanCodes");
+            sst.setScene(new Scene(r));
+            r.requestFocus();
+
+
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            sst.setX(primScreenBounds.getMinX()+primScreenBounds.getWidth()-500);
+            sst.setY(primScreenBounds.getMinY()+primScreenBounds.getHeight()-300);
+
+            sst.show();
+
+
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
 
     }
+
+
+
+
+
+
 
 
 
@@ -133,9 +183,6 @@ col2.setEditable(true);
 
 
 
-    private void setFocus() {
-
-    }
 
 
 
@@ -158,6 +205,25 @@ col2.setEditable(true);
 
     @FXML
     boolean fillTbV2(KeyEvent event) {
+        String changedItem="";
+        String changedQuantity="";
+        try {
+            ITEM colSelected1 = tbV.getSelectionModel().getSelectedItem();
+            Object n=colSelected1.getItem();
+            Object ID=colSelected1.getQty();
+             changedItem=n.toString().trim();
+            changedQuantity=ID.toString();
+            System.out.println("changedItem: "+changedItem);
+            System.out.println("changedQuantity: "+changedQuantity);
+        }
+        catch (Exception ignore){
+
+        }
+
+
+
+
+
                 DBcon();
         openConn(conn);
         String i = "";
@@ -180,10 +246,18 @@ col2.setEditable(true);
                         while (rs.next()) {
                             String s = rs.getString("sName").trim();
                             String q = rs.getString("qty").trim();
+                            q="1";
 
                             String p = rs.getString("price").trim();
 
-                            itemQuantityUpdate.put(s,new Object[]{Integer.parseInt(q),Double.parseDouble(p)});
+
+                            if (!(changedItem.trim().isEmpty())){
+                                if (changedItem.equals(s)){
+                                    q=changedQuantity;
+                                }
+                            }
+
+
                                 tbV.getItems().addAll(new ITEM(s, q, p));
 
                             System.out.println("fet:");
@@ -210,10 +284,10 @@ col2.setEditable(true);
 
     @FXML
     void startThread() {
-//        stopThread();
-//
-//        m.continueItemSuggestion = true;
-//       // new Thread(() -> fillTbV2()).start();
+       stopThread();
+
+       m.continueItemSuggestion = true;
+
     }
 
     @FXML
@@ -248,18 +322,35 @@ col2.setEditable(true);
     @FXML
     void showReceipt() {
 
-        if (sst.isShowing()){
-            sst.close();
+        try {
+            r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
 
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            sst.setX((primScreenBounds.getWidth() - sst.getWidth()) / 2);
+            sst.setY((primScreenBounds.getHeight() - sst.getHeight()) / 2);
+           sst.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+
+
         try {
+
             r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
             sst.setTitle("Smart Sales - AECleanCodes");
             sst.setScene(new Scene(r));
-            r.requestFocus();
+
            // sst.initStyle(StageStyle.UTILITY);
             sst.show();
+
+
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            sst.setX((primScreenBounds.getWidth() - sst.getWidth()) / 2);
+            sst.setY((primScreenBounds.getHeight() - sst.getHeight()) / 2);
+
+
+
         } catch (Exception e) {
              e.printStackTrace();
         }
@@ -309,19 +400,25 @@ col2.setEditable(true);
     public void addToReceipt(ActionEvent event) {
 
             getSelected();
-            showReceipt();
+
         tf.clear();
+        tbV.getSelectionModel().clearSelection();
+
+         tbV.getItems().clear();
     }
     void getSelected() {
-
-        ShareData m=ShareData.getInstance();
-        m.continueItemSuggestion=false;
 
         try {
             ITEM colSelected1 = tbV.getSelectionModel().getSelectedItem();
             String item = colSelected1.getItem().toString().trim();
             String qty = colSelected1.getQty().toString().trim();
             String price = colSelected1.getPrice().toString().trim();
+
+
+        Object object=    tbV.getSelectionModel().getSelectedIndex();
+            m.intData1=Integer.parseInt(object.toString());
+
+
 
 
             boolean isWrong=false;
@@ -339,16 +436,17 @@ col2.setEditable(true);
 
 
                 if (!isWrong){
+                    m.stringData1=item.toString();
                     double p=Double.parseDouble(price);
                     int q=Integer.parseInt(qty);
 
 
-                    insertItem2(item,q,p);
+                    insertIntoReceipt(item,q,p);
                 }
 
             }
-            catch (Exception e){
-              e.printStackTrace();
+            catch (Exception ignore){
+
             }
 
 
@@ -356,13 +454,49 @@ col2.setEditable(true);
         } catch (Exception e) {
 e.printStackTrace();
         }
+
+
     }
 
-    public void insertItem2(String item, int qty, double price) {
+    void getSelected(String forImage) {
+
+        try {
+            ITEM colSelected1 = tbV.getSelectionModel().getSelectedItem();
+            String item = colSelected1.getItem().toString().trim();
+
+
+
+            Object object=    tbV.getSelectionModel().getSelectedIndex();
+            m.intData1=Integer.parseInt(object.toString());
+
+
+
+
+
+                    m.stringData1=item.toString();
+
+
+
+
+
+            }
+            catch (Exception ignore){
+
+            }
+
+
+
+        }
+
+
+
+
+
+    public void insertIntoReceipt(String item, int qty, double price) {
         DBcon();
         openConn(conn);
         try {
-            qry = "INSERT  INTO receipt (sName,qty,UPrice) values('" + item + "','" + qty + "','" + price + "')";
+            qry = "INSERT ignore INTO receipt (sName,qty,UPrice) values('" + item + "','" + qty + "','" + price + "')";
             st = conn.createStatement();
             st.executeUpdate(qry);
             conn.close();

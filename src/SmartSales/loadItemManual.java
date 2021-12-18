@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -330,7 +331,7 @@ public class loadItemManual extends DBconnect {
         col22.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("qty"));
         col23.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("cost"));
         col24.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("price"));
-
+//xx
         //  getImage();
         startThread();
 
@@ -676,8 +677,8 @@ public class loadItemManual extends DBconnect {
 
             tf21.setText(item.toString());
             tf22.setText(qty.toString());
-            tf23.setText(price.toString());
-            tf221.setText(cost.toString());
+            tf23.setText(cost.toString());
+            tf221.setText(price.toString());
 
 
         } catch (Exception e) {
@@ -705,6 +706,25 @@ public class loadItemManual extends DBconnect {
 
 
         } catch (Exception e) {
+
+        }
+    }
+
+
+
+
+    @FXML
+    void closeImageWindow(MouseEvent event){
+        try {
+
+            r = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
+            //   String   css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+            //   r.getStylesheets().add(css);
+
+
+            sst.close();
+        }
+        catch (Exception e){
 
         }
     }

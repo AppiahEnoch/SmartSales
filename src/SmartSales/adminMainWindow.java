@@ -83,6 +83,38 @@ public class adminMainWindow extends DBconnect {
         }
     }
 
+
+    @FXML
+    void sellWindow(ActionEvent event) {
+
+
+
+
+
+
+
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+            String css=this.getClass().getResource("salesWindow.css").toExternalForm();
+            root.getStylesheets().add(css);
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+
+        }
+        catch (Exception e){
+
+        }
+    }
+
     @FXML
     void registerSeller(ActionEvent event) {
 
