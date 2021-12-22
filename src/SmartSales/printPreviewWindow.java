@@ -1,47 +1,127 @@
 package SmartSales;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.octicons.OctIconView;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.image.*;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 
 public class printPreviewWindow extends DBconnect {
+
+    @FXML
+    private AnchorPane pane1;
+
+    @FXML
+    private Label lbCompany;
+
+    @FXML
+    private Label lbLocation;
+
+    @FXML
+    private Label lbMobile;
+
+    @FXML
+    private Label lbDate;
+
+    @FXML
+    private Label lbReceiptID;
+
+    @FXML
+    private TableView<RECEIPT> tbvReceipt;
+
+    @FXML
+    private TableColumn<RECEIPT, String> c1;
+
+    @FXML
+    private TableColumn<RECEIPT, String> c2;
+
+    @FXML
+    private TableColumn<RECEIPT, String>  c3;
+
+    @FXML
+    private TableColumn<RECEIPT, String> c4;
+
+    @FXML
+    private Label lbBillAmount;
+
+    @FXML
+    private Label lbAmountPaid;
+
+    @FXML
+    private Label lbChange;
+
+    @FXML
+    private Label lbUnderline1;
 
     String styleCompany= "-fx-fill:red;-fx-font-size:20px; -fx-font-weight:bold;";
     String styleDate= "-fx-fill:Black;-fx-font-size:13px; -fx-font-weight:bold;";
     String styleNO= "-fx-fill:Black;-fx-font-size:14px; -fx-font-weight:bold;";
+    String styleContent= "-fx-fill:Black;-fx-font-size:11px";
+    StringBuilder stringBuilder=new StringBuilder();
+    Text txtContent=new Text();
 
-    public  TextArea ta;
+
+    DecimalFormat dp2 = new DecimalFormat("0.00");
+
 
     @FXML
     private Stage currentStage;
 
 
     @FXML
-    private TextFlow tf;
-
-    @FXML
     public void initialize(){
-            setTaRubrics();
+
+
+        c1.setCellValueFactory(new PropertyValueFactory<RECEIPT, String>("item"));
+        c2.setCellValueFactory(new PropertyValueFactory<RECEIPT, String>("qty"));
+        c3.setCellValueFactory(new PropertyValueFactory<RECEIPT, String>("price"));
+        c4.setCellValueFactory(new PropertyValueFactory<RECEIPT, String>("total"));
+
+
+
+                  setTaRubrics();
+                  getReceipt();
+ShareData m=ShareData.getInstance();
+
+
+
+
+DecimalFormat dp2=new DecimalFormat("0.00");
+
+
+        try {
+
+            double io=m.amount;
+            double cash=m.cash;
+            double change=m.change;
+
+
+            lbAmountPaid.setText("Cash Issued:   "+String.valueOf(dp2.format(cash)));
+            lbBillAmount.setText("Bill Amount:   "+String.valueOf(dp2.format(io)));
+            lbChange.setText("Change:           "+String.valueOf(dp2.format(change)));
+
+
+
+        }
+        catch (Exception e){
+e.printStackTrace();
+        }
 
         if (ShareData.isPrint){
             System.out.println("printiong...");
-            ShareData.print(tf);
+            ShareData.print(pane1);
 
 
         }
@@ -52,44 +132,76 @@ public class printPreviewWindow extends DBconnect {
     private void setTaRubrics(){
         DateFormat dateFormat=new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
         Date date=new Date();
+        lbDate.setText(dateFormat.format(date));
+        lbLocation.setText("Location: TANOSO");
+        lbMobile.setText("Mobile: 0549822202");
+        lbReceiptID.setText(getRandom());
+
+
+
 
 
 
         try {
-       tf.getChildren().clear();
-          Text txtCompany=new Text();
-          Text txtDate=new Text();
-          Text txtReceiptNo=new Text();
-          Text txtLocation=new Text();
-          Text txtCashier=new Text();
-            Text txtLine=new Text();
-            Text txtLabel=new Text();
 
-          txtCompany.setStyle(styleCompany);
-          txtCompany.setUnderline(true);
-          txtDate.setStyle(styleDate);
-          txtReceiptNo.setStyle(styleNO);
-          txtLocation.setStyle(styleNO);
-          txtCashier.setStyle(styleNO);
-          txtLine.setStyle(styleDate);
-         txtLabel.setStyle(styleNO);
+//
+//
+//        //    tf.getChildren().addAll(txtCompany,txtLocation,
+//                  txtDate,txtReceiptNo,txtCashier,
+//                  txtLine,txtLabel,txtContent);
 
-
-            txtCompany.setText("AECleanCodes\n");
-            txtDate.setText(dateFormat.format(date)+"\n");
-            txtReceiptNo.setText("Receipt ID: "+getRandom()+"\n");
-            txtLocation.setText("Location: Tanoso \n");
-            txtCashier.setText("Cashier: Appiah Enoch \n");
-            txtLine.setText("____________________________________\n\n");
-            txtLabel.setText("ITEM      QTY   PRICE   TOTAL\n");
-
-
-          tf.getChildren().addAll(txtCompany,txtLocation,
-                  txtDate,txtReceiptNo,txtCashier,txtLine,txtLabel);
         }
         catch (Exception e){
             e.printStackTrace();
         }
+
+    }
+
+
+
+    private void getReceipt() {
+
+
+        StringBuilder itemName=new StringBuilder();
+
+        stringBuilder.delete(0,stringBuilder.length());
+        DBcon();
+        openConn(conn);
+        qry = "select  sName,qty,amount,UPrice,time from receipt order by time desc";
+
+        try {
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
+            while (rs.next()) {
+
+                DBitem = rs.getString("sName").trim();
+                DBqty = rs.getString("qty").trim();
+                DBCost = rs.getString("amount").trim();
+                DBprice = rs.getString("UPrice").trim();
+
+                String amount = null;
+                double b = Double.parseDouble(DBCost);
+
+                amount = dp2.format(b);
+
+              tbvReceipt.getItems().addAll(new RECEIPT(DBitem,DBqty,DBprice,amount));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+        }
+  txtContent.setText(stringBuilder.toString());
+
+
 
     }
 
@@ -100,6 +212,8 @@ public class printPreviewWindow extends DBconnect {
     void closeWindow(ActionEvent event) {
 
         try {
+
+
             currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
             currentStage.close();
         }

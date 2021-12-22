@@ -78,9 +78,9 @@ public class Main extends Application {
            //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
           //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
          //   root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
-         root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+       root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
       //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
-      //      root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
+      //    root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
 
 
 

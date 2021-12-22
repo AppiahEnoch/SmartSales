@@ -18,6 +18,9 @@ public static boolean isPrint=false;
     int anIntData2;
     int anIntData3;
     int anIntData4;
+    double amount;
+    double change;
+    double cash;
     String stringData1;
     boolean continueItemSuggestion = true;
 

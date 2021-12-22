@@ -194,18 +194,25 @@ public class receiptT extends DBconnect {
         }
 
         getAmount();
+
+
+
     }
 
 
     @FXML
     void getChange(KeyEvent event) {
+
+
+
+
+
         double cashIssued;
         double amount;
         double change;
         try {
             try {
                 cashIssued = Double.parseDouble(tfcash.getText().trim());
-                ;
             } catch (Exception e) {
                 cashIssued = 0;
             }
@@ -221,8 +228,12 @@ public class receiptT extends DBconnect {
                     change = cashIssued - amount;
                     DecimalFormat dp2 = new DecimalFormat("0.00");
                     lbChange.setText((String.valueOf(dp2.format(change))));
+                    m.amount=amount;
+                    m.change=change;
+                    m.cash=cashIssued;
                 } else {
                     lbChange.setText("#####");
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -233,7 +244,14 @@ public class receiptT extends DBconnect {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
+
+
+
+
+
 
     @FXML
     void editItem(TableColumn.CellEditEvent editEvent) {
@@ -600,7 +618,15 @@ public class receiptT extends DBconnect {
 
     @FXML
     void openPreview(ActionEvent event) {
+        try {
+            m.amount=Double.parseDouble((lbAmount.getText().trim()));
+            m.change=Double.parseDouble((lbChange.getText().trim()));
+            m.cash=Double.parseDouble((tfcash.getText().trim()));
 
+        }catch (Exception e){
+
+
+        }
 
         try {
             r = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
