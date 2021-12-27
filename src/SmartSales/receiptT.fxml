@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -26,14 +27,14 @@
             </TableView>
             <VBox prefHeight="196.0" prefWidth="1008.0">
                <children>
-                  <HBox prefHeight="51.0" prefWidth="982.0" spacing="5.0">
+                  <HBox fx:id="hb1" prefHeight="51.0" prefWidth="982.0" spacing="5.0">
                      <children>
                         <Label prefHeight="50.0" prefWidth="142.0" text="CASH ISSUED:">
                            <font>
                               <Font name="Arial Black" size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfcash" onKeyReleased="#getChange" prefHeight="49.0" prefWidth="224.0">
+                        <TextField fx:id="tfcash" onKeyReleased="#getChange" prefHeight="57.0" prefWidth="217.0">
                            <font>
                               <Font name="Arial Black" size="19.0" />
                            </font></TextField>
@@ -59,52 +60,75 @@
                         </Label>
                      </children>
                   </HBox>
-                  <AnchorPane prefHeight="5.0" prefWidth="937.0">
+                  <HBox fx:id="hb11" layoutX="10.0" layoutY="10.0" prefHeight="51.0" prefWidth="982.0" spacing="5.0">
                      <children>
-                        <Button fx:id="btd1" contentDisplay="TOP" layoutX="148.0" layoutY="31.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="58.0" prefWidth="140.0" text="DEL." textAlignment="CENTER">
-                           <font>
-                              <Font name="Arial Black" size="17.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView glyphName="TRASH" size="20" />
-                           </graphic>
-                        </Button>
-                        <Button fx:id="btd2" contentDisplay="TOP" layoutY="36.0" mnemonicParsing="false" onAction="#deleteAll" prefHeight="59.0" prefWidth="129.0" text="DEL ALL">
-                           <font>
-                              <Font name="Arial Black" size="17.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView glyphName="BOMB" size="20" />
-                           </graphic>
-                        </Button>
-                        <Button fx:id="btBack" contentDisplay="TOP" layoutX="306.0" layoutY="24.0" mnemonicParsing="false" onAction="#printReceipt" prefHeight="74.0" prefWidth="387.0" text="PRINT">
+                        <Region prefHeight="47.0" prefWidth="613.0" />
+                        <Label prefHeight="47.0" prefWidth="135.0" text="Discount   %">
                            <font>
                               <Font name="Arial Black" size="16.0" />
                            </font>
-                           <graphic>
-                              <FontAwesomeIconView glyphName="FILE_ALT" size="20" wrappingWidth="9.285714149475098" />
-                           </graphic>
-                        </Button>
-                        <Button fx:id="btOk" contentDisplay="TOP" layoutX="900.0" layoutY="15.0" mnemonicParsing="false" onAction="#closeReceipt" prefHeight="79.0" prefWidth="101.0" text="OK" textAlignment="CENTER">
+                        </Label>
+                        <TextField fx:id="tfDiscount" onKeyReleased="#processBulkDiscount" prefHeight="57.0" prefWidth="217.0" promptText="0">
                            <font>
-                              <Font name="Arial Black" size="17.0" />
+                              <Font name="Arial Black" size="19.0" />
                            </font>
-                           <graphic>
-                              <FontAwesomeIconView glyphName="TRASH" size="20" />
-                           </graphic>
-                        </Button>
-                        <Button fx:id="btPreview" contentDisplay="TOP" layoutX="727.0" layoutY="18.0" mnemonicParsing="false" onAction="#openPreview" prefHeight="74.0" prefWidth="160.0" text="Preview">
-                           <font>
-                              <Font name="Arial Black" size="16.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView glyphName="FILE_ALT" size="20" wrappingWidth="9.285714149475098" />
-                           </graphic>
-                        </Button>
+                        </TextField>
                      </children>
-                  </AnchorPane>
+                  </HBox>
                </children>
             </VBox>
+            <AnchorPane prefHeight="5.0" prefWidth="937.0">
+               <children>
+                  <Button fx:id="btd1" contentDisplay="TOP" layoutX="148.0" layoutY="31.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="58.0" prefWidth="140.0" text="DEL." textAlignment="CENTER">
+                     <font>
+                        <Font name="Arial Black" size="17.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="TRASH" size="20" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btd2" contentDisplay="TOP" layoutY="34.0" mnemonicParsing="false" onAction="#deleteAll" prefHeight="64.0" prefWidth="129.0" text="DEL ALL">
+                     <font>
+                        <Font name="Arial Black" size="17.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="BOMB" size="20" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btBack" contentDisplay="TOP" layoutX="306.0" layoutY="14.0" mnemonicParsing="false" onAction="#printReceipt" prefHeight="80.0" prefWidth="291.0" text="PRINT">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="FILE_ALT" size="20" wrappingWidth="9.285714149475098" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btOk" contentDisplay="TOP" layoutX="900.0" layoutY="15.0" mnemonicParsing="false" onAction="#closeReceipt" prefHeight="79.0" prefWidth="101.0" text="OK" textAlignment="CENTER">
+                     <font>
+                        <Font name="Arial Black" size="17.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="TRASH" size="20" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btPreview" contentDisplay="TOP" layoutX="765.0" layoutY="18.0" mnemonicParsing="false" onAction="#openPreview" prefHeight="74.0" prefWidth="130.0" text="Preview">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="FILE_ALT" size="20" wrappingWidth="9.285714149475098" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btNoReceipt" contentDisplay="TOP" layoutX="606.0" layoutY="18.0" mnemonicParsing="false" onAction="#noPrinting" prefHeight="74.0" prefWidth="149.0" text="NO Printing">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="FILE_ALT" size="20" wrappingWidth="9.285714149475098" />
+                     </graphic>
+                  </Button>
+               </children>
+            </AnchorPane>
          </children>
       </VBox>
    </center>

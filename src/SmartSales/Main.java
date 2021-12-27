@@ -11,6 +11,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,6 +83,7 @@ public class Main extends Application {
        root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
       //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
       //    root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
+     //    root = FXMLLoader.load(getClass().getResource("Blank_Letter.jrxml"));
 
 
 

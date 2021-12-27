@@ -63,6 +63,14 @@ public class salesWindow extends DBconnect {
     boolean regulate = true;
 
     public void initialize() {
+        ShareData.hitRun=true;
+        ShareData.currentRandom_=getRandom().trim();
+        while ((doesThisExist("invoiceID","ID",ShareData.currentRandom_) )){
+            ShareData.currentRandom_=getRandom().trim();
+        }
+
+        insertNewInvoiceID();
+
 
 tbV.setEditable(true);
 col2.setEditable(true);
@@ -145,16 +153,153 @@ tf.requestFocus();
     }
 
 
+    public void insertCusChange() {
+
+        if (DBcon()) {
+
+            try {
+
+                qry = "Update receipt set totalBill = " + m.amount + ",cashIssued= " + m.cash;
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+
+                }
+            }
+        }
+
+
+    }
+
+    public void updateUCostInReceipt() {
+
+        if (DBcon()) {
+
+            try {
+
+                qry = "update receipt " +
+                        "set receipt.UCost=(select item.cost from item where " +
+                        "item.sName=receipt.sName ) where not  receipt.sName =''";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT UPDATE UCOST:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+
+                }
+            }
+        }
+
+
+    }
+
+
+    public void sendReportToSales() {
+
+        if (DBcon()) {
+
+            try {
+
+                qry = "INSERT INTO sales ( userID,salesID, sName, qty,Ucost,Uprice," +
+                        " amount,profit,time,totalBill,cashIssued,CusChange)" +
+                        " SELECT  userID, salesID, sName, qty,Ucost,Uprice,amount," +
+                        " profit,time,totalBill,cashIssued,CusChange " +
+                        " FROM receipt";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT UPDATE UCOST:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+
+                }
+            }
+        }
+
+
+    }
 
 
 
+    private void prePrintWork(){
+        insertCusChange();
+        ShareData.currentRandom_="";
+        updateUCostInReceipt();
+
+        // deleteRecord("sales");
+        sendReportToSales();
+        deleteRecord("receipt");
 
 
+
+    }
 
 
 
     @FXML
     void goMainWindow(ActionEvent event) {
+
+        if (ShareData.hitRun){
+          deleteNewInvoiceID();
+
+        }
+
+        if (countRecord("receipt","sName")>0){
+
+
+            Alert alert =
+                    new Alert(Alert.AlertType.WARNING,
+                            "YOU HAVE ITEMS ON THE RECEIPT.\n" +
+                                    "DID YOU  SELL THEM?",
+                            ButtonType.YES,
+                            ButtonType.NO);
+            alert.setTitle("ITEMS ARE ON RECEIPT.");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.YES) {
+
+                /// ALL PRINT STUFF
+                
+                prePrintWork();
+
+                try {
+                    r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
+                    sst = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                    sst.close();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        }
+
+
+
+
+
         try {
             root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
             currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -322,6 +467,7 @@ tf.requestFocus();
     @FXML
     void showReceipt() {
 
+
         try {
             r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
 
@@ -442,6 +588,7 @@ tf.requestFocus();
 
 
                     insertIntoReceipt(item,q,p);
+                    ShareData.hitRun=false;
                 }
 
             }
@@ -496,11 +643,225 @@ e.printStackTrace();
         DBcon();
         openConn(conn);
         try {
-            qry = "INSERT ignore INTO receipt (sName,qty,UPrice) values('" + item + "','" + qty + "','" + price + "')";
+            qry = "INSERT ignore INTO receipt ( userID, salesID,  sName,qty,UPrice)" +
+                    " values('" + ShareData.userID_ + "',  '" + ShareData.currentRandom_ + "','"
+                    + item + "','" + qty + "','" + price + "')";
             st = conn.createStatement();
             st.executeUpdate(qry);
             conn.close();
             m.continueItemSuggestion=true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                conn.close();
+            } catch (Exception ee) {
+
+            }
+
+        }
+    }
+
+    public String getRandom() {
+        String s1 = "";
+
+
+        char cc1;
+        char cc2;
+        char cc3;
+
+        Double c1 = (Math.random() * 100);
+        Double c2 = Math.random() * 200;
+        Double c3 = Math.random() * 200;
+
+        int r1 = (int) Math.round(c1);
+        int r2 = (int) Math.round(c2);
+        int r3 = (int) Math.round(c3);
+
+        int m = (int) (Math.random() * 50);
+
+        int mm = (int) (Math.random() * 9770);
+
+        int u = (int) (Math.random() * 100);
+
+        int ctr = 0;
+
+        while (u < 64) {
+            ctr++;
+            u++;
+
+            if (ctr % 3 == 0) {
+                u += ctr;
+            }
+        }
+
+        int ctr1 = 0;
+
+        while (u > 90) {
+            ctr1--;
+            u--;
+            if (ctr % 5 == 0) {
+                u -= ctr1;
+            }
+        }
+
+        if (u < 1) {
+            u = 87;
+        }
+
+
+        char cu = (char) u;
+
+
+        while (m > 9) {
+            m--;
+        }
+
+        while (r1 < 64) {
+            r1++;
+        }
+        while (r1 > 122) {
+            r1--;
+        }
+
+        while (r2 < 64) {
+            r2++;
+        }
+        while (r2 > 122) {
+            r2--;
+        }
+        while (r3 < 64) {
+            r3++;
+        }
+        while (r3 > 122) {
+            r3--;
+        }
+        while (r1 > 90 && r1 < 97) {
+            r1--;
+        }
+        while (r2 > 90 && r2 < 97) {
+            r2--;
+        }
+        while (r3 > 90 && r3 < 97) {
+            r3--;
+        }
+
+        if (r1 == r2) {
+            r1 = r1 + m;
+        }
+
+        if (r3 == r2) {
+            r3++;
+        }
+
+
+        System.out.println(r1);
+        System.out.println(r2);
+        System.out.println(r3);
+
+        if (r3==123){
+            r3=66;
+        }
+
+        cc1 = (char) r1;
+        cc2 = (char) r2;
+        cc3 = (char) r3;
+
+
+        System.out.println(cc1);
+        System.out.println(cc2);
+        System.out.println(cc3);
+
+
+
+
+        Double n1 = 0.0;
+        Double n2;
+        Double n3;
+        n1 = Math.random() * 100;
+        n2 = Math.random() * 80;
+        n3 = Math.random() * 1000;
+
+        int i;
+        int ii;
+        int iii;
+        i = (int) Math.round(n1);
+        ii = (int) Math.round(n2);
+        iii = (int) Math.round(n3);
+
+
+        s1 = ""+ cc1 + ii + iii + cc3 + cc2 + m + mm + cu +i;
+
+
+
+
+
+        return s1;
+    }
+
+    public void insertNewInvoiceID() {
+
+        if (DBcon()) {
+            openConn(ShareData.directConnection);
+            try {
+
+                qry = "Insert into invoiceID (ID)  values( '" + ShareData.currentRandom_+ "')";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+        }
+
+       insertCurrentInvoiceID();
+    }
+
+
+
+    public void insertCurrentInvoiceID() {
+          deleteRecord("currentInvoice");
+        if (DBcon()) {
+            openConn(ShareData.directConnection);
+            try {
+
+                qry = "Insert into currentInvoice (ID)  values( '" + ShareData.currentRandom_+ "')";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+
+
+    public void deleteNewInvoiceID() {
+        DBcon();
+
+        try {
+            qry = "DELETE  FROM invoiceID where ID= '"+ShareData.currentRandom_+"'";
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
             try {

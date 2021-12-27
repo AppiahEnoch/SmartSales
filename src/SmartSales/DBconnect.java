@@ -60,6 +60,7 @@ public class DBconnect {
 
             conn = DriverManager.getConnection(url2, "root", "root");
             st.execute(qrydb);
+            ShareData.directConnection=conn;
             return true;
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.WARNING);

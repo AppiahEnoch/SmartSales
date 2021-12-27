@@ -10,6 +10,6 @@
     <orderEntry type="library" name="fontawesome" level="project" />
     <orderEntry type="library" name="DB" level="project" />
     <orderEntry type="library" name="POI" level="project" />
-    <orderEntry type="library" name="JASPER" level="project" />
+    <orderEntry type="library" name="net.sf.jasperreports:jasperreports:6.18.1" level="project" />
   </component>
 </module>

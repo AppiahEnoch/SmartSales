@@ -1,17 +1,29 @@
 package SmartSales;
 
+import javafx.concurrent.Task;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ShareData {
 
 public static boolean isPrint=false;
+
+public static Connection directConnection;
     private static ShareData instance;
     Paths path;
     int intData1;
@@ -22,7 +34,12 @@ public static boolean isPrint=false;
     double change;
     double cash;
     String stringData1;
+ static   String currentUser_="";
+    static   String userID_="";
+ static boolean hitRun=true;
+    static   String currentRandom_="";
     boolean continueItemSuggestion = true;
+    static   String originalBill="";
 
     public File file;
 
@@ -65,37 +82,50 @@ public static boolean isPrint=false;
     }
 
 
-    public static void print(Node node)
-    {
-        // Define the Job Status Message
+    public static void print(String jasperDocument){
+            Task task=new Task() {
+                @Override
+                protected Object call() throws Exception {
 
 
-        // Create a printer job for the default printer
-        PrinterJob job = PrinterJob.createPrinterJob();
 
-        if (job != null)
-        {
-            // Show the printer job status
+                    return null;
+                }
+
+            };
+            ExecutorService executorService= Executors.newSingleThreadExecutor();
+            executorService.execute(task);
+            executorService.shutdown();
 
 
-            // Print the node
-
-            boolean printed = job.printPage(node);
-
-            if (printed)
-            {
-                // End the printer job
-                job.endJob();
-            }
-            else
-            {
-                // Write Error Message
-
-            }
-        }
-        else
-        {
-
-        }
     }
+
+    public static void preView(String jasperDocument,String title){
+        Task task=new Task() {
+            @Override
+            protected Object call() throws Exception {
+                JasperPrint jp;
+                Map param = new HashMap();
+
+                try {
+                    jp = JasperFillManager.fillReport(jasperDocument, param, ShareData.directConnection);
+                    JasperViewer jv = new JasperViewer(jp, false);
+                    jv.setTitle(title);
+                    jv.setVisible(true);
+                } catch (JRException e) {
+                    e.printStackTrace();
+                }
+
+
+                return null;
+            }
+
+        };
+        ExecutorService executorService= Executors.newSingleThreadExecutor();
+        executorService.execute(task);
+        executorService.shutdown();
+
+
+    }
+
 }

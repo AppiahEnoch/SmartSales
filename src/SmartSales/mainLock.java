@@ -167,6 +167,13 @@ public class mainLock extends DBconnect {
         if (validate()){
 
             if (isAdmin){
+                try {
+
+                    updateCurrentUser();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 try{
                     root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
@@ -176,6 +183,7 @@ public class mainLock extends DBconnect {
                     root.getStylesheets().add(css);
                     currentStage.setScene(currentScene);
 
+                    currentStage.setTitle("SmartSales    Current User: "+ShareData.currentUser_.toUpperCase());
                     currentStage.show();
                     root.requestFocus();
                 }
@@ -187,7 +195,37 @@ public class mainLock extends DBconnect {
             }
 
         else     if (isSeller){
-                System.out.println("isSeller");
+
+            try {
+                getUserDetails();
+                updateCurrentUser();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+                try {
+                    root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+                    currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+                    currentScene=new Scene(root);
+//                    String css=this.getClass().getResource("sellerPassword.css").toExternalForm();
+//                    root.getStylesheets().add(css);
+                    currentStage.setScene(currentScene);
+                    currentStage.setTitle("SmartSales    Current User: "+ShareData.currentUser_.toUpperCase());
+
+                    currentStage.show();
+                    root.requestFocus();
+                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                    currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+                    currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+                    currentStage.setResizable(false);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+
+                }
             }
 
         else     if (isNewSeller){
@@ -377,7 +415,13 @@ public class mainLock extends DBconnect {
 
             if (rs.next()){
 
-                String g=rs.getString("name");
+                username=rs.getString("name").trim();
+                userID=password;
+
+                ShareData.currentUser_=username.trim();
+                ShareData.userID_=userID.trim();
+
+
 
 
                 return true;
@@ -388,4 +432,68 @@ public class mainLock extends DBconnect {
 
         return false;
     }
+
+
+    String userName="";
+    String userID="";
+
+
+
+    private void getUserDetails(){
+        sellerHasRegistered();
+        qry="SELECT seller.ID, seller.name, seller.mobile from seller" +
+                " inner join password on seller.ID=password.ID where password.name" +
+                "='"+username+"' and password= '"+password+"'";
+        try {
+            DBcon();
+            st=conn.createStatement();
+            rs=st.executeQuery(qry);
+
+            if (rs.next()){
+           userID=rs.getString("ID").trim();
+           username=rs.getString("name").trim();
+           ShareData.currentUser_=username;
+           ShareData.userID_=userID;
+
+
+
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
+
+
+    public void updateCurrentUser() {
+        deleteRecord("currentUser");
+
+        if (DBcon()) {
+            openConn(ShareData.directConnection);
+            try {
+
+                qry = "Insert into currentUser(ID,fName)  values( '" + userID + "','" + username+ "')";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+              ee.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+
+
 }

@@ -299,16 +299,38 @@ public class logAdmin extends DBconnect {
                 "item1(id int primary key auto_Increment, fName varchar(400),sName varchar(400)" +
                 ",  qty int,cost double,price double,time timestamp  DEFAULT CURRENT_TIMESTAMP)";
 
-        String sales= "CREATE TABLE IF NOT EXISTS " +
-                "sales(id int primary key auto_Increment, salesID varchar(400),sName varchar(400)" +
-                ",  qty int, UPrice double,TPrice double,profit double,time timestamp  DEFAULT CURRENT_TIMESTAMP)";
 
         String receipt= "CREATE TABLE IF NOT EXISTS " +
-                "receipt(id int,sName varchar(400)" +
+                "receipt(userID varchar(400),salesID varchar(400),sName varchar(400) PRIMARY KEY" +
                 ",  qty int,UCost double, UPrice double," +
                 " amount double as (qty*UPrice)," +
                 "profit double as(UPrice-UCost),time timestamp " +
-                " DEFAULT CURRENT_TIMESTAMP)";
+                " DEFAULT CURRENT_TIMESTAMP," +
+                "totalBill  double DEFAULT 0.00," +
+                " discountOnTotalCost  double DEFAULT 0.00, " +
+                "discountAmount  double DEFAULT 0.00," +
+                "cashIssued  double DEFAULT 0.00," +
+                "CusChange double as (cashIssued-totalBill )) ";
+
+        String sales= "CREATE TABLE IF NOT EXISTS " +
+                "sales(userID varchar(400), salesID varchar(400),sName varchar(400)" +
+                ",  qty int,UCost double, UPrice double," +
+                " amount double," +
+                "profit double,time timestamp " +
+                " DEFAULT CURRENT_TIMESTAMP," +
+                "totalBill  double DEFAULT 0.00," +
+                "cashIssued  double DEFAULT 0.00," +
+                "CusChange double ) ";
+
+
+        String invoiceID = "CREATE TABLE IF NOT EXISTS " +
+                "invoiceID(ID varchar(100) NOT NULL)";
+
+        String currentInvoice = "CREATE TABLE IF NOT EXISTS " +
+                "currentInvoice(ID varchar(100) NOT NULL)";
+
+        String currentUser = "CREATE TABLE IF NOT EXISTS " +
+                "currentUser( ID varchar(100), fName varchar(100), sName varchar(100))";
 
 
 
@@ -326,6 +348,11 @@ public class logAdmin extends DBconnect {
                 st.execute(item1);
                 st.execute(sales);
                 st.execute(receipt);
+                st.execute(invoiceID);
+                st.execute(currentInvoice);
+                st.execute(currentUser);
+
+
                 conn.close();
               return true;
             }
