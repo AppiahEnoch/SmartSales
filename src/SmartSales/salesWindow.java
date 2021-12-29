@@ -63,6 +63,7 @@ public class salesWindow extends DBconnect {
     boolean regulate = true;
 
     public void initialize() {
+        ShareData.goSales=true;
         ShareData.hitRun=true;
         ShareData.currentRandom_=getRandom().trim();
         while ((doesThisExist("invoiceID","ID",ShareData.currentRandom_) )){
@@ -153,110 +154,18 @@ tf.requestFocus();
     }
 
 
-    public void insertCusChange() {
-
-        if (DBcon()) {
-
-            try {
-
-                qry = "Update receipt set totalBill = " + m.amount + ",cashIssued= " + m.cash;
-                st = conn.createStatement();
-                st.executeUpdate(qry);
-                conn.close();
-
-            } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
-                alert.showAndWait();
-                try {
-                    conn.close();
-                } catch (Exception ee) {
-
-                }
-            }
-        }
-
-
-    }
-
-    public void updateUCostInReceipt() {
-
-        if (DBcon()) {
-
-            try {
-
-                qry = "update receipt " +
-                        "set receipt.UCost=(select item.cost from item where " +
-                        "item.sName=receipt.sName ) where not  receipt.sName =''";
-                st = conn.createStatement();
-                st.executeUpdate(qry);
-                conn.close();
-
-            } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("COULD NOT UPDATE UCOST:" + e.getMessage());
-                alert.showAndWait();
-                try {
-                    conn.close();
-                } catch (Exception ee) {
-
-                }
-            }
-        }
-
-
-    }
-
-
-    public void sendReportToSales() {
-
-        if (DBcon()) {
-
-            try {
-
-                qry = "INSERT INTO sales ( userID,salesID, sName, qty,Ucost,Uprice," +
-                        " amount,profit,time,totalBill,cashIssued,CusChange)" +
-                        " SELECT  userID, salesID, sName, qty,Ucost,Uprice,amount," +
-                        " profit,time,totalBill,cashIssued,CusChange " +
-                        " FROM receipt";
-                st = conn.createStatement();
-                st.executeUpdate(qry);
-                conn.close();
-
-            } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("COULD NOT UPDATE UCOST:" + e.getMessage());
-                alert.showAndWait();
-                try {
-                    conn.close();
-                } catch (Exception ee) {
-
-                }
-            }
-        }
-
-
-    }
 
 
 
-    private void prePrintWork(){
-        insertCusChange();
-        ShareData.currentRandom_="";
-        updateUCostInReceipt();
-
-        // deleteRecord("sales");
-        sendReportToSales();
-        deleteRecord("receipt");
 
 
 
-    }
 
 
 
     @FXML
     void goMainWindow(ActionEvent event) {
+        boolean canClose=true;
 
         if (ShareData.hitRun){
           deleteNewInvoiceID();
@@ -264,33 +173,32 @@ tf.requestFocus();
         }
 
         if (countRecord("receipt","sName")>0){
+            canClose=false;
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("CLEAR RECEIPT!");
+            alert.setHeaderText("YOU HAVE ITEMS ON THE RECEIPT! \n\n" +
+                    "CLEAR THE RECEIPT BEFORE YOU CONTINUE.");
+            alert.showAndWait();
 
 
-            Alert alert =
-                    new Alert(Alert.AlertType.WARNING,
-                            "YOU HAVE ITEMS ON THE RECEIPT.\n" +
-                                    "DID YOU  SELL THEM?",
-                            ButtonType.YES,
-                            ButtonType.NO);
-            alert.setTitle("ITEMS ARE ON RECEIPT.");
-            Optional<ButtonType> result = alert.showAndWait();
+            try {
 
-            if (result.get() == ButtonType.YES) {
+                r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
+                sst.setTitle("Smart Sales - AECleanCodes");
+                sst.setScene(new Scene(r));
 
-                /// ALL PRINT STUFF
-                
-                prePrintWork();
+                // sst.initStyle(StageStyle.UTILITY);
+                sst.show();
 
-                try {
-                    r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
-                    sst = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-                    sst.close();
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                sst.setX((primScreenBounds.getWidth() - sst.getWidth()) / 2);
+                sst.setY((primScreenBounds.getHeight() - sst.getHeight()) / 2);
 
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
 
@@ -298,22 +206,26 @@ tf.requestFocus();
 
 
 
+        if (canClose){
+
+            try {
+                root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
+                currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                currentScene = new Scene(root);
+                String css = this.getClass().getResource("mainLock.css").toExternalForm();
+                root.getStylesheets().add(css);
+                currentStage.setScene(currentScene);
+
+                currentStage.show();
+                root.requestFocus();
+            } catch (Exception e) {
 
 
-        try {
-            root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
-            currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentScene = new Scene(root);
-            String css = this.getClass().getResource("mainLock.css").toExternalForm();
-            root.getStylesheets().add(css);
-            currentStage.setScene(currentScene);
-
-            currentStage.show();
-            root.requestFocus();
-        } catch (Exception e) {
-
-
+            }
         }
+
+
+
     }
 
 
@@ -547,10 +459,10 @@ tf.requestFocus();
 
             getSelected();
 
-        tf.clear();
+
         tbV.getSelectionModel().clearSelection();
 
-         tbV.getItems().clear();
+
     }
     void getSelected() {
 
@@ -872,5 +784,34 @@ e.printStackTrace();
 
         }
     }
+
+    @FXML
+    void openSellerOtherWindow(ActionEvent event) {
+        try {
+
+
+
+            root = FXMLLoader.load(getClass().getResource("sellerOtherWindow.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+
+
+        }
+        catch (Exception e){
+
+        }
+
+
+    }
+
 }
 

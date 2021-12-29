@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartSales.adminMainWindow">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="853.0" stylesheets="@adminMainWindow.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartSales.adminMainWindow">
    <top>
       <HBox prefHeight="114.0" prefWidth="853.0" spacing="10.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER">
          <padding>
@@ -25,7 +25,7 @@
                   <FontAwesomeIconView disable="true" glyphName="PLUS_CIRCLE" size="40" />
                </graphic>
             </Button>
-            <Button contentDisplay="TOP" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="10000.0" text="PRICE">
+            <Button fx:id="btMisc" contentDisplay="TOP" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#openMisc" prefHeight="117.0" prefWidth="10000.0" text="MSC">
                <font>
                   <Font name="Arial Black" size="15.0" />
                </font>

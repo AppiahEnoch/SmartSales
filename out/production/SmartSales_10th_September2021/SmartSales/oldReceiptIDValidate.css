@@ -1,0 +1,46 @@
+
+    .root{
+
+          -fx-background-color:#ffff9f;
+
+
+    }
+
+
+    .button{
+          -fx-font-family:Arial Black;
+           -fx-font-size: 16px;
+          -fx-text-fill:BLUE;
+       -fx-font-size:20px;
+         -fx-font-weight:bold;
+           -fx-background-color:yellow;
+    }
+
+        .button:hover{
+         -fx-text-fill:white;
+           -fx-font-size:20px;
+             -fx-font-weight:bold;
+              -fx-border-width:2px;
+               -fx-border-color:white;
+                -fx-background-color:#000080;
+
+        }
+
+          .text-field{
+          -fx-font-family:Arial Black;
+        -fx-text-fill:BLUE;
+           -fx-font-size:30px;
+           -fx-font-weight:bold;
+           -fx-alignment:Center;
+
+          }
+
+          .label{
+
+              -fx-font-family:Arial Black;
+            -fx-text-fill:white;
+               -fx-font-size:20px;
+               -fx-font-weight:bold;
+                -fx-background-color:blue;
+
+          }

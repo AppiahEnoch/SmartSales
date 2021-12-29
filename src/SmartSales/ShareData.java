@@ -5,10 +5,12 @@ import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
+import java.awt.print.PageFormat;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -19,9 +21,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ShareData {
+public class ShareData  {
 
 public static boolean isPrint=false;
+    public static boolean oldReceipt=false;
 
 public static Connection directConnection;
     private static ShareData instance;
@@ -30,7 +33,9 @@ public static Connection directConnection;
     int anIntData2;
     int anIntData3;
     int anIntData4;
-    double amount;
+    boolean printInProgress=false;
+    double amount=0.00;
+   static double  discount=0.00;
     double change;
     double cash;
     String stringData1;
@@ -39,6 +44,8 @@ public static Connection directConnection;
  static boolean hitRun=true;
     static   String currentRandom_="";
     boolean continueItemSuggestion = true;
+  static   boolean  isAdmin = false;
+    static   boolean  goSales = false;
     static   String originalBill="";
 
     public File file;
@@ -82,10 +89,30 @@ public static Connection directConnection;
     }
 
 
+
+
+
     public static void print(String jasperDocument){
+
             Task task=new Task() {
                 @Override
                 protected Object call() throws Exception {
+
+          try {
+              JasperPrint jp;
+              Map param = new HashMap();
+
+              try {
+                  jp = JasperFillManager.fillReport(jasperDocument, param, ShareData.directConnection);
+
+
+              } catch (JRException e) {
+                  e.printStackTrace();
+              }
+          }
+          catch (Exception e){
+              e.printStackTrace();
+          }
 
 
 
@@ -95,6 +122,7 @@ public static Connection directConnection;
             };
             ExecutorService executorService= Executors.newSingleThreadExecutor();
             executorService.execute(task);
+
             executorService.shutdown();
 
 
@@ -127,5 +155,9 @@ public static Connection directConnection;
 
 
     }
+
+
+
+
 
 }

@@ -53,3 +53,20 @@
                                  -fx-background-color:#ffff9f;
 
                         }
+
+     #lbSalesToday{
+    -fx-font-family:Arial Black;
+    -fx-text-fill:yellow;
+   -fx-font-size:20px;
+  -fx-font-weight:bold;
+-fx-background-color: #160775;
+ }
+
+ #lbSalesToday1{
+ -fx-font-family:Arial Black;
+  -fx-text-fill:yellow;
+  -fx-font-size:20px;
+ -fx-font-weight:bold;
+ -fx-background-color: #160775;
+ -fx-alignment:center;
+  }

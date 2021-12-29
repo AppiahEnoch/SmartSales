@@ -306,11 +306,15 @@ public class logAdmin extends DBconnect {
                 " amount double as (qty*UPrice)," +
                 "profit double as(UPrice-UCost),time timestamp " +
                 " DEFAULT CURRENT_TIMESTAMP," +
-                "totalBill  double DEFAULT 0.00," +
-                " discountOnTotalCost  double DEFAULT 0.00, " +
-                "discountAmount  double DEFAULT 0.00," +
-                "cashIssued  double DEFAULT 0.00," +
-                "CusChange double as (cashIssued-totalBill )) ";
+                "totalBill  double DEFAULT 1.00," +
+                " discountOnTotalCost  double DEFAULT 2.00, " +
+                "discountAmount  double DEFAULT 3.00," +
+                "cashIssued  double(7,2)," +
+                "CusChange double as (cashIssued-totalBill )," +
+                "discountNumber  double DEFAULT 4.00) ";
+
+
+
 
         String sales= "CREATE TABLE IF NOT EXISTS " +
                 "sales(userID varchar(400), salesID varchar(400),sName varchar(400)" +
@@ -319,8 +323,11 @@ public class logAdmin extends DBconnect {
                 "profit double,time timestamp " +
                 " DEFAULT CURRENT_TIMESTAMP," +
                 "totalBill  double DEFAULT 0.00," +
+                " discountOnTotalCost  double DEFAULT 2.00," +
+                " discountAmount  double DEFAULT 0.00," +
                 "cashIssued  double DEFAULT 0.00," +
-                "CusChange double ) ";
+                "CusChange double(7,2)," +
+                "discountNumber  double DEFAULT 0.00 ) ";
 
 
         String invoiceID = "CREATE TABLE IF NOT EXISTS " +
@@ -351,6 +358,7 @@ public class logAdmin extends DBconnect {
                 st.execute(invoiceID);
                 st.execute(currentInvoice);
                 st.execute(currentUser);
+
 
 
                 conn.close();

@@ -45,8 +45,7 @@ public class adminMainWindow extends DBconnect {
             root = FXMLLoader.load(getClass().getResource("changePassword.fxml"));
             currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
             currentScene=new Scene(root);
-            String css=this.getClass().getResource("sellerPassword.css").toExternalForm();
-            root.getStylesheets().add(css);
+
             currentStage.setScene(currentScene);
 
             currentStage.show();
@@ -81,6 +80,32 @@ public class adminMainWindow extends DBconnect {
         catch (Exception e){
 
         }
+    }
+
+
+
+
+    @FXML
+    void openMisc(ActionEvent event) {
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("msc.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+        }
+        catch (Exception e){
+
+        }
+
     }
 
 

@@ -72,7 +72,7 @@ public class Main extends Application {
         Parent root;
         String css;
         if (DBExists) {
-           //   root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
+         ///   root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
             //  root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
               //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
 
@@ -80,10 +80,11 @@ public class Main extends Application {
            //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
           //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
          //   root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
-       root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+    //  root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
       //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
       //    root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
-     //    root = FXMLLoader.load(getClass().getResource("Blank_Letter.jrxml"));
+    //    root = FXMLLoader.load(getClass().getResource("msc.fxml"));
+       root = FXMLLoader.load(getClass().getResource("msc.fxml"));
 
 
 
@@ -91,11 +92,13 @@ public class Main extends Application {
             // css = this.getClass().getResource("loadItemManual.css").toExternalForm();
            //   css = this.getClass().getResource("recentItem.css").toExternalForm();
             // css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
-           // css = this.getClass().getResource("recentItem.css").toExternalForm();
+           // css = this.getClass().getResource("recentItem.css").toExternalForm(); \
+
+
 
         } else {
             root = FXMLLoader.load(getClass().getResource("logAdmin.fxml"));
-            css = this.getClass().getResource("logProgram.css").toExternalForm();
+       //     css = this.getClass().getResource("logProgram.css").toExternalForm();
             logAdmin logAdmin = new logAdmin();
             logAdmin.createTables();
         }

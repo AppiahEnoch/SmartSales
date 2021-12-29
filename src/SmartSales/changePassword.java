@@ -286,6 +286,10 @@ public class changePassword extends DBconnect {
                st.executeUpdate(qry);
 
                conn.close();
+
+               Alert alert=new Alert(Alert.AlertType.INFORMATION);
+               alert.setHeaderText("\t\tCONGRATS!");
+               alert.show();
                return true;
            }
            catch (Exception e){

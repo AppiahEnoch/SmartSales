@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,13 +20,13 @@ import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.JasperPrintManager;
 
+import java.awt.print.PageFormat;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -118,6 +119,8 @@ public class receiptT extends DBconnect {
 
     @FXML
     public void initialize() {
+        ShareData.goSales=false;
+
         c1.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("name"));
         c2.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("qty"));
         c3.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("cost"));
@@ -129,8 +132,13 @@ public class receiptT extends DBconnect {
         c3.setCellFactory(TextFieldTableCell.forTableColumn());
         c4.setCellFactory(TextFieldTableCell.forTableColumn());
 
-
         getReceipt();
+
+        if (ShareData.oldReceipt){
+            getDataForOldReceipt();
+            processBulkDiscount();
+
+        }
 
     }
 
@@ -160,7 +168,7 @@ public class receiptT extends DBconnect {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
         } finally {
             try {
                 conn.close();
@@ -263,6 +271,22 @@ public class receiptT extends DBconnect {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+    }
+
+
+    void getBillAmount() {
+        double amount=0;
+            try {
+                amount = Double.parseDouble(lbAmount.getText().trim());
+                m.amount = amount;
+            } catch (Exception e) {
+                amount = 0;
+            }
+
+
+
 
 
     }
@@ -669,8 +693,47 @@ public class receiptT extends DBconnect {
     private ImageView imv;
 
 
+
+    public void updateCurrentUser() {
+        deleteRecord("currentUser");
+
+        if (DBcon()) {
+            openConn(ShareData.directConnection);
+            try {
+
+                qry = "Insert into currentUser(ID,fName)  values( '" + ShareData.userID_ + "','" +ShareData.currentUser_+ "')";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+
+
+
     @FXML
     void closeReceipt(ActionEvent event) {
+
+        if (ShareData.oldReceipt){
+            ShareData.oldReceipt=false;
+            updateCurrentUser();
+        }
+
+
+
 
 
         try {
@@ -706,8 +769,13 @@ public class receiptT extends DBconnect {
 
     @FXML
     void openPreview(ActionEvent event) {
-        insertCusChange();
-        updatedDiscountOnTotalCost();
+
+
+
+            insertCusChange();
+            updatedDiscountOnTotalCost();
+              getNewSalesID();
+
         openConn(ShareData.directConnection);
         ShareData.preView("customerReport.jasper","Powered BY AECleanCodes 0549822202");
 
@@ -718,6 +786,15 @@ public class receiptT extends DBconnect {
     @FXML
     void printReceipt(ActionEvent event) {
                  prePrintWork();
+
+                 print();
+
+
+
+
+
+
+
 
 
         try {
@@ -733,40 +810,39 @@ public class receiptT extends DBconnect {
 
 
     private void prePrintWork(){
+
         if (countRecord("receipt","sname")>0){
+                getNewSalesID();
+
+            if (m.amount<1){
+                getBillAmount();
+            }
+
             insertCusChange();
             updatedDiscountOnTotalCost();
             ShareData.currentRandom_="";
             updateUCostInReceipt();
 
-            // deleteRecord("sales");
-            sendReportToSales();
+
+
+             if ( ! ShareData.oldReceipt){
+               //  deleteRecord("sales");
+                 sendReportToSales();
+             }
+
 
             tbv.getItems().clear();
-            deleteRecord("receipt");
-            printCustomerReceipt();
+
+
+
 
         }
 
 
     }
 
-    private void printCustomerReceipt(){
-        Task task=new Task() {
-            @Override
-            protected Object call() throws Exception {
 
 
-
-                return null;
-            }
-
-        };
-        ExecutorService executorService= Executors.newSingleThreadExecutor();
-        executorService.execute(task);
-        executorService.shutdown();
-
-    }
 
 String  time;
     String  totalBill;
@@ -839,9 +915,11 @@ String  time;
             try {
 
                 qry = "INSERT INTO sales ( userID,salesID, sName, qty,Ucost,Uprice," +
-                        " amount,profit,time,totalBill,cashIssued,CusChange)" +
+                        " amount,profit,time,totalBill,cashIssued,CusChange," +
+                        " discountAmount, discountOnTotalCost,discountNumber )" +
                         " SELECT  userID, salesID, sName, qty,Ucost,Uprice,amount," +
-                        " profit,time,totalBill,cashIssued,CusChange " +
+                        " profit,time,totalBill,cashIssued,CusChange," +
+                        " discountAmount, discountOnTotalCost,discountNumber" +
                         " FROM receipt";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
@@ -854,7 +932,7 @@ String  time;
                 try {
                     conn.close();
                 } catch (Exception ee) {
-
+                    e.printStackTrace();
                 }
             }
         }
@@ -862,11 +940,66 @@ String  time;
 
     }
 
-
     @FXML
     void noPrinting(ActionEvent event) {
 
-        prePrintWork();
+
+
+
+
+
+        Task task=new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+                try {
+
+
+
+
+                    prePrintWork();
+                    deleteRecord("receipt");
+                    getNewSalesID();
+
+
+
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+                return null;
+            }
+
+        };
+
+        ExecutorService executorService= Executors.newSingleThreadExecutor();
+        executorService.execute(task);
+        executorService.shutdown();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         try {
@@ -884,6 +1017,7 @@ String  time;
     }
 
 double bulkDiscount;
+    double bulkDiscountR;
     private boolean validateDiscount(){
         String i=tfDiscount.getText().trim();
         if (i.isEmpty()){
@@ -899,6 +1033,7 @@ double bulkDiscount;
                }
 
                bulkDiscount=ii/100;
+               bulkDiscountR=ii;
                return true;
 
             }
@@ -958,7 +1093,7 @@ double bulkDiscount;
 
         return x;
     }
-    double discount=0.00;
+    double discount=ShareData.discount;
     @FXML
     void processBulkDiscount(KeyEvent event) {
              if (validateDiscount() && validateBillAmount()){
@@ -974,6 +1109,19 @@ double bulkDiscount;
     }
 
 
+    void processBulkDiscount() {
+        if (validateDiscount() && validateBillAmount()){
+
+            discount=billAmount * bulkDiscount;
+            double discountedAmount=billAmount-discount;
+            lbAmount.setText(String.valueOf(dp2.format(discountedAmount)));
+
+            getChange();
+
+
+        }
+    }
+
     public void updatedDiscountOnTotalCost() {
 
         if (DBcon()) {
@@ -981,7 +1129,7 @@ double bulkDiscount;
             try {
 
                 qry = "update receipt set discountOnTotalCost="+dp2.format(getLbAmount())+", " +
-                        "discountAmount="+dp2.format(discount)+"  where not sname= '' ";
+                        "discountAmount="+dp2.format(discount)+", discountNumber= "+bulkDiscountR+"  where not sname= '' ";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -1002,5 +1150,356 @@ double bulkDiscount;
 
     }
 
+    @FXML
+    private Button btBack;
+
+    public  void print(){
+
+
+        Task task=new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+                try {
+                 String jp;
+                    Map param = new HashMap();
+                    try {
+
+                        openConn(ShareData.directConnection);
+
+                        jp = JasperFillManager.fillReportToFile("customerReport.jasper"
+                                , param, ShareData.directConnection);
+
+
+                        if (jp!=null){
+                            JasperPrintManager.printReport(jp,false);
+
+                        }
+                        else {
+
+                        }
+
+
+
+                    } catch (JRException e) {
+                        e.printStackTrace();
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+                return null;
+            }
+
+        };
+        ExecutorService executorService= Executors.newSingleThreadExecutor();
+        executorService.execute(task);
+        executorService.shutdown();
+
+        deleteRecord("receipt");
+        deleteRecord("currentinvoice");
+        getNewSalesID();
+    }
+
+
+
+  private  void   getDataForOldReceipt(){
+
+          qry = "SELECT discountOnTotalCost,discountAmount ,CusChange,cashIssued,discountNumber  from receipt";
+
+          try {
+              DBcon();
+              st = conn.createStatement();
+              rs = st.executeQuery(qry);
+
+              if (rs.next()) {
+               String cash  = rs.getString("cashIssued").trim();
+                  String change = rs.getString("CusChange").trim();
+                  String discountTotalCost = rs.getString("discountOnTotalCost").trim();
+                  String discountNumber = rs.getString("discountNumber").trim();
+
+                  lbChange.setText(change);
+                  lbAmount.setText(discountTotalCost);
+                  tfDiscount.setText(discountNumber);
+                  tfcash.setText(cash);
+
+
+                  conn.close();
+
+              } else {
+              conn.close();
+              }
+          } catch (Exception e) {
+              System.out.println("here");
+              e.printStackTrace();
+
+          }
+
+
+
+
+    }
+
+    public String getRandom() {
+        String s1 = "";
+
+
+        char cc1;
+        char cc2;
+        char cc3;
+
+        Double c1 = (Math.random() * 100);
+        Double c2 = Math.random() * 200;
+        Double c3 = Math.random() * 200;
+
+        int r1 = (int) Math.round(c1);
+        int r2 = (int) Math.round(c2);
+        int r3 = (int) Math.round(c3);
+
+        int m = (int) (Math.random() * 50);
+
+        int mm = (int) (Math.random() * 9770);
+
+        int u = (int) (Math.random() * 100);
+
+        int ctr = 0;
+
+        while (u < 64) {
+            ctr++;
+            u++;
+
+            if (ctr % 3 == 0) {
+                u += ctr;
+            }
+        }
+
+        int ctr1 = 0;
+
+        while (u > 90) {
+            ctr1--;
+            u--;
+            if (ctr % 5 == 0) {
+                u -= ctr1;
+            }
+        }
+
+        if (u < 1) {
+            u = 87;
+        }
+
+
+        char cu = (char) u;
+
+
+        while (m > 9) {
+            m--;
+        }
+
+        while (r1 < 64) {
+            r1++;
+        }
+        while (r1 > 122) {
+            r1--;
+        }
+
+        while (r2 < 64) {
+            r2++;
+        }
+        while (r2 > 122) {
+            r2--;
+        }
+        while (r3 < 64) {
+            r3++;
+        }
+        while (r3 > 122) {
+            r3--;
+        }
+        while (r1 > 90 && r1 < 97) {
+            r1--;
+        }
+        while (r2 > 90 && r2 < 97) {
+            r2--;
+        }
+        while (r3 > 90 && r3 < 97) {
+            r3--;
+        }
+
+        if (r1 == r2) {
+            r1 = r1 + m;
+        }
+
+        if (r3 == r2) {
+            r3++;
+        }
+
+
+        System.out.println(r1);
+        System.out.println(r2);
+        System.out.println(r3);
+
+        if (r3==123){
+            r3=66;
+        }
+
+        cc1 = (char) r1;
+        cc2 = (char) r2;
+        cc3 = (char) r3;
+
+
+        System.out.println(cc1);
+        System.out.println(cc2);
+        System.out.println(cc3);
+
+
+
+
+        Double n1 = 0.0;
+        Double n2;
+        Double n3;
+        n1 = Math.random() * 100;
+        n2 = Math.random() * 80;
+        n3 = Math.random() * 1000;
+
+        int i;
+        int ii;
+        int iii;
+        i = (int) Math.round(n1);
+        ii = (int) Math.round(n2);
+        iii = (int) Math.round(n3);
+
+
+        s1 = ""+ cc1 + ii + iii + cc3 + cc2 + m + mm + cu +i;
+
+
+
+
+
+        return s1;
+    }
+
+
+    public void insertNewInvoiceID() {
+
+        if (DBcon()) {
+            openConn(ShareData.directConnection);
+            try {
+
+                qry = "Insert into invoiceID (ID)  values( '" + ShareData.currentRandom_+ "')";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+        }
+
+        insertCurrentInvoiceID();
+    }
+
+
+
+    public void insertCurrentInvoiceID() {
+        deleteRecord("currentInvoice");
+        if (DBcon()) {
+            openConn(ShareData.directConnection);
+            try {
+
+                qry = "Insert into currentInvoice (ID)  values( '" + ShareData.currentRandom_+ "')";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+    public void updatedReceiptSetSalesID() {
+
+        if (DBcon()) {
+
+            try {
+
+                qry = "update receipt set salesID= '"+ShareData.currentRandom_+"'";
+                st = conn.createStatement();
+                st.executeUpdate(qry);
+                conn.close();
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("COULD NOT UPDATE UCOST:" + e.getMessage());
+                alert.showAndWait();
+                try {
+                    conn.close();
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+
+                }
+            }
+        }
+
+
+    }
+
+
+    private void getNewSalesID(){
+
+        deleteRecord("currentinvoice");
+       openConn(ShareData.directConnection);
+            ShareData.currentRandom_=getRandom().trim();
+            while ((doesThisExist("invoiceID","ID",ShareData.currentRandom_) )){
+                ShareData.currentRandom_=getRandom().trim();
+            }
+            insertNewInvoiceID();
+
+            updatedReceiptSetSalesID();
+
+    }
+
+
+
+    @FXML
+    void showOldReceipt(ActionEvent event) {
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("oldReceiptIDValidate.fxml"));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+        }
+        catch (Exception e){
+
+        }
+
+    }
 
 }

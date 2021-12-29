@@ -2,6 +2,8 @@ package SmartSales;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.octicons.OctIconView;
+import javafx.animation.Animation;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,23 +15,25 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 public class mainLock extends DBconnect {
 
-    String DBName=null;
+    String DBName = null;
 
     @FXML
     private Stage currentStage;
     private Scene currentScene;
     private Parent root;
 
-    String username=null;
-    String password=null;
-    boolean isSeller=false;
-    boolean isAdmin=false;
-    boolean isNewSeller=false;
+    String username = null;
+    String password = null;
+    boolean isSeller = false;
+    boolean isAdmin = false;
+    boolean isNewSeller = false;
 
     @FXML
     private Button btfp;
@@ -67,6 +71,14 @@ public class mainLock extends DBconnect {
     @FXML
     private TextField tf1;
 
+
+    @FXML
+    private Label lbSalesToday;
+
+    @FXML
+    private Label lbSalesToday1;
+
+
     @FXML
     void btExited(MouseEvent event) {
 
@@ -83,30 +95,27 @@ public class mainLock extends DBconnect {
     }
 
 
-
     @FXML
     void forgotPassWindow(ActionEvent event) {
         try {
             root = FXMLLoader.load(getClass().getResource("forgotPassword.fxml"));
-            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-            currentScene=new Scene(root);
-            String css=this.getClass().getResource("forgotPassword.css").toExternalForm();
+            currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentScene = new Scene(root);
+            String css = this.getClass().getResource("forgotPassword.css").toExternalForm();
             root.getStylesheets().add(css);
             currentStage.setScene(currentScene);
 
             currentStage.show();
             root.requestFocus();
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setX((primScreenBounds.getWidth() - currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() - currentStage.getHeight()) / 2);
             currentStage.setResizable(false);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
     }
-
 
 
     @FXML
@@ -159,94 +168,82 @@ public class mainLock extends DBconnect {
     private Label lbFP;
 
 
-
-
-
     @FXML
     void submit(ActionEvent event) {
-        if (validate()){
+        if (validate()) {
 
-            if (isAdmin){
+            if (isAdmin) {
                 try {
 
                     updateCurrentUser();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                try{
+                try {
+                    ShareData.isAdmin = true;
                     root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
-                    currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-                    currentScene=new Scene(root);
-                    String css=this.getClass().getResource("adminMainWindow.css").toExternalForm();
+                    currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    currentScene = new Scene(root);
+                    String css = this.getClass().getResource("adminMainWindow.css").toExternalForm();
                     root.getStylesheets().add(css);
                     currentStage.setScene(currentScene);
 
-                    currentStage.setTitle("SmartSales    Current User: "+ShareData.currentUser_.toUpperCase());
+                    currentStage.setTitle("SmartSales    Current User: " + ShareData.currentUser_.toUpperCase());
                     currentStage.show();
                     root.requestFocus();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
 
                 }
 
-            }
-
-        else     if (isSeller){
-
-            try {
-                getUserDetails();
-                updateCurrentUser();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
+            } else if (isSeller) {
+                ShareData.isAdmin = false;
+                try {
+                    getUserDetails();
+                    updateCurrentUser();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 
                 try {
                     root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
-                    currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-                    currentScene=new Scene(root);
+                    currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    currentScene = new Scene(root);
 //                    String css=this.getClass().getResource("sellerPassword.css").toExternalForm();
 //                    root.getStylesheets().add(css);
                     currentStage.setScene(currentScene);
-                    currentStage.setTitle("SmartSales    Current User: "+ShareData.currentUser_.toUpperCase());
+                    currentStage.setTitle("SmartSales    Current User: " + ShareData.currentUser_.toUpperCase());
 
                     currentStage.show();
                     root.requestFocus();
                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                    currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-                    currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+                    currentStage.setX((primScreenBounds.getWidth() - currentStage.getWidth()) / 2);
+                    currentStage.setY((primScreenBounds.getHeight() - currentStage.getHeight()) / 2);
                     currentStage.setResizable(false);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
 
                 }
-            }
+            } else if (isNewSeller) {
 
-        else     if (isNewSeller){
-
-
+                ShareData.isAdmin = false;
                 try {
                     root = FXMLLoader.load(getClass().getResource("sellerPassword.fxml"));
-                    currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-                    currentScene=new Scene(root);
-                    String css=this.getClass().getResource("sellerPassword.css").toExternalForm();
+                    currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    currentScene = new Scene(root);
+                    String css = this.getClass().getResource("sellerPassword.css").toExternalForm();
                     root.getStylesheets().add(css);
                     currentStage.setScene(currentScene);
 
                     currentStage.show();
                     root.requestFocus();
                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                    currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-                    currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+                    currentStage.setX((primScreenBounds.getWidth() - currentStage.getWidth()) / 2);
+                    currentStage.setY((primScreenBounds.getHeight() - currentStage.getHeight()) / 2);
                     currentStage.setResizable(false);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
 
                 }
@@ -257,51 +254,42 @@ public class mainLock extends DBconnect {
     }
 
 
-
-
-
-    public boolean validate(){
+    public boolean validate() {
 
         tf1.setText(ptf1.getText().trim());
         tf2.setText(ptf2.getText().trim());
 
 
-        String tf1s= tf1.getText().trim();
-        String tf2s= tf2.getText().trim();
+        String tf1s = tf1.getText().trim();
+        String tf2s = tf2.getText().trim();
 
-        username=tf1s;
-        password=tf2s;
+        username = tf1s;
+        password = tf2s;
 
-        if (tf1s.isEmpty()){
+        if (tf1s.isEmpty()) {
             ptf1.clear();
 
-        }
-        else  if (tf2s.isEmpty()){
+        } else if (tf2s.isEmpty()) {
             ptf2.clear();
 
-        }
-        else  if(isSeller()){
-            isSeller=true;
-        }
-        else  if(isAdmin()){
-            isAdmin=true;
-        }
-        else  if(isNewSeller()){
-            isNewSeller=true;
+        } else if (isSeller()) {
+            isSeller = true;
+        } else if (isAdmin()) {
+            isAdmin = true;
+        } else if (isNewSeller()) {
+            isNewSeller = true;
 
-        }
-
-        else {
-            Alert alert=new Alert(Alert.AlertType.ERROR);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("WRONG LOGIN DETAILS!");
             alert.showAndWait();
-            isAdmin=false;
-            isSeller=false;
+            isAdmin = false;
+            isSeller = false;
         }
 
-        if (isAdmin){
+        if (isAdmin) {
 
-            Alert alert=new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("\t\tCONGRATS!");
             alert.showAndWait();
             ptf1.clear();
@@ -310,9 +298,9 @@ public class mainLock extends DBconnect {
             tf2.clear();
             return true;
         }
-        if (isSeller){
+        if (isSeller) {
 
-            Alert alert=new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("\t\tCONGRATS!");
             alert.showAndWait();
             ptf1.clear();
@@ -321,9 +309,9 @@ public class mainLock extends DBconnect {
             tf2.clear();
             return true;
         }
-        if (isNewSeller){
-            Alert alert=new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("\t\tHi!\n\n\t"+DBName+"\n\n\t PLEASE SET YOUR USER NAME\n \t AND " +
+        if (isNewSeller) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("\t\tHi!\n\n\t" + DBName + "\n\n\t PLEASE SET YOUR USER NAME\n \t AND " +
                     "PASSWORD");
             alert.showAndWait();
             ptf1.clear();
@@ -336,15 +324,15 @@ public class mainLock extends DBconnect {
     }
 
 
-    public boolean isSeller(){
+    public boolean isSeller() {
         sellerHasRegistered();
-        qry="SELECT name FROM password where name='"+username+"' and password= '"+password+"'";
+        qry = "SELECT name FROM password where name='" + username + "' and password= '" + password + "'";
         try {
             DBcon();
-            st=conn.createStatement();
-            rs=st.executeQuery(qry);
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
 
-            if (rs.next()){
+            if (rs.next()) {
 
                 return true;
             }
@@ -355,20 +343,20 @@ public class mainLock extends DBconnect {
         return false;
     }
 
-    public boolean isNewSeller(){
-        if (sellerHasRegistered()){
+    public boolean isNewSeller() {
+        if (sellerHasRegistered()) {
             return false;
         }
 
-        qry="SELECT  name FROM seller where ID='"+username+"'";
+        qry = "SELECT  name FROM seller where ID='" + username + "'";
         try {
             DBcon();
-            st=conn.createStatement();
-            rs=st.executeQuery(qry);
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
 
-            if (rs.next()){
-                DBName=rs.getString("name");
-                setN1(username,"00","00","00");
+            if (rs.next()) {
+                DBName = rs.getString("name");
+                setN1(username, "00", "00", "00");
                 return true;
             }
         } catch (Exception e) {
@@ -379,23 +367,22 @@ public class mainLock extends DBconnect {
     }
 
 
-    public boolean sellerHasRegistered(){
+    public boolean sellerHasRegistered() {
 
-        qry="SELECT seller.ID as ID FROM seller  inner join password on seller.ID=password.ID && seller.ID='"+username+"'";
+        qry = "SELECT seller.ID as ID FROM seller  inner join password on seller.ID=password.ID && seller.ID='" + username + "'";
         try {
             DBcon();
-            st=conn.createStatement();
-            rs=st.executeQuery(qry);
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
 
-            if (rs.next()){
-             String ID=rs.getString("ID");
+            if (rs.next()) {
+                String ID = rs.getString("ID");
 
 
-                System.out.println("in two tables: "+ID);
+                System.out.println("in two tables: " + ID);
 
                 return true;
-            }
-            else {
+            } else {
                 System.out.println(" no match in two tables: ");
             }
         } catch (Exception e) {
@@ -405,23 +392,21 @@ public class mainLock extends DBconnect {
         return false;
     }
 
-    public boolean isAdmin(){
-        qry="SELECT name FROM admin where name='"+username+"' and password= '"+password+"'";
+    public boolean isAdmin() {
+        qry = "SELECT name FROM admin where name='" + username + "' and password= '" + password + "'";
 
         try {
             DBcon();
-            st=conn.createStatement();
-            rs=st.executeQuery(qry);
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
 
-            if (rs.next()){
+            if (rs.next()) {
 
-                username=rs.getString("name").trim();
-                userID=password;
+                username = rs.getString("name").trim();
+                userID = password;
 
-                ShareData.currentUser_=username.trim();
-                ShareData.userID_=userID.trim();
-
-
+                ShareData.currentUser_ = username.trim();
+                ShareData.userID_ = userID.trim();
 
 
                 return true;
@@ -434,28 +419,25 @@ public class mainLock extends DBconnect {
     }
 
 
-    String userName="";
-    String userID="";
+    String userName = "";
+    String userID = "";
 
 
-
-    private void getUserDetails(){
+    private void getUserDetails() {
         sellerHasRegistered();
-        qry="SELECT seller.ID, seller.name, seller.mobile from seller" +
+        qry = "SELECT seller.ID, seller.name, seller.mobile from seller" +
                 " inner join password on seller.ID=password.ID where password.name" +
-                "='"+username+"' and password= '"+password+"'";
+                "='" + username + "' and password= '" + password + "'";
         try {
             DBcon();
-            st=conn.createStatement();
-            rs=st.executeQuery(qry);
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
 
-            if (rs.next()){
-           userID=rs.getString("ID").trim();
-           username=rs.getString("name").trim();
-           ShareData.currentUser_=username;
-           ShareData.userID_=userID;
-
-
+            if (rs.next()) {
+                userID = rs.getString("ID").trim();
+                username = rs.getString("name").trim();
+                ShareData.currentUser_ = username;
+                ShareData.userID_ = userID;
 
 
             }
@@ -474,7 +456,7 @@ public class mainLock extends DBconnect {
             openConn(ShareData.directConnection);
             try {
 
-                qry = "Insert into currentUser(ID,fName)  values( '" + userID + "','" + username+ "')";
+                qry = "Insert into currentUser(ID,fName)  values( '" + userID + "','" + username + "')";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -486,7 +468,7 @@ public class mainLock extends DBconnect {
                 try {
                     conn.close();
                 } catch (Exception ee) {
-              ee.printStackTrace();
+                    ee.printStackTrace();
                 }
             }
         }
@@ -495,5 +477,64 @@ public class mainLock extends DBconnect {
     }
 
 
+    public void initialize() {
+        getTodaySales();
+        TranslateTransition rt = new TranslateTransition();
+        rt.setDuration(Duration.seconds(1));
+        rt.setNode(lbSalesToday);
+        rt.setByX(80);
+        rt.setAutoReverse(true);
+        // rt.setDuration(Duration.millis(10000));
+        rt.setCycleCount(TranslateTransition.INDEFINITE);
+        rt.play();
 
+
+        TranslateTransition rt2 = new TranslateTransition();
+        rt2.setByX(100);
+        rt2.setByY(100);
+        rt2.setDuration(Duration.seconds(3));
+        rt2.setNode(lbSalesToday1);
+        rt2.setAutoReverse(true);
+        rt2.setCycleCount(Animation.INDEFINITE);
+        rt2.play();
+
+
+    }
+
+    DecimalFormat dp2 = new DecimalFormat("0.00");
+
+    private void getTodaySales() {
+
+        DBcon();
+        openConn(conn);
+        qry = "select sum(sales.discountOnTotalCost) as totalSales from sales where date(time)=curdate()";
+
+        try {
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
+
+
+            while (rs.next()) {
+                String amt = rs.getString("totalSales").trim();
+                double amt2 = Double.parseDouble(amt);
+
+
+                lbSalesToday1.setText( "GHS "+   (String.valueOf(dp2.format(amt2))));
+
+
+
+            }
+
+        } catch (Exception e) {
+            //  e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+
+            } catch (Exception e) {
+
+            }
+        }
+
+    }
 }
