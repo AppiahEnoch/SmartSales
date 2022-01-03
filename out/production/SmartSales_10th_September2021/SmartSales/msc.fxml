@@ -22,7 +22,7 @@
    <bottom>
       <HBox prefHeight="71.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btBark" mnemonicParsing="false" onAction="#getAdminWindow" prefHeight="70.0" prefWidth="128.0" text="Bark" />
+            <Button fx:id="btBark" mnemonicParsing="false" onAction="#getAdminWindow" prefHeight="70.0" prefWidth="128.0" text="Back" />
          </children>
       </HBox>
    </bottom>

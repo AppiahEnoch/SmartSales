@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 
 import java.io.*;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +40,8 @@ public class DBconnect {
     String DBsn;
     String DBCost;
     String DBtime;
+
+    public DecimalFormat dp00 = new DecimalFormat("0.00");
 
 
     int windowSize0 = 20;

@@ -13,7 +13,7 @@
                <children>
                   <Button fx:id="tbPassword" mnemonicParsing="false" onAction="#openChangePassword" prefHeight="75.0" prefWidth="144.0" text="PASSWORD" />
                   <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openOldReceipt" prefHeight="75.0" prefWidth="161.0" text="OLD RECEIPT" />
-                  <Button layoutX="171.0" layoutY="10.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="161.0" text="2" />
+                  <Button fx:id="btTotalSales" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#OpenUserSalesWindow" prefHeight="75.0" prefWidth="161.0" text=" TOTAL SALES" />
                </children>
             </HBox>
          </children>

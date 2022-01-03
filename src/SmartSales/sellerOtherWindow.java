@@ -1,6 +1,4 @@
 package SmartSales;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.octicons.OctIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,10 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.image.*;
 
 public class sellerOtherWindow extends DBconnect {
     @FXML
@@ -100,5 +96,34 @@ public class sellerOtherWindow extends DBconnect {
 
         }
     }
-   
+
+
+
+    @FXML
+    void OpenUserSalesWindow(ActionEvent event) {
+         openWindowByClick(event,"sellerTotalSales.fxml");
+    }
+
+
+    @FXML
+    void openWindowByClick(ActionEvent event, String fxml){
+        try {
+            root = FXMLLoader.load(getClass().getResource(fxml));
+            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+            currentScene=new Scene(root);
+
+            currentStage.setScene(currentScene);
+
+            currentStage.show();
+            root.requestFocus();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setResizable(false);
+        }
+        catch (Exception e){
+
+        }
+    }
+
 }

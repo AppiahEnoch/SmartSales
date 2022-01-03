@@ -2,6 +2,7 @@ package SmartSales;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class salesWindow extends DBconnect {
 
@@ -62,15 +65,48 @@ public class salesWindow extends DBconnect {
 
     boolean regulate = true;
 
-    public void initialize() {
-        ShareData.goSales=true;
-        ShareData.hitRun=true;
-        ShareData.currentRandom_=getRandom().trim();
-        while ((doesThisExist("invoiceID","ID",ShareData.currentRandom_) )){
-            ShareData.currentRandom_=getRandom().trim();
-        }
 
-        insertNewInvoiceID();
+    private  void run(){
+
+        Task task=new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+                try {
+
+                    ShareData.goSales=true;
+                    ShareData.hitRun=true;
+                    ShareData.currentRandom_=getRandom().trim();
+                    while ((doesThisExist("invoiceID","ID",ShareData.currentRandom_) )){
+                        ShareData.currentRandom_=getRandom().trim();
+                    }
+
+                    insertNewInvoiceID();
+
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+                return null;
+            }
+
+        };
+
+        ExecutorService executorService= Executors.newSingleThreadExecutor();
+
+        executorService.execute(task);
+        executorService.shutdown();
+    }
+
+    public void initialize() {
+
+
+                 run();
+
 
 
 tbV.setEditable(true);
@@ -87,9 +123,6 @@ col2.setEditable(true);
                      deleteRecord("receipt");
 
 
-
-
-                startThread();
 
         if (isTableviewEmpty()) {
             imageV.setImage(null);
@@ -339,18 +372,7 @@ tf.requestFocus();
         return false;
     }
 
-    @FXML
-    void startThread() {
-       stopThread();
 
-       m.continueItemSuggestion = true;
-
-    }
-
-    @FXML
-    void stopThread() {
-        m.continueItemSuggestion = false;
-    }
 
 
 
