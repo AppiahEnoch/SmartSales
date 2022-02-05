@@ -51,7 +51,7 @@
                   <Font name="Arial Black" size="18.0" />
                </font>
                <graphic>
-                  <FontAwesomeIconView disable="true" fill="#4c07ee" glyphName="TRASH" size="40" />
+                  <FontAwesomeIconView disable="true" fill="#4c07ee" glyphName="BOMB" size="40" />
                </graphic>
             </Button>
          </children>

@@ -4,6 +4,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.octicons.OctIconView;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,13 +17,25 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class mainLock extends DBconnect {
 
@@ -261,7 +274,7 @@ public class mainLock extends DBconnect {
 
 
     public boolean validate() {
-
+getFocus1();
         tf1.setText(ptf1.getText().trim());
         tf2.setText(ptf2.getText().trim());
 
@@ -508,6 +521,35 @@ public class mainLock extends DBconnect {
         rt2.play();
 
 
+        Task task=new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+                try {
+
+                    updateQtyInItem();
+
+                    updateUsedQtyInItem();
+                    updateFinishingPercentage();
+                    createExcelLoadItemsFile();
+
+
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+                return null;
+            }
+
+        };
+
+        ExecutorService executorService= Executors.newSingleThreadExecutor();
+        executorService.execute(task);
+        executorService.shutdown();
     }
 
     DecimalFormat dp2 = new DecimalFormat("0.00");
@@ -580,6 +622,7 @@ public class mainLock extends DBconnect {
 
 
 
+
     public void logOut( String oldID){
 
         DBcon();
@@ -612,4 +655,262 @@ public class mainLock extends DBconnect {
 
 
     }
+
+    public void updateUsedQtyInItem(){
+
+        DBcon();
+
+
+
+        qry=" update item set item.usedQty = " +
+                " (select  sum( sales.qty) as qtySum from sales where " +
+                " sales.sName=item.sName group by item.sName )";
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+
+
+    public void updateQtyInItem(){
+
+        DBcon();
+
+
+
+        qry=" update item set item.qty =(select  sum( item1.qty) as qtySum " +
+                "from item1 where item1.sName=item.sName group by item.sName)";
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+
+
+
+
+
+    public static void createExcelLoadItemsFile(){
+        ShareData shareData = ShareData.getInstance();
+        DBconnect dBconnect = new DBconnect();
+        File file = new File(shareData.file.toString() + "\\loadItems.xlsx");
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet spreadsheet = workbook.createSheet("items");
+
+            Map<String,Object[]> list=new HashMap<String,Object[]>();
+
+            list=  dBconnect.getItemsInShortage();
+
+            spreadsheet.addMergedRegion(new CellRangeAddress(
+                    0, // first row (0-based)
+                    1, // last row (0-based)
+                    0,
+                    // first column (0-based)
+                    3 // last column (0-based)
+            ));
+
+
+            spreadsheet.addMergedRegion(new CellRangeAddress(
+                    0, // first row (0-based)
+                    1, // last row (0-based)
+                    6,
+                    // first column (0-based)
+                    9 // last column (0-based)
+            ));
+
+
+            CellStyle style = spreadsheet.getWorkbook().createCellStyle();
+
+            style.setAlignment(HorizontalAlignment.CENTER);
+            style.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            CellStyle style1 = spreadsheet.getWorkbook().createCellStyle();
+            spreadsheet.setColumnWidth(0, 8000);
+            spreadsheet.setColumnWidth(6, 8000);
+            style1.setAlignment(HorizontalAlignment.CENTER);
+            style1.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            Font font=workbook.createFont();
+            Font font1=workbook.createFont();
+            font.setColor(IndexedColors.WHITE.index);
+            font1.setColor(IndexedColors.WHITE.index);
+            font.setBold(true);
+            font1.setBold(true);
+
+
+
+            // style1.setFillBackgroundColor(IndexedColors.BLACK.index);
+
+            style.setFillForegroundColor(IndexedColors.RED.index);
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            style.setFont(font);
+
+            style1.setFillForegroundColor(IndexedColors.BLUE.index);
+            style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            style1.setFont(font1);
+
+
+
+
+            Set<String> keys=list.keySet();
+            int rowNum=0;
+
+            for (String i:keys){
+                Row row = spreadsheet.createRow(rowNum++);
+                Object [] array=list.get(i);
+                int cellNum=0;
+                for (Object ii:array){
+                    Cell cell = row.createCell(cellNum++);
+                    int c=cell.getColumnIndex();
+
+
+
+
+                    if (c<4) {
+
+                        cell.setCellStyle(style);
+                    }
+
+                    if ((cellNum>6)) {
+                        cell.setCellStyle(style1);
+                    }
+
+
+                    if (ii instanceof Double){
+                        cell.setCellValue((Double)ii );
+                    }
+                    else   if (ii instanceof Integer){
+                        cell.setCellValue((Integer)ii);
+                    }
+                    else    if (ii instanceof String){
+                        cell.setCellValue((String) ii);
+                    }
+                }
+            }
+
+            FileOutputStream out = new FileOutputStream(new File(file.toString()));
+            workbook.write(out);
+
+            out.close();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+ int p;
+    public void getPercentageItemFinishing() {
+        qry = "SELECT declareFinishing as p from item limit 1";
+
+        try {
+            DBcon();
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
+
+            if (rs.next()) {
+
+                String v  = rs.getString("p").trim();
+
+                  p=Integer.parseInt(v);
+
+
+                 conn.close();
+
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
+
+
+    public void updateFinishingPercentage(){
+        getPercentageItemFinishing();
+        DBcon();
+        qry="UPDATE item SET declareFinishing ="+p;
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+    void getFocus1(){
+
+        if (ptf1.getText().trim().isEmpty()){
+            ptf1.requestFocus();
+        }
+
+        else   if (ptf2.getText().trim().isEmpty()){
+            ptf2.requestFocus();
+        }
+
+
+
+
+
+    }
+
+
 }

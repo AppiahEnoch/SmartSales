@@ -1,4 +1,5 @@
 package SmartSales;
+
 import com.sun.prism.paint.Color;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -12,11 +13,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 
-
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -35,98 +33,151 @@ import static com.sun.prism.paint.Color.*;
 
 public class Main extends Application {
 
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        DBconnect dBconnect = new DBconnect();
+        Parent root;
+        String css;
 
-        boolean DBExists = dBconnect.DBExists();
-        ShareData m = ShareData.getInstance();
-        if (DBExists){
-            loadItemFromExcel();
-            createExcelLoadItemsFile();
+          boolean proceed=false;
 
-            //basic routines
+        String fileName = ShareData.fileName;
+        File userFile = new File(fileName);
 
-            try {
+        if (userFile.exists()) {
+        proceed=true;
+        }
 
-                loadItemManual obj = new loadItemManual();
 
-                obj.isItemInDatabase(obj.checkEmptyFolder());
+
+
+
+
+        if(proceed){
+
+
+
+
+            DBconnect dBconnect = new DBconnect();
+
+            boolean DBExists = dBconnect.DBExists();
+            ShareData m = ShareData.getInstance();
+
+            if (DBExists) {
+                loadItemFromExcel();
+                createExcelLoadItemsFile();
+
+                //basic routines
 
                 try {
 
+                    loadItemManual obj = new loadItemManual();
+
+                    obj.isItemInDatabase(obj.checkEmptyFolder());
+
+                    try {
+
+                    } catch (Exception ee) {
+
+                    }
+                    obj.writeAllNoImageItems();
+                    obj.getImagesFromFolder();
                 } catch (Exception ee) {
 
                 }
-                obj.writeAllNoImageItems();
-                obj.getImagesFromFolder();
-            } catch (Exception ee) {
-
             }
+
+
+
+            if (DBExists) {
+                 //   root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
+                //    root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
+
+                //  root = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
+                //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
+                //   root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
+                 root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
+                //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
+                //    root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("msc.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("sellerOtherWindow.fxml"));
+                //     root = FXMLLoader.load(getClass().getResource("sellerTotalSales.fxml"));
+                //     root = FXMLLoader.load(getClass().getResource("log.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("viewCost.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("viewSales.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("reportWindow.fxml"));
+                 //  root = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
+                //  root = FXMLLoader.load(getClass().getResource("changePassword.fxml"));
+
+
+
+                //  css = this.getClass().getResource("mainLock.css").toExternalForm();
+                // css = this.getClass().getResource("loadItemManual.css").toExternalForm();
+                //   css = this.getClass().getResource("recentItem.css").toExternalForm();
+                // css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
+                // css = this.getClass().getResource("recentItem.css").toExternalForm(); \
+
+
+            } else {
+                root = FXMLLoader.load(getClass().getResource("logAdmin.fxml"));
+                //     css = this.getClass().getResource("logProgram.css").toExternalForm();
+                logAdmin logAdmin = new logAdmin();
+                logAdmin.createTables();
+            }
+
+            //   root.getStylesheets().add(css);
+            primaryStage.setTitle("Smart Sales - AECleanCodes");
+            primaryStage.setScene(new Scene(root));
+            // root.requestFocus();
+
+
+            primaryStage.initStyle(StageStyle.UTILITY);
+            primaryStage.show();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+            primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+                public void handle(WindowEvent event) {
+                    m.continueItemSuggestion = false;
+                }
+            });
+
+
+
+
+        }
+        else {
+
+
+
+            root = FXMLLoader.load(getClass().getResource("databasePassword.fxml"));
+
+            primaryStage.setTitle("Smart Sales - AECleanCodes");
+            primaryStage.setScene(new Scene(root));
+            // root.requestFocus();
+
+
+            primaryStage.initStyle(StageStyle.UTILITY);
+            primaryStage.show();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+            primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+
+
         }
 
 
 
 
-        Parent root;
-        String css;
-        if (DBExists) {
-       //     root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
-          //    root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
-              //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
 
-            //  root = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
-           //   root = FXMLLoader.load(getClass().getResource("emptySystemWindow.fxml"));
-          //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
-         //   root = FXMLLoader.load(getClass().getResource("editItem.fxml"));
-    //  root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
-      //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
-      //    root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
-      //  root = FXMLLoader.load(getClass().getResource("msc.fxml"));
-     //  root = FXMLLoader.load(getClass().getResource("sellerOtherWindow.fxml"));
-  //     root = FXMLLoader.load(getClass().getResource("sellerTotalSales.fxml"));
- //     root = FXMLLoader.load(getClass().getResource("log.fxml"));
-  //  root = FXMLLoader.load(getClass().getResource("viewCost.fxml"));
- //  root = FXMLLoader.load(getClass().getResource("viewSales.fxml"));
-  root = FXMLLoader.load(getClass().getResource("reportWindow.fxml"));
-
-
-
-             //  css = this.getClass().getResource("mainLock.css").toExternalForm();
-            // css = this.getClass().getResource("loadItemManual.css").toExternalForm();
-           //   css = this.getClass().getResource("recentItem.css").toExternalForm();
-            // css = this.getClass().getResource("showImagesInFolder.css").toExternalForm();
-           // css = this.getClass().getResource("recentItem.css").toExternalForm(); \
-
-
-
-        } else {
-            root = FXMLLoader.load(getClass().getResource("logAdmin.fxml"));
-       //     css = this.getClass().getResource("logProgram.css").toExternalForm();
-            logAdmin logAdmin = new logAdmin();
-            logAdmin.createTables();
-        }
-
-     //   root.getStylesheets().add(css);
-        primaryStage.setTitle("Smart Sales - AECleanCodes");
-        primaryStage.setScene(new Scene(root));
-       // root.requestFocus();
-
-
-        primaryStage.initStyle(StageStyle.UTILITY);
-        primaryStage.show();
-        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-        primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
-
-
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-            public void handle(WindowEvent event) {
-                m.continueItemSuggestion=false;
-            }
-        });
 
 
     }
@@ -139,13 +190,7 @@ public class Main extends Application {
     }
 
 
-
-
-
-
-
-
-    public static void createExcelLoadItemsFile(){
+    public static void createExcelLoadItemsFile() {
         ShareData shareData = ShareData.getInstance();
         DBconnect dBconnect = new DBconnect();
         File file = new File(shareData.file.toString() + "\\loadItems.xlsx");
@@ -153,15 +198,16 @@ public class Main extends Application {
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet spreadsheet = workbook.createSheet("items");
 
-            Map<String,Object[]>list=new HashMap<String,Object[]>();
+            Map<String, Object[]> list = new HashMap<String, Object[]>();
 
-         list=  dBconnect.getItemsInShortage();
+            list = dBconnect.getItemsInShortage();
+            System.out.println(" list size:" + list.size());
 
             spreadsheet.addMergedRegion(new CellRangeAddress(
                     0, // first row (0-based)
                     1, // last row (0-based)
                     0,
-                     // first column (0-based)
+                    // first column (0-based)
                     3 // last column (0-based)
             ));
 
@@ -186,59 +232,52 @@ public class Main extends Application {
             style1.setAlignment(HorizontalAlignment.CENTER);
             style1.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            Font font=workbook.createFont();
-            Font font1=workbook.createFont();
+            Font font = workbook.createFont();
+            Font font1 = workbook.createFont();
             font.setColor(IndexedColors.WHITE.index);
             font1.setColor(IndexedColors.WHITE.index);
             font.setBold(true);
             font1.setBold(true);
 
 
-
-          // style1.setFillBackgroundColor(IndexedColors.BLACK.index);
+            // style1.setFillBackgroundColor(IndexedColors.BLACK.index);
 
             style.setFillForegroundColor(IndexedColors.RED.index);
-           style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-           style.setFont(font);
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            style.setFont(font);
 
-           style1.setFillForegroundColor(IndexedColors.BLUE.index);
-           style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-           style1.setFont(font1);
-
-
+            style1.setFillForegroundColor(IndexedColors.BLUE.index);
+            style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            style1.setFont(font1);
 
 
-            Set <String>keys=list.keySet();
-            int rowNum=0;
+            Set<String> keys = list.keySet();
+            int rowNum = 0;
 
-            for (String i:keys){
+            for (String i : keys) {
                 Row row = spreadsheet.createRow(rowNum++);
-                Object [] array=list.get(i);
-                int cellNum=0;
-                for (Object ii:array){
+                Object[] array = list.get(i);
+                int cellNum = 0;
+                for (Object ii : array) {
                     Cell cell = row.createCell(cellNum++);
-                    int c=cell.getColumnIndex();
-
-                    System.out.println("celnum:"+cellNum);
+                    int c = cell.getColumnIndex();
 
 
-                  if (c<4) {
-                      System.out.println("r:"+rowNum);
-                      cell.setCellStyle(style);
-                  }
+                    if (c < 4) {
 
-                    if ((cellNum>6)) {
+                        cell.setCellStyle(style);
+                    }
+
+                    if ((cellNum > 6)) {
                         cell.setCellStyle(style1);
                     }
 
 
-                     if (ii instanceof Double){
-                        cell.setCellValue((Double)ii );
-                    }
-                 else   if (ii instanceof Integer){
-                        cell.setCellValue((Integer)ii);
-                    }
-                 else    if (ii instanceof String){
+                    if (ii instanceof Double) {
+                        cell.setCellValue((Double) ii);
+                    } else if (ii instanceof Integer) {
+                        cell.setCellValue((Integer) ii);
+                    } else if (ii instanceof String) {
                         cell.setCellValue((String) ii);
                     }
                 }
@@ -249,15 +288,11 @@ public class Main extends Application {
 
             out.close();
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
-
-
 
 
     public static void loadItemFromExcel() {
@@ -289,6 +324,7 @@ public class Main extends Application {
                     if (col == 6) {
 
                         String value = dataFormatter.formatCellValue(cell);
+                        value = value.toLowerCase();
                         item.add(value);
 
                     }
@@ -327,70 +363,61 @@ public class Main extends Application {
 
 
             try {
-                boolean iswrong=false;
-                String name=item.get(i).toString().trim();
-                String qq=qty.get(i).toString().trim();
-                String cc=cost.get(i).toString().trim();
-                String pp=price.get(i).toString().trim();
+                boolean iswrong = false;
+                String name = item.get(i).toString().trim();
+                String qq = qty.get(i).toString().trim();
+                String cc = cost.get(i).toString().trim();
+                String pp = price.get(i).toString().trim();
 
 
-
-                int q=0;
-                Double c=0.0;
-                Double p=0.0;
+                int q = 0;
+                Double c = 0.0;
+                Double p = 0.0;
 
                 if (name.isEmpty()) {
-                  iswrong=true;
-                }
-                else if (qq.isEmpty()){
-                    iswrong=true;
+                    iswrong = true;
+                } else if (qq.isEmpty()) {
+                    iswrong = true;
 
-                }      else if (cc.isEmpty()){
-                    iswrong=true;
+                } else if (cc.isEmpty()) {
+                    iswrong = true;
 
-                }      else if (pp.isEmpty()){
-                    iswrong=true;
-
-                }
-
-
-                try{
-                     q=Integer.parseInt(qty.get(i));
+                } else if (pp.isEmpty()) {
+                    iswrong = true;
 
                 }
-                catch (Exception e){
-                    iswrong=true;
+
+
+                try {
+                    q = Integer.parseInt(qty.get(i));
+
+                } catch (Exception e) {
+                    iswrong = true;
                 }
-                try{
-                     c=Double.parseDouble(cc);
+                try {
+                    c = Double.parseDouble(cc);
+                } catch (Exception e) {
+                    iswrong = true;
                 }
-                catch (Exception e){
-                    iswrong=true;
-                }
-                try{
-                     p=Double.parseDouble(pp);
-                }
-                catch (Exception e){
-                    iswrong=true;
+                try {
+                    p = Double.parseDouble(pp);
+                } catch (Exception e) {
+                    iswrong = true;
                 }
 
 
-
-                if (!iswrong){
+                if (!iswrong) {
 
                     try {
 
 
-
-
-                        if ((q>0)&&(c>0)){
-                            updateItem1(name,q,c,p);
-                            updateItem(name,q,c,p);
+                        if ((q > 0) && (c > 0)) {
+                            updateItem1(name, q, c, p);
+                            updateItem(name, q, c, p);
                         }
 
 
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -398,8 +425,7 @@ public class Main extends Application {
                 }
 
 
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -409,13 +435,11 @@ public class Main extends Application {
     }
 
 
-
-
     public static void updateItem1(String sName, int qty2, double cost2, double price2) {
         DBconnect dBconnect = new DBconnect();
         Connection conn;
         dBconnect.DBcon();
-        conn=dBconnect.conn;
+        conn = dBconnect.conn;
 
 
         Statement st;
@@ -425,7 +449,7 @@ public class Main extends Application {
         try {
             qry = "INSERT IGNORE INTO " +
                     "item1(sName,qty,cost,price)" +
-                    " values('" + sName + "'," + qty2 +"," + cost2 + "," + price2 + ")";
+                    " values('" + sName + "'," + qty2 + "," + cost2 + "," + price2 + ")";
 
             st = conn.createStatement();
             st.executeUpdate(qry);
@@ -447,7 +471,7 @@ public class Main extends Application {
         DBconnect dBconnect = new DBconnect();
         Connection conn;
         dBconnect.DBcon();
-        conn=dBconnect.conn;
+        conn = dBconnect.conn;
 
 
         Statement st;
@@ -457,7 +481,7 @@ public class Main extends Application {
         try {
             qry = "INSERT IGNORE INTO " +
                     "item(sName,qty,cost,price)" +
-                    " values('" + sName + "'," + qty2 +"," + cost2 + "," + price2 + ")";
+                    " values('" + sName + "'," + qty2 + "," + cost2 + "," + price2 + ")";
 
             st = conn.createStatement();
             st.executeUpdate(qry);

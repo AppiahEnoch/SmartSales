@@ -1,6 +1,8 @@
 package SmartSales;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.octicons.OctIconView;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class reportWindow extends DBconnect {
     @FXML
@@ -39,8 +50,60 @@ public class reportWindow extends DBconnect {
 
     @FXML
     void printSales(ActionEvent event) {
-        openConn(ShareData.directConnection);
-        ShareData.preView("salesAccountsPdf.jasper","Powered BY AECleanCodes 0549822202");
+
+        Service service = new Service() {
+            @Override
+            protected Task createTask() {
+                return new Task() {
+                    @Override
+                    protected Object call() throws Exception {
+                        try {
+
+                            pb.setVisible(true);
+                            btPrintSales.setVisible(false);
+                            btViewsales.setVisible(false);
+                            btviewCost.setVisible(false);
+
+                            JasperPrint jp;
+                            Map param = new HashMap();
+                            String jasperDocument="salesAccountsPdf.jasper";
+                            String title="Powered BY AECleanCodes 0549822202";
+
+                            try {
+                                openConn(conn);
+                                jp = JasperFillManager.fillReport(jasperDocument, param, ShareData.directConnection);
+                                updateProgress(2,5);
+
+                                JasperViewer jv = new JasperViewer(jp, false);
+                                updateProgress(3,5);
+                                jv.setTitle(title);
+                                updateProgress(4,5);
+                                jv.setVisible(true);
+                                updateProgress(5,5);
+
+                                pb.setVisible(false);
+                                btPrintSales.setVisible(true);
+                                btViewsales.setVisible(true);
+                                btviewCost.setVisible(true);
+
+
+                            } catch (JRException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            pb.setVisible(false);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        pb.progressProperty().bind(service.progressProperty());
+        service.start();
     }
 
     @FXML
@@ -59,63 +122,100 @@ public class reportWindow extends DBconnect {
     }
 
 
+    @FXML
+    private ProgressBar pb;
+
+    public  void initialize(){
+        pb.setStyle("-fx-accent: blue");
+
+        pb.setVisible(true);
+        btPrintSales.setVisible(false);
+        btViewsales.setVisible(false);
+        btviewCost.setVisible(false);
 
 
-   public  void initialize(){
-
-        try {
-
-            deleteRecord("reportCost");
-            deleteRecord("reportSales");
-            deleteRecord("reportProfit");
-
-            updateProfitSum();
-            getToday();
-            getWeekSales();
-            getLastWeek();
-            getMonthSales();
-            getLastMonth();
-            getYearSales();
-            getLastYearSales();
-            getOverall();
-
-
-            getTodayCost();
-            getWeekCost();
-            getLastWeekCost();
-            getMonthCost();
-            getLastMonthCost();
-            getYearCost();
-            getLastYearCost();
-            getOverallCost();
+        Service service = new Service() {
+            @Override
+            protected Task createTask() {
+                return new Task() {
+                    @Override
+                    protected Object call() throws Exception {
+                        try {
 
 
 
 
+                            deleteRecord("reportCost");
+                            deleteRecord("reportSales");
+                            deleteRecord("reportProfit");
 
-            getTodayProfit();
-            getWeekSalesProfit();
-            getLastWeekProfit();
-            getMonthSalesProfit();
-            getLastMonthProfit();
-            getYearSalesProfit();
-            getLastYearSalesProfit();
-            getOverallProfit();
+                            updateProgress(1,5);
 
 
+                            updateProfitSum();
+                            getToday();
+                            getWeekSales();
+                            getLastWeek();
+                            getMonthSales();
+                            getLastMonth();
+                            getYearSales();
+                            getLastYearSales();
+                            getOverall();
 
-//            System.out.println("fffffffffffffffffffffffffffffffffff: "+ShareData.profit.get(0));
-//            System.out.println("fffffffffffffffffffffffffffffffffff: "+ShareData.profit.size());
+                            updateProgress(2,5);
+
+                            getTodayCost();
+                            getWeekCost();
+                            getLastWeekCost();
+                            getMonthCost();
+                            getLastMonthCost();
+                            getYearCost();
+                            getLastYearCost();
+                            getOverallCost();
 
 
-              reportSales();
-              reportCost();
-              reportProfit();
-        }
-        catch (Exception e){
 
-e.printStackTrace();
-        }
+                            updateProgress(3,5);
+
+
+                            getTodayProfit();
+                            getWeekSalesProfit();
+                            getLastWeekProfit();
+                            getMonthSalesProfit();
+                            getLastMonthProfit();
+                            getYearSalesProfit();
+                            getLastYearSalesProfit();
+                            getOverallProfit();
+
+
+                            updateProgress(4,5);
+
+                            reportSales();
+                            reportCost();
+                            reportProfit();
+
+
+                            updateProgress(5,5);
+
+
+                            pb.setVisible(false);
+                            btPrintSales.setVisible(true);
+                            btViewsales.setVisible(true);
+                            btviewCost.setVisible(true);
+
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        pb.progressProperty().bind(service.progressProperty());
+        service.start();
 
 
 

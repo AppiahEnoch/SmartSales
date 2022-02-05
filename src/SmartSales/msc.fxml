@@ -12,9 +12,14 @@
          <children>
             <HBox prefHeight="82.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="btOldReceipt" mnemonicParsing="false" onAction="#getIDWindow" prefHeight="75.0" prefWidth="144.0" text="Old Receipt" />
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#showCombo" prefHeight="75.0" prefWidth="161.0" text="cashiers" />
-                  <Button layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#showLog" prefHeight="75.0" prefWidth="161.0" text="logins" />
+                  <Button fx:id="btOldReceipt" mnemonicParsing="false" onAction="#getIDWindow" prefHeight="68.0" prefWidth="258.0" text="Old Receipt" />
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#showCombo" prefHeight="68.0" prefWidth="267.0" text="cashiers" />
+                  <Button layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#showLog" prefHeight="68.0" prefWidth="297.0" text="logins" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="82.0" prefWidth="600.0">
+               <children>
+                  <Button fx:id="btItem" mnemonicParsing="false" onAction="#itemsGettingFinished" prefHeight="44.0" prefWidth="318.0" text="Check Items Getting Finished" />
                </children>
             </HBox>
          </children>

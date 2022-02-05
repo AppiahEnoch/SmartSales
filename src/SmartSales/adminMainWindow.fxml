@@ -30,7 +30,7 @@
                   <Font name="Arial Black" size="15.0" />
                </font>
                <graphic>
-                  <FontAwesomeIconView disable="true" glyphName="DOLLAR" size="40" />
+                  <FontAwesomeIconView glyphName="LEMON_ALT" size="40" />
                </graphic>
             </Button>
             <Button contentDisplay="TOP" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#sellWindow" prefHeight="117.0" prefWidth="10000.0" text="SELL">

@@ -35,7 +35,7 @@
          <children>
             <Button fx:id="edit" alignment="CENTER" contentDisplay="TOP" layoutX="169.0" layoutY="181.0" mnemonicParsing="false" onAction="#editName" prefHeight="80.0" prefWidth="365.0" text="EDIT ITEM SUGGESTIONS">
                <graphic>
-                  <FontAwesomeIconView glyphName="REFRESH" size="20" />
+                  <FontAwesomeIconView glyphName="REFRESH" size="40" />
                </graphic>
             </Button>
          </children>

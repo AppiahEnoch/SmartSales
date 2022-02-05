@@ -174,6 +174,7 @@ public class sellerPassword extends DBconnect {
 
 
     public boolean validate(){
+        getFocus1();
         textFieldUser.setText(passwordField1.getText().trim());
         textFieldPassword.setText(passwordField2.getText().trim());
         textFieldConfirmPassword.setText(passwordField3.getText().trim());
@@ -255,4 +256,28 @@ public class sellerPassword extends DBconnect {
     }
 
 
+
+
+
+    void getFocus1(){
+
+        if (passwordField1.getText().trim().isEmpty()){
+            passwordField1.requestFocus();
+        }
+
+        else   if (passwordField2.getText().trim().isEmpty()){
+            passwordField2.requestFocus();
+        }
+
+        else   if (passwordField3.getText().trim().isEmpty()){
+            passwordField3.requestFocus();
+        }
+
+
+
+
+
+
+
+    }
 }

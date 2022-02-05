@@ -82,6 +82,7 @@ public class setBusinessName extends DBconnect {
 
     /// DETAILS
     public boolean validate(){
+        getFocus1();
         String tf1=textFieldUser.getText().trim();
         String tf2=textFieldPassword.getText().trim();
         String tf3=textFieldConfirmPassword.getText().trim();
@@ -146,5 +147,28 @@ public class setBusinessName extends DBconnect {
         }
 
      return false;
+    }
+
+
+    void getFocus1(){
+
+        if (textFieldUser.getText().trim().isEmpty()){
+            textFieldUser.requestFocus();
+        }
+
+        else   if (textFieldPassword.getText().trim().isEmpty()){
+            textFieldPassword.requestFocus();
+        }
+
+        else   if (textFieldConfirmPassword.getText().trim().isEmpty()){
+            textFieldConfirmPassword.requestFocus();
+        }
+
+
+
+
+
+
+
     }
 }

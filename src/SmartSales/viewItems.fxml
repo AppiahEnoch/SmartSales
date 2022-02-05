@@ -11,8 +11,11 @@
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btViewRecentlyAdded" mnemonicParsing="false" onAction="#getRecent" prefHeight="31.0" prefWidth="333.0" text="VIEW RECENTLY ADDED" />
-            <Button fx:id="btViewAllItems" layoutX="204.0" layoutY="244.0" mnemonicParsing="false" onAction="#getAllItems" prefHeight="31.0" prefWidth="333.0" text="VIEW ALL ITEMS" />
+            <Button fx:id="btViewRecentlyAdded" contentDisplay="TOP" mnemonicParsing="false" onAction="#getRecent" prefHeight="127.0" prefWidth="333.0" text="VIEW ITEMS ">
+               <graphic>
+                  <FontAwesomeIconView fill="#d0ddda" glyphName="LEAF" size="40" />
+               </graphic></Button>
+            <Button fx:id="btViewAllItems" layoutX="204.0" layoutY="244.0" mnemonicParsing="false" onAction="#getAllItems" prefHeight="31.0" prefWidth="333.0" text="VIEW ALL ITEMS" visible="false" />
          </children>
       </VBox>
    </center>

@@ -1,5 +1,6 @@
 package SmartSales;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,11 +18,22 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
+import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
+import net.sf.jasperreports.view.JasperViewer;
 
+
+import javax.print.*;
+
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.AttributeSet;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.HashPrintServiceAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.MediaSizeName;
+import javax.print.attribute.standard.PrinterName;
 import java.awt.print.PageFormat;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -29,6 +41,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+
+
 
 public class receiptT extends DBconnect {
 
@@ -82,6 +97,9 @@ public class receiptT extends DBconnect {
     private Button btd2;
 
     @FXML
+    private ProgressBar pb;
+
+    @FXML
     String getSelected() {
 
         ITEM2 colSelected = tbv.getSelectionModel().getSelectedItem();
@@ -119,7 +137,10 @@ public class receiptT extends DBconnect {
 
     @FXML
     public void initialize() {
-        ShareData.goSales=false;
+        pb.setVisible(false);
+        pb.setStyle("-fx-accent: blue");
+
+        ShareData.goSales = false;
 
         c1.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("name"));
         c2.setCellValueFactory(new PropertyValueFactory<ITEM2, String>("qty"));
@@ -134,7 +155,7 @@ public class receiptT extends DBconnect {
 
         getReceipt();
 
-        if (ShareData.oldReceipt){
+        if (ShareData.oldReceipt) {
             getDataForOldReceipt();
             processBulkDiscount();
 
@@ -162,13 +183,13 @@ public class receiptT extends DBconnect {
 
 
                 lbAmount.setText((String.valueOf(dp2.format(amt2))));
-                ShareData.originalBill=String.valueOf(dp2.format(amt2));
+                ShareData.originalBill = String.valueOf(dp2.format(amt2));
 
 
             }
 
         } catch (Exception e) {
-          //  e.printStackTrace();
+            //  e.printStackTrace();
         } finally {
             try {
                 conn.close();
@@ -180,8 +201,6 @@ public class receiptT extends DBconnect {
 
 
     }
-
-
 
 
     private void getReceipt() {
@@ -223,8 +242,6 @@ public class receiptT extends DBconnect {
         }
 
         getAmount();
-
-
 
 
     }
@@ -277,20 +294,16 @@ public class receiptT extends DBconnect {
 
 
     void getBillAmount() {
-        double amount=0;
-            try {
-                amount = Double.parseDouble(lbAmount.getText().trim());
-                m.amount = amount;
-            } catch (Exception e) {
-                amount = 0;
-            }
-
-
-
+        double amount = 0;
+        try {
+            amount = Double.parseDouble(lbAmount.getText().trim());
+            m.amount = amount;
+        } catch (Exception e) {
+            amount = 0;
+        }
 
 
     }
-
 
 
     void getChange() {
@@ -693,7 +706,6 @@ public class receiptT extends DBconnect {
     private ImageView imv;
 
 
-
     public void updateCurrentUser() {
         deleteRecord("currentUser");
 
@@ -701,7 +713,7 @@ public class receiptT extends DBconnect {
             openConn(ShareData.directConnection);
             try {
 
-                qry = "Insert into currentUser(ID,fName)  values( '" + ShareData.userID_ + "','" +ShareData.currentUser_+ "')";
+                qry = "Insert into currentUser(ID,fName)  values( '" + ShareData.userID_ + "','" + ShareData.currentUser_ + "')";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -722,18 +734,13 @@ public class receiptT extends DBconnect {
     }
 
 
-
-
     @FXML
     void closeReceipt(ActionEvent event) {
 
-        if (ShareData.oldReceipt){
-            ShareData.oldReceipt=false;
+        if (ShareData.oldReceipt) {
+            ShareData.oldReceipt = false;
             updateCurrentUser();
         }
-
-
-
 
 
         try {
@@ -769,72 +776,101 @@ public class receiptT extends DBconnect {
 
     @FXML
     void openPreview(ActionEvent event) {
+        pb.setVisible(true);
 
 
+        Service service = new Service() {
+            @Override
+            protected Task createTask() {
+                return new Task() {
+                    @Override
+                    protected Object call() throws Exception {
+                        try {
 
-            insertCusChange();
-            updatedDiscountOnTotalCost();
-              getNewSalesID();
+                            updateProgress(1, 5);
+                            insertCusChange();
+                            updatedDiscountOnTotalCost();
+                            getNewSalesID();
 
-        openConn(ShareData.directConnection);
-       ShareData.preView("customerReport.jasper","Powered BY AECleanCodes 0549822202");
 
+                            JasperPrint jp;
+                            Map param = new HashMap();
+                            String jasperDocument = "customerReport.jasper";
+                            String title = "Powered BY AECleanCodes 0549822202";
+
+                            try {
+                                openConn(conn);
+                                jp = JasperFillManager.fillReport(jasperDocument, param, ShareData.directConnection);
+                                updateProgress(2, 5);
+
+                                JasperViewer jv = new JasperViewer(jp, false);
+                                updateProgress(3, 5);
+                                jv.setTitle(title);
+                                updateProgress(4, 5);
+                                jv.setVisible(true);
+                                updateProgress(5, 5);
+
+                                pb.setVisible(false);
+
+
+                            } catch (JRException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            pb.setVisible(false);
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        pb.progressProperty().bind(service.progressProperty());
+        service.start();
+
+
+    }
+
+
+    boolean notDone = true;
+
+    @FXML
+    void printReceipt(ActionEvent event) {
+        pb.setVisible(true);
+        prePrintWork();
+        print();
 
 
     }
 
 
     @FXML
-    void printReceipt(ActionEvent event) {
-                 prePrintWork();
+    private void prePrintWork() {
+        pb.setVisible(true);
+        if (countRecord("receipt", "sname") > 0) {
+            getNewSalesID();
 
-                 print();
-
-
-
-
-
-
-
-
-
-        try {
-            r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
-            sst = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            sst.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-
-    private void prePrintWork(){
-
-        if (countRecord("receipt","sname")>0){
-                getNewSalesID();
-
-            if (m.amount<1){
+            if (m.amount < 1) {
                 getBillAmount();
             }
 
             insertCusChange();
             updatedDiscountOnTotalCost();
-            ShareData.currentRandom_="";
+            ShareData.currentRandom_ = "";
             updateUCostInReceipt();
 
 
-
-             if ( ! ShareData.oldReceipt){
-               //  deleteRecord("sales");
-                 sendReportToSales();
-             }
+            if (!ShareData.oldReceipt) {
+                //  deleteRecord("sales");
+                sendReportToSales();
+            }
 
 
             tbv.getItems().clear();
-
-
 
 
         }
@@ -843,11 +879,9 @@ public class receiptT extends DBconnect {
     }
 
 
-
-
-String  time;
-    String  totalBill;
-    String  cashIssued;
+    String time;
+    String totalBill;
+    String cashIssued;
 
 
     public void selectReceipt() {
@@ -864,9 +898,9 @@ String  time;
                 DBitem = rs.getString("sName").trim();
                 DBqty = rs.getString("qty").trim();
                 DBprice = rs.getString("UPrice").trim();
-                time=rs.getString("time").trim();
-                totalBill=rs.getString("totalBill").trim();
-                cashIssued=rs.getString("cashIssued").trim();
+                time = rs.getString("time").trim();
+                totalBill = rs.getString("totalBill").trim();
+                cashIssued = rs.getString("cashIssued").trim();
 
 
             } else {
@@ -944,49 +978,73 @@ String  time;
     @FXML
     void noPrinting(ActionEvent event) {
 
-        prePrintWork();
-        deleteRecord("receipt");
-        getNewSalesID();
+        pb.setVisible(true);
 
+        Service service = new Service() {
+            @Override
+            protected Task createTask() {
+                return new Task() {
+                    @Override
+                    protected Object call() throws Exception {
+                        try {
+                            updateProgress(2, 5);
+
+                            prePrintWork();
+                            updateProgress(3, 5);
+                            deleteRecord("receipt");
+
+                            getNewSalesID();
+                            updateProgress(5, 5);
+
+                            pb.setVisible(false);
+
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        pb.progressProperty().bind(service.progressProperty());
+        service.start();
 
         try {
             r = FXMLLoader.load(getClass().getResource("receiptT.fxml"));
             sst = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             sst.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-
     }
 
-double bulkDiscount;
+    double bulkDiscount;
     double bulkDiscountR;
-    private boolean validateDiscount(){
-        String i=tfDiscount.getText().trim();
-        if (i.isEmpty()){
+
+    private boolean validateDiscount() {
+        String i = tfDiscount.getText().trim();
+        if (i.isEmpty()) {
             getAmount();
             return false;
-        }
-        else {
+        } else {
             try {
-               double ii=Double.parseDouble(i);
+                double ii = Double.parseDouble(i);
 
-               if (ii==0){
-                   getAmount();
-               }
+                if (ii == 0) {
+                    getAmount();
+                }
 
-               bulkDiscount=ii/100;
-               bulkDiscountR=ii;
-               return true;
+                bulkDiscount = ii / 100;
+                bulkDiscountR = ii;
+                return true;
 
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 getAmount();
-               return false;
+                return false;
             }
 
 
@@ -995,19 +1053,18 @@ double bulkDiscount;
     }
 
     double billAmount;
-    private boolean validateBillAmount(){
-        String i=ShareData.originalBill;
-        if (i.isEmpty()){
+
+    private boolean validateBillAmount() {
+        String i = ShareData.originalBill;
+        if (i.isEmpty()) {
             return false;
-        }
-        else {
+        } else {
             try {
-                billAmount=Double.parseDouble(i);
+                billAmount = Double.parseDouble(i);
 
 
-               return  true;
-            }
-            catch (Exception e){
+                return true;
+            } catch (Exception e) {
                 return false;
             }
 
@@ -1015,22 +1072,19 @@ double bulkDiscount;
         }
 
 
-
     }
 
 
-    private double getLbAmount(){
-        String i=lbAmount.getText().trim();
-        double x=0.00;
-        if (i.isEmpty()){
+    private double getLbAmount() {
+        String i = lbAmount.getText().trim();
+        double x = 0.00;
+        if (i.isEmpty()) {
 
-        }
-        else {
+        } else {
             try {
-                x=Double.parseDouble(i);
+                x = Double.parseDouble(i);
 
-            }
-            catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -1040,27 +1094,29 @@ double bulkDiscount;
 
         return x;
     }
-    double discount=ShareData.discount;
+
+    double discount = ShareData.discount;
+
     @FXML
     void processBulkDiscount(KeyEvent event) {
-             if (validateDiscount() && validateBillAmount()){
+        if (validateDiscount() && validateBillAmount()) {
 
-                  discount=billAmount * bulkDiscount;
-                 double discountedAmount=billAmount-discount;
-                 lbAmount.setText(String.valueOf(dp2.format(discountedAmount)));
+            discount = billAmount * bulkDiscount;
+            double discountedAmount = billAmount - discount;
+            lbAmount.setText(String.valueOf(dp2.format(discountedAmount)));
 
-                 getChange();
+            getChange();
 
 
-             }
+        }
     }
 
 
     void processBulkDiscount() {
-        if (validateDiscount() && validateBillAmount()){
+        if (validateDiscount() && validateBillAmount()) {
 
-            discount=billAmount * bulkDiscount;
-            double discountedAmount=billAmount-discount;
+            discount = billAmount * bulkDiscount;
+            double discountedAmount = billAmount - discount;
             lbAmount.setText(String.valueOf(dp2.format(discountedAmount)));
 
             getChange();
@@ -1075,8 +1131,8 @@ double bulkDiscount;
 
             try {
 
-                qry = "update receipt set discountOnTotalCost="+dp2.format(getLbAmount())+", " +
-                        "discountAmount="+dp2.format(discount)+", discountNumber= "+bulkDiscountR+"  where not sname= '' ";
+                qry = "update receipt set discountOnTotalCost=" + dp2.format(getLbAmount()) + ", " +
+                        "discountAmount=" + dp2.format(discount) + ", discountNumber= " + bulkDiscountR + "  where not sname= '' ";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -1100,92 +1156,117 @@ double bulkDiscount;
     @FXML
     private Button btBack;
 
-    public  void print(){
+
+    @FXML
+    public void print() {
+
+        pb.setVisible(true);
 
 
-        Task task=new Task() {
+        Service service = new Service() {
             @Override
-            protected Object call() throws Exception {
+            protected Task createTask() {
+                return new Task() {
+                    @Override
+                    protected Object call() throws Exception {
+                        try {
+                            pb.setVisible(true);
+                            updateProgress(1, 5);
 
-                try {
-                 String jp;
-                    Map param = new HashMap();
-                    try {
-
-                        openConn(ShareData.directConnection);
-
-                        jp = JasperFillManager.fillReportToFile("customerReport.jasper"
-                                , param, ShareData.directConnection);
+                            try {
+                                String jp;
+                                Map param = new HashMap();
+                                try {
 
 
-                        if (jp!=null){
-                            JasperPrintManager.printReport(jp,false);
 
+                                    openConn(ShareData.directConnection);
+
+                                    jp = JasperFillManager.fillReportToFile("customerReport.jasper"
+                                            , param, ShareData.directConnection);
+
+                                    updateProgress(3, 5);
+
+
+                                    if (jp != null) {
+                                        JasperPrintManager.printReport(jp, false);
+
+                                        notDone = false;
+                                    } else {
+
+                                    }
+
+                                    JasperReport jpp;
+                                    JasperPrint p=JasperCompileManager.compileReport();
+
+                                } catch (JRException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                                updateProgress(4, 5);
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                            deleteRecord("receipt");
+                            deleteRecord("currentinvoice");
+                            getNewSalesID();
+                            pb.setVisible(false);
+
+                            pb.setVisible(false);
+
+
+                        } catch (Exception e) {
+                            notDone = false;
+                            e.printStackTrace();
                         }
-                        else {
-
-                        }
-
-
-
-                    } catch (JRException e) {
-                        e.printStackTrace();
+                        return null;
                     }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
-
-
-                return null;
+                };
             }
-
         };
-        ExecutorService executorService= Executors.newSingleThreadExecutor();
-        executorService.execute(task);
-        executorService.shutdown();
+        pb.progressProperty().bind(service.progressProperty());
+        service.start();
 
-        deleteRecord("receipt");
-        deleteRecord("currentinvoice");
-        getNewSalesID();
+
     }
 
 
+    private void getDataForOldReceipt() {
 
-  private  void   getDataForOldReceipt(){
+        qry = "SELECT discountOnTotalCost,discountAmount ,CusChange,cashIssued,discountNumber  from receipt";
 
-          qry = "SELECT discountOnTotalCost,discountAmount ,CusChange,cashIssued,discountNumber  from receipt";
+        try {
+            DBcon();
+            st = conn.createStatement();
+            rs = st.executeQuery(qry);
 
-          try {
-              DBcon();
-              st = conn.createStatement();
-              rs = st.executeQuery(qry);
+            if (rs.next()) {
+                String cash = rs.getString("cashIssued").trim();
+                String change = rs.getString("CusChange").trim();
+                String discountTotalCost = rs.getString("discountOnTotalCost").trim();
+                String discountNumber = rs.getString("discountNumber").trim();
 
-              if (rs.next()) {
-               String cash  = rs.getString("cashIssued").trim();
-                  String change = rs.getString("CusChange").trim();
-                  String discountTotalCost = rs.getString("discountOnTotalCost").trim();
-                  String discountNumber = rs.getString("discountNumber").trim();
-
-                  lbChange.setText(change);
-                  lbAmount.setText(discountTotalCost);
-                  tfDiscount.setText(discountNumber);
-                  tfcash.setText(cash);
-
-
-                  conn.close();
-
-              } else {
-              conn.close();
-              }
-          } catch (Exception e) {
-              System.out.println("here");
-              e.printStackTrace();
-
-          }
+                lbChange.setText(change);
+                lbAmount.setText(discountTotalCost);
+                tfDiscount.setText(discountNumber);
+                tfcash.setText(cash);
 
 
+                conn.close();
+
+            } else {
+                conn.close();
+            }
+        } catch (Exception e) {
+            System.out.println("here");
+            e.printStackTrace();
+
+        }
 
 
     }
@@ -1287,8 +1368,8 @@ double bulkDiscount;
         System.out.println(r2);
         System.out.println(r3);
 
-        if (r3==123){
-            r3=66;
+        if (r3 == 123) {
+            r3 = 66;
         }
 
         cc1 = (char) r1;
@@ -1299,8 +1380,6 @@ double bulkDiscount;
         System.out.println(cc1);
         System.out.println(cc2);
         System.out.println(cc3);
-
-
 
 
         Double n1 = 0.0;
@@ -1318,10 +1397,7 @@ double bulkDiscount;
         iii = (int) Math.round(n3);
 
 
-        s1 = ""+ cc1 + ii + iii + cc3 + cc2 + m + mm + cu +i;
-
-
-
+        s1 = "" + cc1 + ii + iii + cc3 + cc2 + m + mm + cu + i;
 
 
         return s1;
@@ -1334,7 +1410,7 @@ double bulkDiscount;
             openConn(ShareData.directConnection);
             try {
 
-                qry = "Insert into invoiceID (ID)  values( '" + ShareData.currentRandom_+ "')";
+                qry = "Insert into invoiceID (ID)  values( '" + ShareData.currentRandom_ + "')";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -1355,14 +1431,13 @@ double bulkDiscount;
     }
 
 
-
     public void insertCurrentInvoiceID() {
         deleteRecord("currentInvoice");
         if (DBcon()) {
             openConn(ShareData.directConnection);
             try {
 
-                qry = "Insert into currentInvoice (ID)  values( '" + ShareData.currentRandom_+ "')";
+                qry = "Insert into currentInvoice (ID)  values( '" + ShareData.currentRandom_ + "')";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -1388,7 +1463,7 @@ double bulkDiscount;
 
             try {
 
-                qry = "update receipt set salesID= '"+ShareData.currentRandom_+"'";
+                qry = "update receipt set salesID= '" + ShareData.currentRandom_ + "'";
                 st = conn.createStatement();
                 st.executeUpdate(qry);
                 conn.close();
@@ -1410,20 +1485,19 @@ double bulkDiscount;
     }
 
 
-    private void getNewSalesID(){
+    private void getNewSalesID() {
 
         deleteRecord("currentinvoice");
-       openConn(ShareData.directConnection);
-            ShareData.currentRandom_=getRandom().trim();
-            while ((doesThisExist("invoiceID","ID",ShareData.currentRandom_) )){
-                ShareData.currentRandom_=getRandom().trim();
-            }
-            insertNewInvoiceID();
+        openConn(ShareData.directConnection);
+        ShareData.currentRandom_ = getRandom().trim();
+        while ((doesThisExist("invoiceID", "ID", ShareData.currentRandom_))) {
+            ShareData.currentRandom_ = getRandom().trim();
+        }
+        insertNewInvoiceID();
 
-            updatedReceiptSetSalesID();
+        updatedReceiptSetSalesID();
 
     }
-
 
 
     @FXML
@@ -1431,22 +1505,73 @@ double bulkDiscount;
 
         try {
             root = FXMLLoader.load(getClass().getResource("oldReceiptIDValidate.fxml"));
-            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-            currentScene=new Scene(root);
+            currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentScene = new Scene(root);
 
             currentStage.setScene(currentScene);
 
             currentStage.show();
             root.requestFocus();
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+            currentStage.setX((primScreenBounds.getWidth() - currentStage.getWidth()) / 2);
+            currentStage.setY((primScreenBounds.getHeight() - currentStage.getHeight()) / 2);
             currentStage.setResizable(false);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
     }
 
+
+//   openWindowByClick(event,"msc.fxml");
+
+    @FXML
+    void openWindowByClick(ActionEvent event, String fxml) {
+        try {
+            root = FXMLLoader.load(getClass().getResource(fxml));
+            currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentScene = new Scene(root);
+
+            currentStage.setScene(currentScene);
+
+            currentStage.close();
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    JasperReport jasperDocument = null;
+
+    public JasperReport jasperCompile() {
+
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+
+
+                openConn(conn);
+                jasperDocument = JasperCompileManager
+                        .compileReport("customerReport.jrxml");
+                return null;
+            }
+
+        };
+
+        ExecutorService executorService = Executors.newSingl+eThreadExecutor();
+        executorService.execute(task);
+        executorService.shutdown();
+
+
+        return jasperDocument;
+    }
+
+
+
+    void gg(){
+
+
+
+
+    }
 }

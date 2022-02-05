@@ -381,6 +381,8 @@ public class loadItemManual extends DBconnect {
             tf221.requestFocus();
         } else {
 
+            item=item.toLowerCase();
+
             itemToDelete = savedSN;
             if (!(savedSN == null)) {
                 tfSN.setText(savedSN);
@@ -539,6 +541,8 @@ public class loadItemManual extends DBconnect {
         isItemInDatabase(checkEmptyFolder());
 
         writeAllNoImageItems();
+
+        updateQtyInItem();
     }
 
     @FXML
@@ -1263,7 +1267,37 @@ public class loadItemManual extends DBconnect {
         }
     }
 
+    public void updateQtyInItem(){
 
+        DBcon();
+
+
+
+        qry=" update item set item.qty =(select  sum( item1.qty) as qtySum " +
+                "from item1 where item1.sName=item.sName group by item.sName)";
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
 
 }
 

@@ -113,6 +113,7 @@ public class regSeller extends DBconnect {
 
     @FXML
     void setID_Visible(MouseEvent event) {
+
         tfID.setVisible(true);
         lbSellerID.setVisible(true);
         getID();
@@ -128,6 +129,7 @@ public class regSeller extends DBconnect {
 
     @FXML
     void submit(ActionEvent event) {
+
         if (validate() ){
 
 
@@ -161,7 +163,12 @@ public class regSeller extends DBconnect {
     char prev='0';
     String ID=null;
 
+    public  void initialize(){
+        tfLocation.requestFocus();
+    }
+
     public boolean validate() {
+        getFocus1();
         String tf1 = tfName.getText().trim();
         String tf2 = tfLocation.getText().trim();
         String tf3 =tfMobile.getText().trim();
@@ -439,4 +446,25 @@ public boolean isNumeric(String value){
 }
 
 
+
+
+
+
+    void getFocus1(){
+
+           if (tfLocation.getText().trim().isEmpty()){
+            tfLocation.requestFocus();
+        }
+
+        else   if (tfMobile.getText().trim().isEmpty()){
+            tfMobile.requestFocus();
+        }
+
+
+
+
+
+
+
+    }
 }

@@ -125,6 +125,9 @@ public class logAdmin extends DBconnect {
     @FXML
     void submit(ActionEvent event) {
         if (validate()) {
+
+
+
              if (saveAdmindetails()){
                  // SWITCH WINDOW
                  try{
@@ -171,6 +174,7 @@ public class logAdmin extends DBconnect {
 
 
     public boolean validate(){
+        getFocus1();
         textFieldUser.setText(passwordField1.getText().trim());
         textFieldPassword.setText(passwordField2.getText().trim());
         textFieldConfirmPassword.setText(passwordField3.getText().trim());
@@ -291,7 +295,11 @@ public class logAdmin extends DBconnect {
 
         String item= "CREATE TABLE IF NOT EXISTS " +
                 "item(fName varchar(400),sName varchar(400)" +
-                " PRIMARY KEY,qty int,cost double,price double,img LONGBLOB,time timestamp  DEFAULT CURRENT_TIMESTAMP)";
+                " PRIMARY KEY,qty int,cost double,price double,img LONGBLOB,time timestamp  " +
+                "DEFAULT CURRENT_TIMESTAMP," +
+                " usedQty int,  availQty int as (qty-usedQty), " +
+                "declareFinishing int default 30," +
+                " availPercentage int as ((availQty/qty)*100))";
 
 
 
@@ -372,7 +380,7 @@ public class logAdmin extends DBconnect {
                 "pThisMonth varchar(100), pLastMonth varchar(100), pThisYear varchar(100), pLastYear varchar(100)," +
                 "pOverall varchar(100))";
 
-        String pdfView = "create view pdfView as select * from reportcost,reportsales,reportprofit,businessName";
+        String pdfView = "create or replace view pdfView as select * from reportcost,reportsales,reportprofit,businessName";
 
 
 
@@ -426,5 +434,25 @@ public class logAdmin extends DBconnect {
 return false;
     }
 
+    void getFocus1(){
 
+        if (passwordField1.getText().trim().isEmpty()){
+            passwordField1.requestFocus();
+        }
+
+        else   if (passwordField2.getText().trim().isEmpty()){
+            passwordField2.requestFocus();
+        }
+
+        else   if (passwordField3.getText().trim().isEmpty()){
+            passwordField3.requestFocus();
+        }
+
+
+
+
+
+
+
+    }
 }

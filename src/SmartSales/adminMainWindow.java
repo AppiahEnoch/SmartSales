@@ -36,6 +36,9 @@ public class adminMainWindow extends DBconnect {
     private Button btPass;
 
 
+    public void initialize(){
+        updateQtyInItem();
+    }
 
     @FXML
     void changePassword(ActionEvent event) {
@@ -252,5 +255,74 @@ public class adminMainWindow extends DBconnect {
         catch (Exception e){
 
         }
+    }
+
+
+
+    public void updateUsedQtyInItem(){
+
+        DBcon();
+
+
+
+        qry=" update item set item.usedQty = " +
+                " (select  sum( sales.qty) as qtySum from sales where " +
+                " sales.sName=item.sName group by item.sName )";
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+
+
+    public void updateQtyInItem(){
+
+        DBcon();
+
+
+
+        qry=" update item set item.qty =(select  sum( item1.qty) as qtySum " +
+                "from item1 where item1.sName=item.sName group by item.sName)";
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+        updateUsedQtyInItem();
     }
 }

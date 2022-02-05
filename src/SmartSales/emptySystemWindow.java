@@ -107,7 +107,7 @@ public class emptySystemWindow extends DBconnect {
     @FXML
     void home(ActionEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("mainlock.fxml"));
+            root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
             currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
             currentScene=new Scene(root);
             String css=this.getClass().getResource("mainlock.css").toExternalForm();

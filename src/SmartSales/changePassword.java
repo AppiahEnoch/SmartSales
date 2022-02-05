@@ -199,6 +199,8 @@ public class changePassword extends DBconnect {
     /// DETAILS
 
     public boolean validate(){
+
+        getFocus1();
         tfInitialCode.setText(passwordField1.getText().trim());
         tfNewUserName.setText(passwordField2.getText().trim());
         tfPassword.setText(passwordField3.getText().trim());
@@ -315,6 +317,36 @@ public class changePassword extends DBconnect {
 
      return false;
     }
+
+
+
+
+    void getFocus1(){
+
+    if (passwordField1.getText().trim().isEmpty()){
+        passwordField1.requestFocus();
+    }
+
+  else   if (passwordField2.getText().trim().isEmpty()){
+            passwordField2.requestFocus();
+        }
+
+    else   if (passwordField3.getText().trim().isEmpty()){
+        passwordField3.requestFocus();
+        }
+
+    else      if (passwordFieldConfirm.getText().trim().isEmpty()){
+            passwordFieldConfirm.requestFocus();
+        }
+
+
+
+
+
+    }
+
+
+
 
 
 }

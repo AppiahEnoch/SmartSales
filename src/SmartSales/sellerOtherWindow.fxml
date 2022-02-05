@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -11,9 +12,18 @@
          <children>
             <HBox prefHeight="82.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="tbPassword" mnemonicParsing="false" onAction="#openChangePassword" prefHeight="75.0" prefWidth="144.0" text="PASSWORD" />
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openOldReceipt" prefHeight="75.0" prefWidth="161.0" text="OLD RECEIPT" />
-                  <Button fx:id="btTotalSales" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#OpenUserSalesWindow" prefHeight="75.0" prefWidth="161.0" text=" TOTAL SALES" />
+                  <Button fx:id="tbPassword" contentDisplay="TOP" mnemonicParsing="false" onAction="#openChangePassword" prefHeight="75.0" prefWidth="144.0" text="PASSWORD">
+                     <graphic>
+                        <FontAwesomeIconView fill="#741bda" glyphName="KEY" size="30" />
+                     </graphic></Button>
+                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openOldReceipt" prefHeight="75.0" prefWidth="161.0" text="OLD RECEIPT">
+                     <graphic>
+                        <FontAwesomeIconView fill="#741bda" glyphName="FILE_ALT" size="30" />
+                     </graphic></Button>
+                  <Button fx:id="btTotalSales" contentDisplay="TOP" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#OpenUserSalesWindow" prefHeight="75.0" prefWidth="161.0" text=" TOTAL SALES">
+                     <graphic>
+                        <FontAwesomeIconView fill="#741bda" glyphName="BRIEFCASE" size="30" />
+                     </graphic></Button>
                </children>
             </HBox>
          </children>

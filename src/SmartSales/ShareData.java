@@ -3,6 +3,7 @@ package SmartSales;
 import javafx.concurrent.Task;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -11,11 +12,15 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.awt.print.PageFormat;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +28,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ShareData  {
-
+Connection conn=null;
 public static boolean isPrint=false;
     public static boolean oldReceipt=false;
+    static   String  fileName="AECleanCodesDBP_x891kve266uus.txt";
 
 public static Connection directConnection;
     private static ShareData instance;
@@ -138,6 +144,7 @@ public static Connection directConnection;
         Task task=new Task() {
             @Override
             protected Object call() throws Exception {
+
                 JasperPrint jp;
                 Map param = new HashMap();
 
@@ -162,6 +169,129 @@ public static Connection directConnection;
 
     }
 
+
+
+    public boolean DBcon() {
+
+        Statement st;
+        String smartSales = "Smart";
+        String url2 = "jdbc:mysql://localhost:3306/" + smartSales;
+        String qrydb = "CREATE DATABASE IF NOT EXISTS " + smartSales;
+
+        if(readPassword()){
+
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                //server URL
+                String url = "jdbc:mysql://localhost/";
+                conn = DriverManager.getConnection(url, "root", "root");
+                st = conn.createStatement();
+                st.execute(qrydb);
+
+                conn = DriverManager.getConnection(url2, "root", "root");
+                st.execute(qrydb);
+                ShareData.directConnection=conn;
+                return true;
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText("DATABASE CONNECTION ERROR: " + e.getMessage());
+                alert.showAndWait();
+            }
+
+
+
+
+        }
+
+
+
+
+        return false;
+    }
+
+
+
+    public Connection openConn(Connection con) {
+
+        try {
+            if (con.isClosed()) {
+                DBcon();
+                con = conn;
+                directConnection=con;
+                return con;
+            } else {
+                return conn;
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        return con;
+    }
+
+
+
+   static String DBUserName="";
+  static   String DBPassword="";
+
+    boolean proceed = false;
+
+    boolean readPassword() {
+        if (DBUserName.length()>1){
+            return true;
+        }
+
+        try {
+
+            String fileName = ShareData.fileName;
+            File userFile = new File(fileName);
+
+            if (userFile.exists()) {
+                proceed = true;
+            }
+
+        } catch (Exception e) {
+            proceed = false;
+        }
+
+
+        if(proceed){
+
+            try {
+                String fileName = ShareData.fileName;
+                String st = null;
+
+                File file = new File(fileName);
+                BufferedReader br = new BufferedReader(new FileReader(fileName));
+                while ((st = br.readLine()) != null) {
+                    String[] data = st.split(" ");
+                    String userName = data[0];
+                    String password = data[1];
+                    System.out.println(userName);
+                    System.out.println(password);
+                    DBUserName=userName;
+                    DBPassword=password;
+
+                    proceed=true;
+                    return true;
+
+
+                }
+            }
+            catch (Exception e) {
+
+                proceed=false;
+            }
+
+        }
+
+
+
+
+        return false;
+
+    }
 
 
 

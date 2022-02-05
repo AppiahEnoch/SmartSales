@@ -2,6 +2,8 @@ package SmartSales;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,7 +23,31 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+
+
+
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.octicons.OctIconView;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.image.*;
+import javafx.scene.input.KeyEvent;
+
+
+
+
+
 public class DBconnect {
+
+    @FXML
+    private Stage currentStage;
+    private Scene currentScene;
+    private Parent root;
+
+
     ArrayList<String> arraylistItems = new ArrayList<>();
 
     Connection conn;
@@ -48,28 +75,36 @@ public class DBconnect {
 
 
     public boolean DBcon() {
-
         Statement st;
         String smartSales = "Smart";
         String url2 = "jdbc:mysql://localhost:3306/" + smartSales;
         String qrydb = "CREATE DATABASE IF NOT EXISTS " + smartSales;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            //server URL
-            String url = "jdbc:mysql://localhost/";
-            conn = DriverManager.getConnection(url, "root", "root");
-            st = conn.createStatement();
-            st.execute(qrydb);
 
-            conn = DriverManager.getConnection(url2, "root", "root");
-            st.execute(qrydb);
-            ShareData.directConnection=conn;
-            return true;
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("DATABASE CONNECTION ERROR: " + e.getMessage());
-            alert.showAndWait();
+        if(readPassword()){
+
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                //server URL
+                String url = "jdbc:mysql://localhost/";
+                conn = DriverManager.getConnection(url, DBUserName, DBPassword);
+                st = conn.createStatement();
+                st.execute(qrydb);
+
+                conn = DriverManager.getConnection(url2, DBUserName, DBPassword);
+                st.execute(qrydb);
+                ShareData.directConnection=conn;
+                return true;
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText("DATABASE CONNECTION ERROR: " + e.getMessage());
+                alert.showAndWait();
+            }
         }
+
+
+
+
+
         return false;
     }
 
@@ -584,10 +619,10 @@ return true;
         list.put("2", new Object[]{"", "", "", "", "", "", "", "", "", ""});
         list.put("3", new Object[]{"ITEM", "QTY", "COST", "PRICE", "", "", "ITEM", "QTY", "COST", "PRICE"});
 
-
+int i=4;
         if (DBcon()) {
 
-            qry = "SELECT sName,qty,cost,price from item1";
+            qry = "SELECT * FROM smart.item where declareFinishing>=availPercentage";
 
             try {
 
@@ -600,7 +635,13 @@ return true;
                     DBCost = rs.getString("cost").trim();
                     DBprice = rs.getString("price").trim();
 
-                    list.put(DBitem, new Object[]{DBitem, Integer.parseInt(DBqty), Double.parseDouble(DBCost), Double.parseDouble(DBprice), "", "", DBitem, 0, 0, 0});
+                    System.out.println(DBitem);
+
+                    String ii=String.valueOf(i);
+
+                    list.put(ii, new Object[]{DBitem, Integer.parseInt(DBqty),
+                            Double.parseDouble(DBCost), Double.parseDouble(DBprice),"", "", DBitem, 0, 0, 0});
+                    i++;
                 }
 
             } catch (Exception e) {
@@ -613,6 +654,68 @@ return true;
         return list;
     }
 
+  static   String DBUserName="";
+ static    String DBPassword="";
+
+    boolean proceed = false;
+
+    boolean readPassword() {
+        if (DBUserName.length()>1){
+            return true;
+        }
+
+        try {
+
+            String fileName = ShareData.fileName;
+            File userFile = new File(fileName);
+
+            if (userFile.exists()) {
+                proceed = true;
+            }
+            else {
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            proceed = false;
+        }
+
+
+        if(proceed){
+
+            try {
+                String fileName = ShareData.fileName;
+                String st = null;
+
+                File file = new File(fileName);
+                BufferedReader br = new BufferedReader(new FileReader(fileName));
+                while ((st = br.readLine()) != null) {
+                    String[] data = st.split(" ");
+                    String userName = data[0];
+                    String password = data[1];
+                    System.out.println(userName);
+                    System.out.println(password);
+                    DBUserName=userName;
+                    DBPassword=password;
+
+                    proceed=true;
+                    return true;
+
+
+                }
+            }
+            catch (Exception e) {
+
+                proceed=false;
+            }
+
+        }
+
+
+        return false;
+
+    }
 
 
 

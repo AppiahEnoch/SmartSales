@@ -26,7 +26,7 @@
             <Font name="Arial Black" size="26.0" />
          </font>
       </Label>
-      <Button fx:id="btSubmit" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="208.0" layoutY="449.0" mnemonicParsing="false" onAction="#submit" prefHeight="105.0" prefWidth="164.0" style="-fx-background-color: transparent;" text="SUBMIT">
+      <Button fx:id="btSubmit" alignment="BOTTOM_CENTER" contentDisplay="CENTER" defaultButton="true" layoutX="208.0" layoutY="449.0" mnemonicParsing="false" onAction="#submit" prefHeight="105.0" prefWidth="164.0" style="-fx-background-color: transparent;" text="SUBMIT">
          <font>
             <Font name="FontAwesome Regular" size="19.0" />
          </font>
