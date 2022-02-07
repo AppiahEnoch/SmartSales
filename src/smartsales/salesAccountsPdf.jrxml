@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="salesAccountsPdf" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e9b67f8-30fd-47e6-8db3-0acf741e981d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="smart"/>
+	<queryString language="SQL">
+		<![CDATA[select * from smart.pdfView]]>
+	</queryString>
+	<field name="cToday" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cToday"/>
+		<property name="com.jaspersoft.studio.field.label" value="cToday"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cThisWeek" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cThisWeek"/>
+		<property name="com.jaspersoft.studio.field.label" value="cThisWeek"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cLastWeek" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cLastWeek"/>
+		<property name="com.jaspersoft.studio.field.label" value="cLastWeek"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cThisMonth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cThisMonth"/>
+		<property name="com.jaspersoft.studio.field.label" value="cThisMonth"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cLastMonth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cLastMonth"/>
+		<property name="com.jaspersoft.studio.field.label" value="cLastMonth"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cThisYear" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cThisYear"/>
+		<property name="com.jaspersoft.studio.field.label" value="cThisYear"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cLastYear" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cLastYear"/>
+		<property name="com.jaspersoft.studio.field.label" value="cLastYear"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="cOverall" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cOverall"/>
+		<property name="com.jaspersoft.studio.field.label" value="cOverall"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sToday" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sToday"/>
+		<property name="com.jaspersoft.studio.field.label" value="sToday"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sThisWeek" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sThisWeek"/>
+		<property name="com.jaspersoft.studio.field.label" value="sThisWeek"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sLastWeek" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sLastWeek"/>
+		<property name="com.jaspersoft.studio.field.label" value="sLastWeek"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sThisMonth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sThisMonth"/>
+		<property name="com.jaspersoft.studio.field.label" value="sThisMonth"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sLastMonth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sLastMonth"/>
+		<property name="com.jaspersoft.studio.field.label" value="sLastMonth"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sThisYear" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sThisYear"/>
+		<property name="com.jaspersoft.studio.field.label" value="sThisYear"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sLastYear" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sLastYear"/>
+		<property name="com.jaspersoft.studio.field.label" value="sLastYear"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="sOverall" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sOverall"/>
+		<property name="com.jaspersoft.studio.field.label" value="sOverall"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pToday" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pToday"/>
+		<property name="com.jaspersoft.studio.field.label" value="pToday"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pThisWeek" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pThisWeek"/>
+		<property name="com.jaspersoft.studio.field.label" value="pThisWeek"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pLastWeek" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pLastWeek"/>
+		<property name="com.jaspersoft.studio.field.label" value="pLastWeek"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pThisMonth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pThisMonth"/>
+		<property name="com.jaspersoft.studio.field.label" value="pThisMonth"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pLastMonth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pLastMonth"/>
+		<property name="com.jaspersoft.studio.field.label" value="pLastMonth"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pThisYear" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pThisYear"/>
+		<property name="com.jaspersoft.studio.field.label" value="pThisYear"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pLastYear" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pLastYear"/>
+		<property name="com.jaspersoft.studio.field.label" value="pLastYear"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="pOverall" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pOverall"/>
+		<property name="com.jaspersoft.studio.field.label" value="pOverall"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="location"/>
+		<property name="com.jaspersoft.studio.field.label" value="location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<field name="mobile" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="mobile"/>
+		<property name="com.jaspersoft.studio.field.label" value="mobile"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pdfview"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="113" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="20" width="550" height="30" forecolor="#FFFFFF" backcolor="#4214FA" uuid="3e3a2ad4-6455-4ec6-a7df-f614a87432c5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="51" width="550" height="30" forecolor="#FFFFFF" backcolor="#FA6B11" uuid="681e566d-7585-4b64-a13e-be0cea3438dd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="18"/>
+				</textElement>
+				<text><![CDATA[SALES REPORT]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy hh:mm:ss  a">
+				<reportElement mode="Opaque" x="0" y="80" width="550" height="30" forecolor="#FFFFFF" backcolor="#878683" uuid="dcccd5a8-c213-489f-9d73-ea0963342295"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="622" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="256" y="9" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="76ff0d27-10ee-4c66-83ea-dea85f51ff84"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sToday}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="9" width="150" height="20" forecolor="#4112FC" uuid="dfc90880-77f3-4d4d-933e-7701ec71a6ee"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES TODAY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="12" y="41" width="188" height="20" forecolor="#0F2EFA" uuid="456441c8-c4bd-46f2-b331-035d173ae078"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES THIS WEEK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="80" width="189" height="20" forecolor="#0F2EFA" uuid="de8ea869-3015-4ffa-b2a8-dc750b301fd6"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES LAST WEEK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="117" width="199" height="20" forecolor="#0F2EFA" uuid="90284ca0-dbed-4cb0-b708-2c34fa293ebf"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES THIS MONTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="7" y="224" width="193" height="20" forecolor="#0F2EFA" uuid="1d6a14a3-9be1-4b93-b3dc-1d4f3a66c7ce"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES LAST YEAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="259" width="190" height="20" forecolor="#0F2EFA" uuid="b246f027-e894-4ead-bcc1-4675933e18e1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OVER ALL SALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="9" y="150" width="201" height="20" forecolor="#0F2EFA" uuid="d8d7e92f-afc2-407a-bb03-009550390f14"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES LAST MONTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="12" y="189" width="188" height="20" forecolor="#0F2EFA" uuid="69aeb843-4052-4f4f-8d21-75be39b95968"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES THIS YEAR]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="256" y="41" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="bcec1a82-c460-4745-81a2-152c84b12a9e"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sThisWeek}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="256" y="78" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="8d197e26-3fc3-4538-b376-9a0aab80cf51"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sLastWeek}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="256" y="114" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="0b036e8b-b099-4754-b6ec-9ed3dc9e8b63"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sThisMonth}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="256" y="147" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="310399e5-041f-4104-a1ed-2173b853b823"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sLastMonth}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="256" y="187" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="66d42cbc-af96-4cef-a126-60f0a567db61"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sThisYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="256" y="223" width="284" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="54ca7c2a-165a-49d3-b3d4-4d2aea4ddf31"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sLastYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="253" y="258" width="287" height="24" forecolor="#2414FC" backcolor="#FFFFFF" uuid="a64a9ef7-1135-44de-8b40-877afe1e594a"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sOverall}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="333" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="ee5f10fc-8f13-49e6-b866-f740ddbabbef"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cToday}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="333" width="184" height="20" forecolor="#FC4319" uuid="d2b0f9f3-387f-4ea0-a473-df05eb8e255f"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST TODAY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="12" y="365" width="222" height="20" forecolor="#FC4319" uuid="e9452d02-3354-4675-9d08-7bfaa52d43ba"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST THIS WEEK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="404" width="223" height="20" forecolor="#FC4319" uuid="95b26139-5dfd-431e-a5b6-55e0d7b569d0"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST LAST WEEK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="441" width="233" height="20" forecolor="#FC4319" uuid="e9a870fb-c9a9-4429-8bf5-a3eeeb3d9f52"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST THIS MONTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="7" y="548" width="227" height="20" forecolor="#FC4319" uuid="2d5013c0-1ee5-456b-b39e-900fa97f0861"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST LAST YEAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="583" width="224" height="20" forecolor="#FC4319" uuid="05dec9a9-2092-4b2c-8fb4-eb515dc025a8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OVER ALL COST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="9" y="474" width="235" height="20" forecolor="#FC4319" uuid="bea4027a-3d1e-41f5-a830-b4e9030401f1"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST LAST MONTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="12" y="513" width="222" height="20" forecolor="#FC4319" uuid="606eeb7c-ee27-42fd-af98-d5ead261ed29"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COST THIS YEAR]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="365" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="b009c0de-0b36-46e2-b994-05f6edd81a09"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cThisWeek}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="402" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="c6e788c4-2710-4c87-a687-072128ba7cbb"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cLastWeek}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="438" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="49fa0b6e-281f-4b76-ba93-3dccfcdf6926"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cThisMonth}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="471" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="6ea186b1-6c5a-434e-af4e-a5c526c4f2b5"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cLastMonth}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="511" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="56fbc7e5-b086-4913-af45-01591d11c35a"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cThisYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="254" y="547" width="286" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="4eca9fd7-5289-4dc4-9ec3-51da74e1b428"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cLastYear}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="251" y="582" width="289" height="24" forecolor="#FC4319" backcolor="#FFFFFF" uuid="125155d1-05fc-4be7-b4de-84e4f55570ca"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cOverall}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="360" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="210" y="37" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="35a0d42c-ecb0-496b-8115-f168b9fd2621"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pToday}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="37" width="147" height="20" forecolor="#878683" uuid="a66d97a2-c57b-4420-84cd-9cdb46ed7d5d"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT TODAY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="69" width="176" height="20" forecolor="#878683" uuid="92d19286-08b0-4c51-be4d-7dba9e19be9b"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT THIS WEEK]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="210" y="69" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="f1c89ff7-2495-44fe-9372-4e29b142c517"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pThisWeek}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="108" width="187" height="20" forecolor="#878683" uuid="ac936b92-6454-494d-a79b-864a8bdbf029"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT  LAST WEEK]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="210" y="106" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="51a3ccd8-9c55-4ff8-93a7-d9acb66a0a47"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pLastWeek}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="145" width="187" height="20" forecolor="#878683" uuid="d4b95a97-6f76-4a4b-85ec-56d7dd2d564c"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT  THIS MONTH]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="210" y="142" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="a8c6a112-446b-4df6-8ce8-87f7397e98e6"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pThisMonth}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="8" y="178" width="195" height="20" forecolor="#878683" uuid="9742b28a-853b-43cd-8fce-ee23f00a92f2"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT  LAST MONTH]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="210" y="175" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="dce31340-0730-49fd-bd4f-3241703bd3a5"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pLastMonth}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="217" width="176" height="20" forecolor="#878683" uuid="66e5503d-0b24-4111-b1f6-c0bf65270b83"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT  THIS YEAR]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="210" y="215" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="ae954781-77f9-47b2-a2da-ad03a96c4df0"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pThisYear}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="6" y="252" width="171" height="20" forecolor="#878683" uuid="7b29ee2a-4439-4108-bc08-1276288ef240"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT  LAST YEAR]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="210" y="251" width="322" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="eba79de1-3839-41fc-9e86-c1454133e28b"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pLastYear}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="9" y="287" width="155" height="20" forecolor="#878683" uuid="246debeb-c6f6-4a87-8da1-b05fe8097dfc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OVER ALL PROFIT ]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="207" y="286" width="325" height="24" forecolor="#878683" backcolor="#FFFFFF" uuid="c3635eaf-0ad9-40d2-88fd-05ff4b60edad"/>
+				<textElement>
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pOverall}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="330" width="526" height="30" uuid="463bfed1-d750-4924-8ca5-cbd29950db01"/>
+				<textElement textAlignment="Left">
+					<font fontName="Calibri" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Powered By AECleanCodes 0549822202]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
