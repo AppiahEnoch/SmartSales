@@ -38,7 +38,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         ShareData m = ShareData.getInstance();
 
-        restoreDB();
+
 
         Parent root;
         String css;
@@ -47,7 +47,7 @@ public class Main extends Application {
 
 
         String fileName = ShareData.fileName;
-        File userFile = new File(ShareData.pathToAllInternalFiles + fileName);
+        File userFile = new File(ShareData.pathToPassword+ fileName);
 
 
         if (userFile.exists()) {
@@ -62,6 +62,8 @@ public class Main extends Application {
             DBconnect dBconnect = new DBconnect();
 
             boolean DBExists = dBconnect.DBExists();
+
+            
 
 
             if (DBExists) {

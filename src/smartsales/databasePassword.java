@@ -128,9 +128,9 @@ public class databasePassword extends DBconnect {
 
     
 
-           File userFile = new File(ShareData.pathToAllInternalFiles +fileName);
+           File userFile = new File(ShareData.pathToPassword+fileName);
 
-
+           System.out.println("file: "+ShareData.pathToPassword+fileName);
 
            // check if file does not exist then create it
            if (!userFile.exists()) {
@@ -160,7 +160,7 @@ public class databasePassword extends DBconnect {
     boolean savePasswordToText(){
         try {
 
-            File userFile = new File(ShareData.pathToAllInternalFiles+ fileName);
+            File userFile = new File(ShareData.pathToPassword+ fileName);
             PrintWriter writeToFile = new PrintWriter(new BufferedWriter(new FileWriter( userFile, true)));
             writeToFile.append(userName+" "+userPassword);
 

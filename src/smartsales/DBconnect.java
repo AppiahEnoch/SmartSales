@@ -91,6 +91,8 @@ public class DBconnect {
         
     
         DBcon();
+
+        openConn(conn);
         String qryt = "SELECT COUNT(name) as totalNames FROM businessName";
 
         try {
@@ -114,7 +116,9 @@ public class DBconnect {
 
                 }
 
-            } else {
+            }
+
+            else {
 
 
                 return false;
@@ -654,13 +658,13 @@ int i=4;
 
             String fileName = ShareData.fileName;
             File userFile = new File(
-                    ShareData.pathToAllInternalFiles+
+                    ShareData.pathToPassword+
                             fileName);
             
        
 
             if (userFile.exists()) {
-                   
+                System.out.println("EXISTS");
                 proceed = true;
             }
             else {
@@ -682,7 +686,7 @@ int i=4;
                 String fileName = ShareData.fileName;
                 String st = null;
 
-                File file = new File(ShareData.pathToAllInternalFiles+  fileName);
+                File file = new File(ShareData.pathToPassword+  fileName);
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 while ((st = br.readLine()) != null) {
                     String[] data = st.split(" ");

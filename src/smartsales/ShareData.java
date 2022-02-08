@@ -25,8 +25,12 @@ import java.util.concurrent.Executors;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 
+import static java.lang.System.getenv;
+import static java.lang.System.setOut;
+
 public class ShareData  {
-    static   String  pathToAllInternalFiles="src\\smartsales\\";
+
+    static   String  pathToPassword="";
 Connection conn=null;
 public static boolean isPrint=false;
     public static boolean oldReceipt=false;
@@ -62,6 +66,9 @@ public static Connection directConnection;
     public File file;
 
     private ShareData(){
+
+        pathToPassword=getenv("ProgramData")+"\\";
+
       createFolderOnDeskTop();
     }
 
@@ -268,7 +275,7 @@ public static Connection directConnection;
                 String fileName = ShareData.fileName;
                 String st = null;
 
-                File file = new File(ShareData.pathToAllInternalFiles+  fileName);
+                File file = new File(ShareData.pathToPassword+  fileName);
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 while ((st = br.readLine()) != null) {
                     String[] data = st.split(" ");
@@ -312,8 +319,8 @@ static  JasperReport jasperDocumentAccounts=null;
 
     public   void   jasperCompile(){
         try{
-            jd1= JRXmlLoader.load(pathToAllInternalFiles+s1);
-            jd2= JRXmlLoader.load(pathToAllInternalFiles+s2);
+            jd1= JRXmlLoader.load(s1);
+            jd2= JRXmlLoader.load(s2);
 
         }
         catch(Exception e){

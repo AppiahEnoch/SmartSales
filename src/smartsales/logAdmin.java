@@ -123,6 +123,16 @@ public class logAdmin extends DBconnect {
     void submit(ActionEvent event) {
         if (validate()) {
 
+            try {
+
+                currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+
+                currentStage.close();
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
 
              if (saveAdmindetails()){
