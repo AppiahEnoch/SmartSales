@@ -308,53 +308,7 @@ public static Connection directConnection;
 
 
 
-static  JasperReport jasperDocument=null;
-static  JasperReport jasperDocumentAccounts=null;
 
-    static   String  s1=   "customerReport.jrxml";
-    static   String  s2=   "salesAccountsPdf.jrxml";
-
-    JasperDesign jd1=null;
-    JasperDesign jd2=null;
-
-    public   void   jasperCompile(){
-        try{
-            jd1= JRXmlLoader.load(s1);
-            jd2= JRXmlLoader.load(s2);
-
-        }
-        catch(Exception e){
-          //  System.out.println(" gggggggggggggggggggg");
-            e.printStackTrace();
-        }
-
-
-        Task task=new Task() {
-            @Override
-            protected Object call() throws Exception {
-                try{
-                    jasperDocument = JasperCompileManager
-                            .compileReport(jd1);
-
-                    jasperDocumentAccounts= JasperCompileManager
-                            .compileReport(jd2);
-
-
-
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-
-        };
-
-        ExecutorService executorService= Executors.newSingleThreadExecutor();
-        executorService.execute(task);
-        executorService.shutdown();
-    }
     
 
 
@@ -576,14 +530,62 @@ public void backupDatabase(){
         }
         return false;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+    static  JasperReport jasperDocument=null;
+    static  JasperReport jasperDocumentAccounts=null;
+
+
+    static   String  truePath1="customerReport.jrxml";
+    static   String  truePath2="salesAccountsPdf.jrxml";
+
+    InputStream in1=getClass().getResourceAsStream(truePath1);
+    InputStream in2=getClass().getResourceAsStream(truePath2);
+    JasperDesign jd1=null;
+    JasperDesign jd2=null;
+
+    public   JasperReport  jasperCompile(){
+        try{
+            jd1=JRXmlLoader.load(in1);
+            jd2=JRXmlLoader.load(in2);
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+        Task task=new Task() {
+            @Override
+            protected Object call() throws Exception {
+                try{
+
+                    jasperDocument = JasperCompileManager
+                            .compileReport(jd1);
+                    jasperDocumentAccounts = JasperCompileManager
+                            .compileReport(jd2);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+        };
+
+        ExecutorService executorService= Executors.newSingleThreadExecutor();
+        executorService.execute(task);
+        executorService.shutdown();
+
+        return  jasperDocument;
+    }
+
+
+
+
+
+
+
 }
