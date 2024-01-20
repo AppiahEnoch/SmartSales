@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +40,11 @@ public static Connection directConnection;
     double change;
     double cash;
     String stringData1;
+
+    static ArrayList<String> cost=new ArrayList();
+    static ArrayList<String> sales=new ArrayList();
+    static ArrayList<String> profit=new ArrayList();
+
  static   String currentUser_="";
     static   String userID_="";
  static boolean hitRun=true;

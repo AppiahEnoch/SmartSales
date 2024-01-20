@@ -243,13 +243,13 @@ tf.requestFocus();
 
             try {
                 root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
-                currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+             sst = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 currentScene = new Scene(root);
                 String css = this.getClass().getResource("mainLock.css").toExternalForm();
                 root.getStylesheets().add(css);
-                currentStage.setScene(currentScene);
+             sst.setScene(currentScene);
 
-                currentStage.show();
+             sst.show();
                 root.requestFocus();
             } catch (Exception e) {
 
@@ -457,18 +457,18 @@ tf.requestFocus();
 
         try {
             root = FXMLLoader.load(getClass().getResource("viewItems.fxml"));
-            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+         sst=(Stage)((Node)event.getSource()).getScene().getWindow();
             currentScene=new Scene(root);
             String css=this.getClass().getResource("viewItems.css").toExternalForm();
            root.getStylesheets().add(css);
-            currentStage.setScene(currentScene);
+         sst.setScene(currentScene);
 
-            currentStage.show();
+         sst.show();
             root.requestFocus();
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
-            currentStage.setResizable(false);
+         sst.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
+         sst.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
+         sst.setResizable(false);
         }
         catch (Exception e){
           e.printStackTrace();
@@ -806,6 +806,8 @@ e.printStackTrace();
 
         }
     }
+    
+  
 
     @FXML
     void openSellerOtherWindow(ActionEvent event) {
@@ -813,18 +815,18 @@ e.printStackTrace();
 
 
 
-            root = FXMLLoader.load(getClass().getResource("sellerOtherWindow.fxml"));
-            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-            currentScene=new Scene(root);
+            r = FXMLLoader.load(getClass().getResource("sellerOtherWindow.fxml"));
 
-            currentStage.setScene(currentScene);
+            scene=new Scene(r);
 
-            currentStage.show();
-            root.requestFocus();
+         sst.setScene(scene);
+
+         sst.show();
+            r.requestFocus();
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
-            currentStage.setResizable(false);
+         sst.setX((primScreenBounds.getWidth() -  sst.getWidth()) / 2);
+         sst.setY((primScreenBounds.getHeight() -  sst.getHeight()) / 2);
+         sst.setResizable(false);
 
 
         }

@@ -1,0 +1,66 @@
+
+ .root{
+   -fx-background-color:#ffff9f;
+     }
+
+ .label{
+ -fx-font-family:Arial Black;
+  -fx-text-fill:yellow;
+  -fx-font-size:20px;
+ -fx-font-weight:bold;
+ -fx-background-color: #160775;
+ -fx-alignment:center;
+  }
+
+
+ .button{
+-fx-font-family:Arial Black;
+-fx-font-size: 16px;
+-fx-text-fill:BLUE;
+-fx-font-size:20px;
+-fx-font-weight:bold;
+-fx-background-color:yellow;
+    }
+
+ .button:hover{
+  -fx-text-fill:white;
+  -fx-font-size:20px;
+  -fx-font-weight:bold;
+  -fx-border-width:2px;
+  -fx-border-color:white;
+   -fx-background-color:#000080;
+        }
+     .text-field{
+     -fx-text-fill:blue;
+     -fx-font-weight:bold;
+     -fx-font-size: 20px;
+      -fx-alignment:center;
+
+     }
+
+ #c1{
+-fx-text-fill:blue;
+ -fx-font-weight:bold;
+-fx-font-size: 17px;
+-fx-alignment:center;
+ }
+
+#c2{
+-fx-text-fill:blue;
+ -fx-font-weight:bold;
+-fx-font-size: 17px;
+-fx-alignment:center;
+ }
+ #c3{
+ -fx-text-fill:blue;
+  -fx-font-weight:bold;
+ -fx-font-size: 17px;
+ -fx-alignment:center;
+  }
+
+  #C4{
+  -fx-text-fill:blue;
+   -fx-font-weight:bold;
+  -fx-font-size: 17px;
+  -fx-alignment:center;
+   }

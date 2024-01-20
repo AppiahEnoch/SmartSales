@@ -777,7 +777,8 @@ public class receiptT extends DBconnect {
               getNewSalesID();
 
         openConn(ShareData.directConnection);
-        ShareData.preView("customerReport.jasper","Powered BY AECleanCodes 0549822202");
+       ShareData.preView("customerReport.jasper","Powered BY AECleanCodes 0549822202");
+
 
 
     }
@@ -943,63 +944,9 @@ String  time;
     @FXML
     void noPrinting(ActionEvent event) {
 
-
-
-
-
-
-        Task task=new Task() {
-            @Override
-            protected Object call() throws Exception {
-
-                try {
-
-
-
-
-                    prePrintWork();
-                    deleteRecord("receipt");
-                    getNewSalesID();
-
-
-
-
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
-
-
-                return null;
-            }
-
-        };
-
-        ExecutorService executorService= Executors.newSingleThreadExecutor();
-        executorService.execute(task);
-        executorService.shutdown();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        prePrintWork();
+        deleteRecord("receipt");
+        getNewSalesID();
 
 
         try {

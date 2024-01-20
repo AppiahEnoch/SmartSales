@@ -59,7 +59,7 @@
          </padding>
          <children>
             <Region prefHeight="72.0" prefWidth="100000.0" />
-            <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="REPORTS">
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#report" prefHeight="10000.0" prefWidth="10000.0" text="REPORTS">
                <font>
                   <Font name="Arial Black" size="15.0" />
                </font>

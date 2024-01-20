@@ -1,8 +1,6 @@
 package SmartSales;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.octicons.OctIconView;
-import javafx.animation.TranslateTransition;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,16 +14,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.*;
-import javafx.util.Duration;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-public class sellerTotalSales extends DBconnect {
+public class viewCost extends DBconnect {
     @FXML
     private Stage currentStage;
     private Scene currentScene;
     private Parent root;
+
 
     @FXML
     private Label lbUser;
@@ -63,128 +58,32 @@ public class sellerTotalSales extends DBconnect {
     @FXML
     private TextField tf;
 
-
-    private  void run(){
-
-        Task task=new Task() {
-            @Override
-            protected Object call() throws Exception {
-
-                try {
-
-
-
-
-
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
-
-
-                return null;
-            }
-
-        };
-
-        ExecutorService executorService= Executors.newSingleThreadExecutor();
-
-        executorService.execute(task);
-        executorService.shutdown();
-    }
-
-
-
-    public  void initialize(){
-        //deleteRecord("sales");
-
-        lbUser.setText( "TOTAL SALES FOR  "+ShareData.currentUser_.toUpperCase());
-
-        getToday();
-        getWeekSales();
-        getMonthSales();
-        getYearSales();
-        getLastYearSales();
-        getOverall();
-        getLastMonth();
-        getLastWeek();
-
-
-        TranslateTransition rt = new TranslateTransition();
-        rt.setDuration(Duration.seconds(1));
-        rt.setNode(lbToday);
-        rt.setByX(80);
-        rt.setAutoReverse(true);
-        // rt.setDuration(Duration.millis(10000));
-        rt.setCycleCount(TranslateTransition.INDEFINITE);
-        rt.play();
-
-
-
-
-    }
-
-
-
-
-
     @FXML
     void getMyOwnAmount(KeyEvent event) {
-               lbMyOwn.setText("0.00");
-        if (validateTextField()){
-            getMyOwnData();
-        }
-
-
+if (validateTextField()){
+    getMyOwnData();
+}
 
     }
-
-
-    int tfValue=0;
-    private boolean validateTextField(){
-        String i=tf.getText().trim();
-
-        if (i.isEmpty()){
-            return false;
-
-        }
-        else {
-            try {
-                tfValue=Integer.parseInt(i);
-            }
-            catch (Exception e){
-             return false;
-            }
-
-
-        }
-
-
-      return true;
-    }
-
 
     @FXML
-    void gotoSellerOtherWindow(ActionEvent event) {
-       // openWindowByClick(event,"sellerOtherWindow.fxml");
+    void ok(ActionEvent event) {
+        openWindowByClick(event,"reportWindow.fxml");
+    }
 
-        Parent rr;
-        Stage stg1=new Stage();
-        Scene sc1;
 
-                try {
-            rr = FXMLLoader.load(getClass().getResource("sellerTotalSales.fxml"));
-                    stg1 =(Stage)((Node)event.getSource()).getScene().getWindow();
-                   sc1=new Scene(rr);
-                    stg1.setScene(sc1);
 
-                  stg1.close();
 
-        }
-        catch (Exception e){
-
-        }
+   public  void initialize(){
+       getToday();
+       getWeekSales();
+       getMonthSales();
+       getYearSales();
+       getLastYearSales();
+       getOverall();
+       getLastMonth();
+       getLastWeek();
+        
     }
 
 
@@ -216,7 +115,14 @@ public class sellerTotalSales extends DBconnect {
 
 
 
-String ID=ShareData.userID_;
+
+
+
+
+
+
+
+
 
 
 
@@ -226,10 +132,9 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry = "select  sum(discountOnTotalCost)" +
+        qry = "select  sum(Cost)" +
                 " as amt " +
-                "from salesDistinctSalesID where date(time)=curdate() " +
-                "and userID='"+ID+"'";
+                "from costView where date(time)=curdate() ";
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
@@ -247,7 +152,7 @@ String ID=ShareData.userID_;
             }
 
         } catch (Exception e) {
-              e.printStackTrace();
+            e.printStackTrace();
         } finally {
             try {
                 conn.close();
@@ -266,8 +171,8 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID where " +
-                "yearweek(time,1) = yearweek(curdate(),1)   and userID= '"+ID+"'";
+        qry ="select sum(Cost) as amt from costView where " +
+                "yearweek(time,1) = yearweek(curdate(),1) ";
 
         try {
             st = conn.createStatement();
@@ -305,14 +210,12 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID " +
-                "where month(time) = month(curdate()) and year(time)=year(curdate())  and userID= '"+ID+"'";
+        qry ="select sum(Cost) as amt from CostView " +
+                "where month(time) = month(curdate()) and year(time)=year(curdate())";
 
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
-
-
             while (rs.next()) {
                 String amt = rs.getString("amt").trim();
                 double amt2 = Double.parseDouble(amt);
@@ -341,8 +244,8 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID " +
-                "where year(time) = year(curdate())   and userID= '"+ID+"'";
+        qry ="select sum(Cost) as amt from costView " +
+                "where year(time) = year(curdate()) ";
 
         try {
             st = conn.createStatement();
@@ -382,9 +285,9 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from " +
-                "salesDistinctSalesID where year(time)= year(date_sub(curdate(),interval 1 Year))" +
-                " and userID='"+ID+"'";
+        qry ="select sum(Cost) as amt from " +
+                "costView where year(time)= year(date_sub(curdate(),interval 1 Year))" ;
+
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
@@ -415,8 +318,8 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID" +
-                " where userID='"+ID+"'";
+        qry ="select sum(Cost) as amt from costView" ;
+
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
@@ -448,8 +351,8 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID where year(time)=year(current_date -interval 1 month) " +
-                " and month(time)=month(current_date - interval 1 month) and userID='"+ID+"'  ";
+        qry ="select sum(Cost) as amt from costView where year(time)=year(current_date -interval 1 month) " +
+                " and month(time)=month(current_date - interval 1 month) ";
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
@@ -481,8 +384,8 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID where yearweek(time)=yearweek(now()- interval 1 week)" +
-                " and userID='"+ID+"'";
+        qry ="select sum(Cost) as amt from costView where yearweek(time)=yearweek(now()- interval 1 week)" ;
+
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
@@ -512,8 +415,8 @@ String ID=ShareData.userID_;
 
         DBcon();
         openConn(conn);
-        qry ="select sum(discountOnTotalCost) as amt from salesDistinctSalesID where time >=date(now()) - interval "+tfValue+" day " +
-                " and userID='"+ID+"' ";
+        qry ="select sum(Cost) as amt from costView where time >=date(now()) - interval "+tfValue+" day " ;
+
         try {
             st = conn.createStatement();
             rs = st.executeQuery(qry);
@@ -538,4 +441,35 @@ String ID=ShareData.userID_;
         }
 
     }
+
+
+
+
+    int tfValue=0;
+    private boolean validateTextField(){
+        lbMyOwn.setText("");
+        String i=tf.getText().trim();
+
+        if (i.isEmpty()){
+
+            return false;
+
+        }
+        else {
+            try {
+                tfValue=Integer.parseInt(i);
+            }
+            catch (Exception e){
+                return false;
+            }
+
+
+        }
+
+
+        return true;
+    }
+
+
+
 }

@@ -117,7 +117,7 @@ public class forgotPassword extends DBconnect {
             tf.clear();
             tf.setPromptText("ID IS REQUIRED!");
         }
-        else if(password.equals("APPIAH ENOCH")) {
+        else if(password.equals("9723")) {
             getAdmin();
             return  true;
         }

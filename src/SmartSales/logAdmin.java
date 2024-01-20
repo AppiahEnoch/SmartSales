@@ -304,7 +304,7 @@ public class logAdmin extends DBconnect {
                 "receipt(userID varchar(400),salesID varchar(400),sName varchar(400) PRIMARY KEY" +
                 ",  qty int,UCost double, UPrice double," +
                 " amount double as (qty*UPrice)," +
-                "profit double as(UPrice-UCost),time timestamp " +
+                "profit double as((UPrice-UCost)*qty),time timestamp " +
                 " DEFAULT CURRENT_TIMESTAMP," +
                 "totalBill  double DEFAULT 1.00," +
                 " discountOnTotalCost  double DEFAULT 2.00, " +
@@ -327,7 +327,8 @@ public class logAdmin extends DBconnect {
                 " discountAmount  double DEFAULT 0.00," +
                 "cashIssued  double DEFAULT 0.00," +
                 "CusChange double(7,2)," +
-                "discountNumber  double DEFAULT 0.00 ) ";
+                "discountNumber  double DEFAULT 0.00 ," +
+                " profitSum double DEFAULT 0.00 )";
 
 
         String invoiceID = "CREATE TABLE IF NOT EXISTS " +
@@ -338,6 +339,40 @@ public class logAdmin extends DBconnect {
 
         String currentUser = "CREATE TABLE IF NOT EXISTS " +
                 "currentUser( ID varchar(100), fName varchar(100), sName varchar(100))";
+
+        String log = "CREATE TABLE IF NOT EXISTS " +
+                "log( ID varchar(100),name varchar(100),inTime timestamp DEFAULT CURRENT_TIMESTAMP," +
+                " outTime timestamp)";
+
+        String salesDistinctSalesID = "create " +
+                "or replace  view  salesDistinctSalesID " +
+                "as select * from sales group by salesID";
+
+        String salesView = "create or replace view salesView as" +
+                " SELECT * FROM smart.sales";
+
+        String costView = "CREATE or replace view costView as select * from item1";
+
+        String profitSum = "create or replace view profitSum as SELECT " +
+                "salesID, sum(profit) as profit  FROM smart.sales group by sales.salesID";
+
+
+        String reportCost = "CREATE TABLE IF NOT EXISTS " +
+                "reportCost(cToday varchar(100),cThisWeek varchar(100),cLastWeek varchar(100), " +
+                "cThisMonth varchar(100), cLastMonth varchar(100), cThisYear varchar(100), cLastYear varchar(100)," +
+                "cOverall varchar(100))";
+
+        String reportSales = "CREATE TABLE IF NOT EXISTS " +
+                "reportSales(sToday varchar(100),sThisWeek varchar(100),sLastWeek varchar(100), " +
+                "sThisMonth varchar(100), sLastMonth varchar(100), sThisYear varchar(100), sLastYear varchar(100)," +
+                "sOverall varchar(100))";
+
+        String reportProfit = "CREATE TABLE IF NOT EXISTS " +
+                "reportProfit (pToday varchar(100),pThisWeek varchar(100),pLastWeek varchar(100), " +
+                "pThisMonth varchar(100), pLastMonth varchar(100), pThisYear varchar(100), pLastYear varchar(100)," +
+                "pOverall varchar(100))";
+
+        String pdfView = "create view pdfView as select * from reportcost,reportsales,reportprofit,businessName";
 
 
 
@@ -358,6 +393,15 @@ public class logAdmin extends DBconnect {
                 st.execute(invoiceID);
                 st.execute(currentInvoice);
                 st.execute(currentUser);
+                st.execute(salesDistinctSalesID);
+                st.execute(log);
+                st.execute(salesView);
+                st.execute(costView);
+                st.execute(profitSum);
+                st.execute(reportCost);
+                st.execute(reportSales);
+                st.execute(reportProfit);
+                st.execute(pdfView);
 
 
 

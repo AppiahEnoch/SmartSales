@@ -72,8 +72,8 @@ public class Main extends Application {
         Parent root;
         String css;
         if (DBExists) {
-            root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
-            //  root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
+       //     root = FXMLLoader.load(getClass().getResource("mainLock.fxml"));
+          //    root = FXMLLoader.load(getClass().getResource("adminMainWindow.fxml"));
               //  root = FXMLLoader.load(getClass().getResource("recentItem.fxml"));
 
             //  root = FXMLLoader.load(getClass().getResource("showImagesInFolder.fxml"));
@@ -83,8 +83,13 @@ public class Main extends Application {
     //  root = FXMLLoader.load(getClass().getResource("salesWindow.fxml"));
       //      root = FXMLLoader.load(getClass().getResource("print.fxml"));
       //    root = FXMLLoader.load(getClass().getResource("printPreviewWindow.fxml"));
-    //    root = FXMLLoader.load(getClass().getResource("msc.fxml"));
+      //  root = FXMLLoader.load(getClass().getResource("msc.fxml"));
      //  root = FXMLLoader.load(getClass().getResource("sellerOtherWindow.fxml"));
+  //     root = FXMLLoader.load(getClass().getResource("sellerTotalSales.fxml"));
+ //     root = FXMLLoader.load(getClass().getResource("log.fxml"));
+  //  root = FXMLLoader.load(getClass().getResource("viewCost.fxml"));
+ //  root = FXMLLoader.load(getClass().getResource("viewSales.fxml"));
+  root = FXMLLoader.load(getClass().getResource("reportWindow.fxml"));
 
 
 

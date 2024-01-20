@@ -18,7 +18,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class mainLock extends DBconnect {
 
@@ -250,6 +254,8 @@ public class mainLock extends DBconnect {
 
 
             }
+
+            login();
         }
     }
 
@@ -477,7 +483,10 @@ public class mainLock extends DBconnect {
     }
 
 
+
     public void initialize() {
+        logOut(ShareData.userID_);
+
         getTodaySales();
         TranslateTransition rt = new TranslateTransition();
         rt.setDuration(Duration.seconds(1));
@@ -507,7 +516,7 @@ public class mainLock extends DBconnect {
 
         DBcon();
         openConn(conn);
-        qry = "select sum(sales.discountOnTotalCost) as totalSales from sales where date(time)=curdate()";
+        qry = "select sum(discountOnTotalCost) as totalSales from salesDistinctSalesID where date(time)=curdate()";
 
         try {
             st = conn.createStatement();
@@ -535,6 +544,72 @@ public class mainLock extends DBconnect {
 
             }
         }
+
+    }
+
+
+    public void login() {
+
+    if (DBcon()) {
+        openConn(ShareData.directConnection);
+        try {
+
+            qry = "Insert into log(ID,Name)  values( '" + userID + "','" + username + "')";
+            st = conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("COULD NOT SAVE DATA:" + e.getMessage());
+            alert.showAndWait();
+            try {
+                conn.close();
+            } catch (Exception ee) {
+                ee.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+
+    }
+
+
+
+
+    public void logOut( String oldID){
+
+        DBcon();
+
+        Date date=new Date();
+        long time=date.getTime();
+        Timestamp ts=new Timestamp(time);
+
+        qry="UPDATE log SET outTime='"+ts+"' where outTime is null and ID= '"+oldID+"'";
+
+        try {
+            st=conn.createStatement();
+            st.executeUpdate(qry);
+            conn.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+
+        }
+        finally {
+            try {
+                conn.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
 
     }
 }

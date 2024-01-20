@@ -105,21 +105,31 @@ public class sellerOtherWindow extends DBconnect {
     }
 
 
+    Parent rr;
+    Stage stg1=new Stage();
+    Scene sc1;
+
+
+
     @FXML
     void openWindowByClick(ActionEvent event, String fxml){
+
+
+
+
         try {
-            root = FXMLLoader.load(getClass().getResource(fxml));
-            currentStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-            currentScene=new Scene(root);
+            rr = FXMLLoader.load(getClass().getResource(fxml));
 
-            currentStage.setScene(currentScene);
+            sc1=new Scene(rr);
 
-            currentStage.show();
-            root.requestFocus();
+            stg1.setScene(sc1);
+
+            stg1.show();
+            rr.requestFocus();
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-            currentStage.setX((primScreenBounds.getWidth() -  currentStage.getWidth()) / 2);
-            currentStage.setY((primScreenBounds.getHeight() -  currentStage.getHeight()) / 2);
-            currentStage.setResizable(false);
+            stg1.setX((primScreenBounds.getWidth() -  stg1.getWidth()) / 2);
+            stg1.setY((primScreenBounds.getHeight() -  stg1.getHeight()) / 2);
+            stg1.setResizable(false);
         }
         catch (Exception e){
 
